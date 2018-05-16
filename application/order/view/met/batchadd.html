@@ -53,60 +53,16 @@
                     <form id="demo-form2" method="post" action="{:url('MeterType/batchAddMT')}" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
 
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="meterType1">基表型号 <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">基表型号 <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="meterType1" name="meterType[]" required="required" class="form-control col-md-7 col-xs-12">
+                          <input type="text" name="meterType[]" required="required" class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="meterType2">基表型号
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="meterType2" name="meterType[]" class="form-control col-md-7 col-xs-12">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="meterType3">基表型号
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="meterType3" name="meterType[]" class="form-control col-md-7 col-xs-12">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="meterType4">基表型号
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="meterType4" name="meterType[]" class="form-control col-md-7 col-xs-12">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="meterType5">基表型号
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="meterType5" name="meterType[]" class="form-control col-md-7 col-xs-12">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="meterType6">基表型号
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="meterType6" name="meterType[]" class="form-control col-md-7 col-xs-12">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="meterType7">基表型号
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="meterType7" name="meterType[]" class="form-control col-md-7 col-xs-12">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="meterType8">基表型号
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="meterType8" name="meterType[]" class="form-control col-md-7 col-xs-12">
-                        </div>
+                      <div class="form-group"></div>
+                      <div class="form-group" id="met1"></div>
+                      <div class="col-sm-2 col-md-2 col-xs-6 col-lg-2 col-md-offset-2 col-sm-offset-2 col-lg-offset-2">
+                        <button type="button" id="add">添加</button>
                       </div>
 
                       <div class="ln_solid"></div>
@@ -165,6 +121,23 @@
     <script src="__VENDOR__/starrr/dist/starrr.js"></script>
     <!-- Custom Theme Scripts -->
     <script src="__JS__/build/js/custom.min.js"></script>
+  <script>
+      $('#add').click(function(){
+          $('<div class="form-group">'+
+                '<label class="control-label col-md-3 col-sm-3 col-xs-12">基表型号 <span class="required">*</span>'+
+                '</label>'+
+                '<div class="col-md-6 col-sm-6 col-xs-12">'+
+                  '<input type="text" name="meterType[]" required="required" class="form-control col-md-7 col-xs-12">'+
+                '</div><button type="button" class="delHi">删除</button>'+
+              '</div>').appendTo('#met1')
+      })
+      $(function(){
+          $('.x_content').delegate(".delHi","click",function(){
+              //alert(123);
+              $(this).parent('div').remove();
+          })
+      })
 
+  </script>
 </body>
 </html>

@@ -65,9 +65,6 @@ class MeterType extends Base
         $meterType = $post['meterType'];
         //1.先验证都通过了
         for ($i=0;$i<count($meterType);$i++){
-            if($meterType[$i] == ''){
-                continue;
-            }
             $meterTypes['meterType'] = $meterType[$i];
             $validate = $this->validate($meterTypes, 'Met');
             //var_dump($validate);exit();

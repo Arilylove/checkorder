@@ -58,9 +58,6 @@ class ModelType extends Base{
         //var_dump($modelType);exit();
         //1.先验证都通过了
         for ($i=0;$i<count($modelType);$i++){
-            if($modelType[$i] == ''){
-                continue;
-            }
             $modelTypes['modelType'] = $modelType[$i];
             $validate = $this->validate($modelTypes, 'Mot');
             //var_dump($validate);exit();

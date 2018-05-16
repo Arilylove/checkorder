@@ -127,11 +127,11 @@ class Order extends Base{
             $orders['meterStart'] = substr($orders['meterStart'], 0, ($startLen-1));
             $orders['meterEnd'] = substr($orders['meterEnd'], 0, ($endLen-1));
         }
+        $start = "1".$orders['meterStart'];
+        $end = "1".$orders['meterEnd'];
         //查看表号是否没变,如果有一个变了，去判断是否重复
         if(($find['meterStart'] != $orders['meterStart']) || ($find['meterEnd'] != $orders['meterEnd'])){
             //看是否有重复表号，如果有，直接报错
-            $start = "1".$orders['meterStart'];
-            $end = "1".$orders['meterEnd'];
             $meterNum = $this->meterNumList($start, $end);
             $isExist = $this->isExist($meterNum, $oid);
             if($isExist){

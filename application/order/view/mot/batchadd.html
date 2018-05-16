@@ -59,54 +59,10 @@
                           <input type="text" id="modelType1" name="modelType[]" required="required" class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelType2">电子模块类型
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="modelType2" name="modelType[]" class="form-control col-md-7 col-xs-12">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelType3">电子模块类型
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="modelType3" name="modelType[]" class="form-control col-md-7 col-xs-12">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelType4">电子模块类型
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="modelType4" name="modelType[]" class="form-control col-md-7 col-xs-12">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelType5">电子模块类型
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="modelType5" name="modelType[]" class="form-control col-md-7 col-xs-12">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelType6">电子模块类型
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="modelType6" name="modelType[]" class="form-control col-md-7 col-xs-12">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelType7">电子模块类型
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="modelType7" name="modelType[]" class="form-control col-md-7 col-xs-12">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelType8">电子模块类型
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="modelType8" name="modelType[]" class="form-control col-md-7 col-xs-12">
-                        </div>
+                      <div class="form-group"></div>
+                      <div class="form-group" id="met1"></div>
+                      <div class="col-sm-2 col-md-2 col-xs-6 col-lg-2 col-md-offset-2 col-sm-offset-2 col-lg-offset-2">
+                        <button type="button" id="add">添加</button>
                       </div>
 
                       <div class="ln_solid"></div>
@@ -165,6 +121,23 @@
     <script src="__VENDOR__/starrr/dist/starrr.js"></script>
     <!-- Custom Theme Scripts -->
     <script src="__JS__/build/js/custom.min.js"></script>
+  <script>
+      $('#add').click(function(){
+          $('<div class="form-group">'+
+              '<label class="control-label col-md-3 col-sm-3 col-xs-12">电子模块类型 <span class="required">*</span>'+
+              '</label>'+
+              '<div class="col-md-6 col-sm-6 col-xs-12">'+
+              '<input type="text" name="modelType[]" required="required" class="form-control col-md-7 col-xs-12">'+
+              '</div><button type="button" class="delHi">删除</button>'+
+              '</div>').appendTo('#met1')
+      })
+      $(function(){
+          $('.x_content').delegate(".delHi","click",function(){
+              //alert(123);
+              $(this).parent('div').remove();
+          })
+      })
 
+  </script>
 </body>
 </html>

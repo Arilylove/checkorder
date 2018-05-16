@@ -61,26 +61,23 @@
                                     <table class="table table-striped jambo_table bulk_action">
                                         <thead>
                                         <tr class="headings">
-                                            <!--<th>
-                                                <input type="checkbox" id="check-all" class="flat">
-                                            </th>-->
-                                            <th style="text-align: center;">订单编号</th>
-                                            <th style="text-align: center;">客户</th>
 
-                                            <th style="text-align: center;">基表型号</th>
-                                            <th style="text-align: center;">电子模块类型</th>
+                                            <th>客户</th>
 
-                                            <th style="text-align: center;">模块订单号</th>
-                                            <th style="text-align: center;">模块交付日期</th>
-                                            <th style="text-align: center;">模块订单周期(天)</th>
-                                            <th style="text-align: center;">基表组装周期(天)</th>
+                                            <th>基表型号</th>
+                                            <th>电子模块类型</th>
 
-                                            <th style="text-align: center;">基表订单号</th>
-                                            <th style="text-align: center;">表号</th>
-                                            <th style="text-align: center;">制造商</th>
-                                            <th style="text-align: center;">生产负责人</th>
-                                            <th style="text-align: center;">发货状态</th>
-                                            <th class="column-title no-link last" style="width:106px;text-align: center;"><span class="nobr">操作</span>
+                                            <th>模块订单号</th>
+                                            <th>模块交付日期</th>
+                                            <th>模块订单周期(天)</th>
+                                            <th>基表组装周期(天)</th>
+
+                                            <th>基表订单号</th>
+                                            <th>表号</th>
+                                            <th>制造商</th>
+                                            <th>生产负责人</th>
+                                            <th>发货状态</th>
+                                            <th class="column-title no-link last" style="text-align: center;"><span class="nobr">操作</span>
                                             </th>
 
                                         </tr>
@@ -89,37 +86,34 @@
                                         <tbody>
                                         {volist name="orders" id="v"}
                                         <tr class="even pointer">
-                                            <!--<td class="a-center ">
-                                                <input type="checkbox" class="flat" name="table_records">
-                                            </td>-->
-                                            <td>{$v.oid}</td>
-                                            <td>{$v.client}</td>
 
-                                            <td>{$v.meterType}</td>
-                                            <td>{$v.modelType}</td>
+                                            <td style="width:6%;">{$v.client}</td>
 
-                                            <td>{$v.modelNum}</td>
-                                            <td>{$v.deliveryTime}</td>
-                                            <td>{$v.orderCycle}</td>
-                                            <td>{$v.assemCycle}</td>
+                                            <td style="width:10%;">{$v.meterType}</td>
+                                            <td style="width:10%;">{$v.modelType}</td>
 
-                                            <td>{$v.orderNum}</td>
-                                            <td>{$v.meterStart}~{$v.meterEnd}</td>
-                                            <td>{$v.manufacturer}</td>
-                                            <td>{$v.productPrinciple}</td>
+                                            <td style="width:10%;">{$v.modelNum}</td>
+                                            <td style="width:6%;">{$v.deliveryTime}</td>
+                                            <td style="width:6%;">{$v.orderCycle}</td>
+                                            <td style="width:6%;">{$v.assemCycle}</td>
+
+                                            <td style="width:5%;">{$v.orderNum}</td>
+                                            <td style="width:10%;">{$v.meterStart}~{$v.meterEnd}</td>
+                                            <td style="width:8%;">{$v.manufacturer}</td>
+                                            <td style="width:8%;">{$v.productPrinciple}</td>
                                             {if condition="$v['deliveryStatus'] eq 0"}
-                                            <td>已发货</td>
+                                            <td style="width:6%;">已发货</td>
                                             {elseif condition="$v['deliveryStatus'] eq 1"}
-                                            <td>待发货</td>
+                                            <td style="width:6%;">待发货</td>
                                             {elseif condition="$v['deliveryStatus'] eq 2"}
-                                            <td>生产中</td>
+                                            <td style="width:6%;">生产中</td>
                                             {elseif condition="$v['deliveryStatus'] eq 3"}
-                                            <td>物料准备</td>
+                                            <td style="width:6%;">物料准备</td>
                                             {else/}
                                             <td>组装中</td>
                                             {/if}
 
-                                            <td style="text-align: center;">
+                                            <td style="text-align: center;width:9%;">
                                                 <a href="{:url('Order/view',['oid'=>$v['oid']])}" class="glyphicon glyphicon-sunglasses" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
                                                 <a href="{:url('Order/eOrd',['oid'=>$v['oid']])}" class="glyphicon glyphicon-edit" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
                                                 <a href="javascript:void (0);" class="glyphicon glyphicon-remove class-del" onclick=confirmDel("{$v['oid']}") style="color: red;font-size: 18px;"></a>
