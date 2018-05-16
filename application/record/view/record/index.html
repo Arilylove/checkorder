@@ -7,6 +7,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>记录管理</title>
+    <style>
+        .table-fixed{
+            table-layout:fixed;
+        }
+        /*固定长度，溢出隐藏*/
+        .trHid{
+            width:180px;
+            white-space:nowrap;
+            text-overflow:ellipsis;
+            overflow:hidden;
+        }
+    </style>
 </head>
 
 <body class="nav-md">
@@ -58,17 +70,18 @@
                             <div class="x_content">
 
                                 <div class="table-responsive">
-                                    <table class="table table-striped jambo_table bulk_action">
+                                    <table class="table table-striped jambo_table bulk_action table-fixed">
                                         <thead>
                                         <tr class="headings">
+                                            <th>解决时长(小时)</th>
                                             <th>国家</th>
                                             <th>客户</th>
                                             <th>问题分类</th>
                                             <th>问题描述</th>
                                             <th>是否解决</th>
-                                            <th>解决时长(小时)</th>
                                             <th>解决方案</th>
                                             <th>记录人</th>
+                                            <th>记录时间</th>
                                             <th class="column-title no-link last" style="text-align: center;"><span class="nobr">操作</span>
                                             </th>
 
@@ -78,10 +91,11 @@
                                         <tbody>
                                         {volist name="record" id="v"}
                                         <tr class="even pointer">
+                                            <td>{$v.solveCycle}</td>
                                             <td>{$v.state}</td>
-                                            <td>{$v.client}</td>
+                                            <td class="trHid">{$v.client}</td>
                                             <td>{$v.classify}</td>
-                                            <td style="width:320px;">{$v.description}</td>
+                                            <td class="trHid">{$v.description}</td>
                                             {if condition="$v.solved eq 0"}
                                             <td>已解决</td>
                                             {elseif condition="$v.solved eq 1"}
@@ -90,16 +104,21 @@
                                             <td>正在解决</td>
                                             {/if}
 
-                                            <td>{$v.solveCycle}</td>
-                                            <td style="width:320px;">{$v.solution}</td>
+                                            <td class="trHid">{$v.solution}</td>
                                             <td>{$v.recorder}</td>
+                                            <td class="trHid">{$v.recordDate}</td>
                                             <td style="text-align: center;">
+                                                <a href="{:url('Record/view',['rid'=>$v['rid']])}" class="glyphicon glyphicon-sunglasses" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
                                                 <a href="{:url('Record/eRe',['rid'=>$v['rid']])}" class="glyphicon glyphicon-edit" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
                                                 <a href="javascript:void (0);" class="glyphicon glyphicon-remove class-del" onclick=confirmDel("{$v['rid']}") style="color: red;font-size: 18px;"></a>
                                             </td>
                                         </tr>
                                         {/volist}
                                         </tbody>
+                                        <tdbody>
+                                            <td style="color:#00a0e9;font-size:14px;font-weight:bold;">解决时长总计</td>
+                                            <td>{$summery}</td>
+                                        </tdbody>
                                     </table>
                                     <div style="float: right;">
                                         {$page}

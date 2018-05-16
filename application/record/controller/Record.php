@@ -18,7 +18,7 @@ class Record extends Base{
      */
     public function record(){
         $rid = input('param.rid');
-        $field = 'rid,cid,sid,recorder,solveCycle,solved,description,pcId,solution';
+        $field = 'rid,cid,sid,recorder,solveCycle,solved,description,pcId,solution,recordDate';
         $where = array('rid'=>$rid);
         $data = $this->records()->select($field, $where);
         //var_dump($data);
@@ -31,18 +31,33 @@ class Record extends Base{
     public function listRecord(){
         $where = array();
         $count = $this->records()->count($where);
+        $field = 'rid,cid,sid,recorder,solveCycle,solved,description,pcId,solution,recordDate';
+        $dataAll = $this->records()->select($field, '');
+        //总记录解决时长
+        $summery = 0.0;
+        foreach ($dataAll as $value){
+            $summery += $value['solveCycle'];
+        }
+        //var_dump($summery);exit();
         $records = $this->records()->selectPage($count);
         //var_dump($records);exit();
         $len = count($records);
+        //分页记录解决时长
+        $sum = 0.0;
         if($len >= 1){
             for($i=0;$i<$len;$i++){
                 $records[$i] = $this->joinRecord($records[$i]);
+                $sum += $records[$i]['solveCycle'];
             }
         }
         //var_dump($records);exit();
         $this->page($records);
         $this->assignClient();
+        $this->assignAdmin();
+        $this->assignCla();
         $this->assign("record", $records);
+        $this->assign('sum', $sum);
+        $this->assign('summery', $summery);
         return $this->fetch("record/index");
     }
 
@@ -82,6 +97,7 @@ class Record extends Base{
         //session('username', 'test');
         //记录人是当前登录用户
         $records['recorder'] = session('username');
+        $records['recordDate'] = date('Y-m-d H:i:s', time());
         unset($records['state']);
         //var_dump($records);exit();
         //信息验证
@@ -177,41 +193,49 @@ class Record extends Base{
         }
         return $this->success("删除成功", "Record/listRecord");
     }
+
+    /**
+     * 查看一条记录
+     */
+    public function view(){
+        //记录详情
+        $rid = input('param.rid');
+        $where = array('rid'=>$rid);
+        $records = $this->records()->findById($where);
+        $records = $this->joinRecord($records);
+        $this->assign('record', $records);
+        return $this->fetch('record/view');
+    }
     /**
      * 搜索记录
      */
     public function search(){
-        //以客户来搜索
-        $client = input("param.client");
-        $records = array();
-        if($client != ""){
-            $where = array('client'=>$client);
-            //从客户表中获取id
-            $findCid = $this->clients()->findById($where);
-
-            if($findCid < 1){
-                return $this->error("没有该客户的记录");
+        //以条件查询
+        $search = input('post.');
+        $recorder = $search['recorder'];
+        $pcId = $search['pcId'];
+        $cid = $search['cid'];
+        $solved = $search['solved'];
+        //不分页下总的解决时长
+        $summery = $this->records()->sumSolveCycle($search);
+        $records = $this->records()->searchCondition($search);
+        $len = count($records);
+        //分页，每一页的解决时长
+        $sum = 0.0;
+        if($len >= 1){
+            for($i=0;$i<$len;$i++){
+                $records[$i] = $this->joinRecord($records[$i]);
+                $sum += $records[$i]['solveCycle'];
             }
-            $whereCid = array('cid'=>$findCid['cid']);
-            $count = $this->records()->count($whereCid);
-            //var_dump($count);exit();
-            $records = $this->records()->pageWhere($count, $whereCid);
-            $len = count($records);
-            if($len >= 1){
-                for($i=0;$i<$len;$i++){
-                    $records[$i] = $this->joinRecord($records[$i]);
-                }
-            }
-        }else{
-            //进行模糊搜索
-            $search = input("post.search");
-            $records = $this->records()->searchLike($search);
         }
         //var_dump($records);exit();
         $this->page($records);
         $this->assignClient();
         $this->assignCla();
+        $this->assignAdmin();
         $this->assign('record', $records);
+        $this->assign('sum', $sum);
+        $this->assign('summery', $summery);
         return $this->fetch('record/index');
     }
 

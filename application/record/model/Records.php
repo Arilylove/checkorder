@@ -81,6 +81,40 @@ class Records{
         $count = Db::table($this->tableName)->where($where)->count();
         return $count;
     }
+    public function searchCondition($search){
+        $recorder = $search['recorder'];
+        $pcId = $search['pcId'];
+        $cid = $search['cid'];
+        $solved = $search['solved'];
+        $num = 10;
+        $count = Db::table($this->tableName)
+            ->where("recorder", 'like', "%$recorder%")->where('pcId', 'like', "%$pcId%")
+            ->where("cid", 'like', "%$cid%")->where('solved', 'like', "%$solved%")
+            ->count();
+        $record = Db::table($this->tableName)
+            ->where("recorder", 'like', "%$recorder%")->where('pcId', 'like', "%$pcId%")
+            ->where("cid", 'like', "%$cid%")->where('solved', 'like', "%$solved%")
+            ->paginate($num, $count);
+        return $record;
+    }
+
+    /**
+     * 按条件总的解决时长
+     */
+    public function sumSolveCycle($search){
+        $recorder = $search['recorder'];
+        $pcId = $search['pcId'];
+        $cid = $search['cid'];
+        $solved = $search['solved'];
+        $data = Db::table($this->tableName)
+            ->where("recorder", 'like', "%$recorder%")->where('pcId', 'like', "%$pcId%")
+            ->where("cid", 'like', "%$cid%")->where('solved', 'like', "%$solved%")->select();
+        $sum = 0.0;
+        foreach ($data as $v){
+            $sum += $v['solveCycle'];
+        }
+        return $sum;
+    }
 
     /**
      * 模糊查询

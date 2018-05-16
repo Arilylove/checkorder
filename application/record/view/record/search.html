@@ -20,19 +20,58 @@
 <form method="post" action="{:url('Record/search')}" style="float: right;">
 
     <div>
-        <div class="form-group col-md-6 col-sm-6 col-xs-12 col-lg-6">
-            <label style="font-size:16px;">客户</label>
-            <select name="client" class="clihid" style="border-radius:5px;">
-                <option value=""></option>
-                {volist name="clients" id="v"}
-                <option value="{$v.client}" class="clihid">{$v.client}</option>
-                {/volist}
-            </select>
+        <div class="col-md-3 col-sm-3 col-xs-12 col-lg-3"></div>
+        <div class="col-md-2 col-sm-2 col-xs-12 col-lg-2">
+            <div>
+                <label style="width:80px;">记录人</label>
+                <select name="recorder" class="bordrad" style="width:172px;">
+                    <option value=""></option>
+                    {volist name="admins" id="v"}
+                    <option value="{$v.username}">{$v.username}</option>
+                    {/volist}
+                </select>
+            </div><br/>
         </div>
-        <div class="form-group col-md-6 col-sm-6 col-xs-12 col-lg-6">
-            <input type="text" name="search"  placeholder="请输入.." autocomplete="off" class="col-md-7 col-sm-7 col-xs-7 col-lg-7  bordrad">
-            <div class="col-md-1 col-sm-1 col-xs-1 col-lg-1"></div>
-            <button type="submit" class="add-btn" class="col-md-4 col-sm-4 col-xs-4 col-lg-4" style="margin-right:0;border-radius:5px;">搜索</button>
+
+        <div class="col-md-2 col-sm-2 col-xs-12 col-lg-2">
+            <div>
+                <label style="width:80px;">客户</label>
+                <select name="cid" class="bordrad" style="width:172px;">
+                    <option value=""></option>
+                    {volist name="clients" id="v"}
+                    <option value="{$v.cid}">{$v.client}</option>
+                    {/volist}
+                </select>
+
+            </div><br/>
+        </div>
+        <div class="col-md-2 col-sm-2 col-xs-12 col-lg-2">
+            <div>
+                <label style="width:80px;">问题分类</label>
+                <select name="pcId" class="bordrad" style="width:172px;">
+                    <option value=""></option>
+                    {volist name="classifies" id="v"}
+                    <option value="{$v.pcId}">{$v.classify}</option>
+                    {/volist}
+                </select>
+            </div><br/>
+
+        </div>
+        <div class="col-md-3 col-sm-3 col-xs-12 col-lg-3">
+            <div class="col-md-7 col-sm-7 col-xs-12 col-lg-7">
+                <label style="width:80px;">是否解决</label>
+                <select name="solved" class="bordrad" style="width:140px;">
+                    <option value=""></option>
+                    <option value="0">已解决</option>
+                    <option value="1">未解决</option>
+                    <option value="2">正在解决</option>
+                </select>
+            </div>
+            <div class="col-md-1 col-sm-1 col-xs-12 col-lg-1"></div><br/>
+            <div class="col-md-4 col-sm-4 col-xs-12 col-lg-4">
+                <button type="submit" class="add-btn" style="border-radius:5px;margin-right:0;">搜索</button>
+            </div>
+
         </div>
 
     </div>

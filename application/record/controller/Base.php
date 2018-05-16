@@ -7,6 +7,7 @@
  */
 namespace app\record\controller;
 
+use app\record\model\Admins;
 use app\record\model\Classifies;
 use app\record\model\Solutions;
 use think\Controller;
@@ -49,6 +50,10 @@ class Base extends Controller{
     protected function classifies(){
         $classify = new Classifies();
         return $classify;
+    }
+    protected function admin(){
+        $admin = new Admins();
+        return $admin;
     }
     /**
      * 分页
@@ -124,6 +129,12 @@ class Base extends Controller{
         $where = '';
         $classify = $this->classifies()->select($field, $where);
         $this->assign("classifies", $classify);
+    }
+    protected function assignAdmin(){
+        $field = 'adId,username,surname';
+        $where = '';
+        $data = $this->admin()->select($field, $where);
+        $this->assign('admins', $data);
     }
 
 
