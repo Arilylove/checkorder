@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- sidebar menu -->
+<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+    <div class="menu_section">
+        <h3>General</h3>
+        <ul class="nav side-menu">
+            {if condition="$status eq 0"}
+            <li><a><i class="fa fa-users"></i> 用户管理 <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                    <li><a href="{:url('Admin/index')}">用户列表</a></li>
+                </ul>
+            </li>
+            {else/}
+            <li><a><i class="fa fa-binoculars"></i> 可配置信息管理 <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                    <li><a href="{:url('State/stLi')}">国家配置</a></li>
+                    <li><a href="{:url('Client/cliLi')}">客户配置</a></li>
+                    <li><a href="{:url('MeterType/index')}">基表型号配置</a></li>
+                    <li><a href="{:url('ModelType/index')}">电子模块类型配置</a></li>
+                    <li><a href="{:url('Manu/index')}">制造商配置</a></li>
+                    <li><a href="{:url('Principle/index')}">生产负责人配置</a></li>
+                </ul>
+            </li>
+            <li><a><i class="fa fa-key"></i> 订单管理 <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                    <li><a href="{:url('Order/index')}">订单列表</a></li>
+                </ul>
+            </li>
+            {/if}
+
+        </ul>
+    </div>
+
+</div>
+<!-- /sidebar menu -->
+</body>
+</html>

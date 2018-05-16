@@ -1,0 +1,21 @@
+            <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="post" action="{:url('User/stLi')}" style="float: right;">
+    <div>
+        <input type="text" name="search_text"  placeholder="请输入.." autocomplete="off" class="col-md-4 col-sm-4 col-xs-4" style="height:38px;">
+        <div class="col-md-4 col-sm-4 col-xs-5">
+            <select name="sel" style="height:38px;">
+                <option value="stId">按国家代码搜索</option>
+                <option value="state">按国家名称搜索</option>
+            </select>
+        </div>
+        <button type="submit" class="add-btn" class="col-md-4 col-sm-4 col-xs-3" style="margin-right: 0">搜索</button>
+    </div>
+</form>
+</body>
+</html>

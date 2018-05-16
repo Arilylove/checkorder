@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- sidebar menu -->
+<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+    <div class="menu_section">
+        <h3>General</h3>
+        <ul class="nav side-menu">
+            {if condition="$status eq 0"}
+            <li><a><i class="fa fa-user"></i> 用户管理 <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                    <li><a href="{:url('Admin/index')}">用户列表</a></li>
+                </ul>
+            </li>
+            {else/}
+            <li><a><i class="fa fa-university"></i> 国家管理 <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                    <li><a href="{:url('User/stLi')}">国家列表</a></li>
+                </ul>
+            </li>
+            <li><a><i class="fa fa-binoculars"></i> 客户管理 <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                    <li><a href="{:url('User/cliLi')}">客户列表</a></li>
+                </ul>
+            </li>
+            <li><a><i class="fa fa-key"></i> 注册码管理 <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                    <li><a href="{:url('User/coLi')}">注册码列表</a></li>
+                    <li><a href="{:url('User/soLi')}">即将失效的注册码</a></li>
+                    <li><a href="{:url('User/exLi')}">已经失效的注册码</a></li>
+                </ul>
+            </li>
+            {/if}
+        </ul>
+    </div>
+
+</div>
+<!-- /sidebar menu -->
+</body>
+</html>

@@ -1,0 +1,42 @@
+            <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="__RECORD__/search.css"/>
+    <style>
+        .clihid{
+            height:38px;
+            width:200px;
+        }
+        @media screen and (max-width:500px){
+            .clihid{
+                height:38px;
+                width:112px;
+            }
+        }
+    </style>
+</head>
+<body>
+<form method="post" action="{:url('Record/search')}" style="float: right;">
+
+    <div>
+        <!--<div class="add-btn col-md-2 col-sm-2 col-xs-2 col-lg-2" style=""><label>客户</label></div>-->
+        <div class="form-group col-md-6 col-sm-6 col-xs-6 col-lg-6">
+            <label style="font-size:16px;">客户</label>
+            <select name="client" class="clihid" style="border-radius:5px;">
+                <option value=""></option>
+                {volist name="clients" id="v"}
+                <option value="{$v.client}" class="clihid">{$v.client}</option>
+                {/volist}
+            </select>
+        </div>
+        <input type="text" name="search"  placeholder="请输入条件.." autocomplete="off" class="col-md-3 col-sm-3 col-xs-3 col-lg-3  bordrad">
+        <div class="col-md-1 col-sm-1 col-xs-1 col-lg-1">
+
+        </div>
+        <button type="submit" class="add-btn" class="col-md-2 col-sm-2 col-xs-2 col-lg-2" style="margin-right:0;border-radius:5px;">搜索</button>
+    </div>
+</form>
+</body>
+</html>

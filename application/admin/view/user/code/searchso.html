@@ -1,0 +1,24 @@
+            <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="post" action="{:url('User/soLi')}" style="float: right;">
+    <div>
+        <input type="text" name="search_text"  placeholder="请输入.." autocomplete="off" class="col-md-4 col-sm-4 col-xs-4" style="height:38px;">
+        <div class="col-md-4 col-sm-4 col-xs-5">
+            <select name="sel" style="height:38px;">
+                <option value="coId">按编号搜索</option>
+                <option value="company">按客户公司搜索</option>
+                <option value="mac">按mac地址搜索</option>
+                <option value="creator">按创建者搜索</option>
+                <option value="expireTime">按创建时间搜索</option>
+            </select>
+        </div>
+        <button type="submit" class="add-btn" class="col-md-4 col-sm-4 col-xs-3" style="margin-right: 0">搜索</button>
+    </div>
+</form>
+</body>
+</html>
