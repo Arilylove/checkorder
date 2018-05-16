@@ -40,6 +40,7 @@ class Login extends Controller{
 
         session('username', $admin['username']);
         session('status', $hasAdmin['status']); //保存用户权限，判断是管理员还是用户。
+        session('surname', $hasAdmin['surname']);
         //var_dump($hasAdmin['status']);exit;
         if ($hasAdmin['status'] == 0){
             return $this->success('登录成功', 'Admin/index');
@@ -62,6 +63,7 @@ class Login extends Controller{
         if (true){
             session('username', null);
             session('surname', null);
+            session('status', null);
             return $this->fetch('login/index');
         }
         return false;
