@@ -10,7 +10,7 @@ namespace app\order\controller;
 class Principle extends Base{
 
     public function index(){
-        $field = 'pid,productPrinciple,dept,position';
+        $field = 'pid,productPrinciple,position';
         $count = $this->principles()->count('');
         $principles = $this->principles()->selectPage($field, '', $count);
         $this->page($principles);
@@ -47,7 +47,7 @@ class Principle extends Base{
      */
     public function principle(){
         $pid = input('param.pid');
-        $field = 'pid,productPrinciple,dept,position';
+        $field = 'pid,productPrinciple,position';
         $where = array('pid'=>$pid);
         $data = $this->principles()->select($field, $where);
         //var_dump($data);
@@ -60,7 +60,7 @@ class Principle extends Base{
      */
     public function ePrinc(){
         $pid = input('param.pid');
-        $field = 'pid,productPrinciple,dept,position';
+        $field = 'pid,productPrinciple,position';
         $where = array('pid'=>$pid);
         $data = $this->principles()->select($field, $where);
         $this->assign('principles', $data['0']);

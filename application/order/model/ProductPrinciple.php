@@ -18,7 +18,6 @@ class ProductPrinciple{
 
     protected $pid;
     protected $productPrinciple;
-    protected $dept;
     protected $position;
 
     public function add($principle, $where){
@@ -57,12 +56,10 @@ class ProductPrinciple{
     public function searchLike($search){
         $count = Db::table($this->tableName)->where('pid', 'like', "%$search%")
             ->whereOr('productPrinciple', 'like', "%$search%")
-            ->whereOr('dept', 'like', "%$search%")
             ->whereOr('position', 'like', "%$search%")
             ->count();
         $principles = Db::table($this->tableName)->where('pid', 'like', "%$search%")
             ->whereOr('productPrinciple', 'like', "%$search%")
-            ->whereOr('dept', 'like', "%$search%")
             ->whereOr('position', 'like', "%$search%")
             ->paginate(10, $count);
         return $principles;
@@ -100,21 +97,6 @@ class ProductPrinciple{
         $this->productPrinciple = $productPrinciple;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDept()
-    {
-        return $this->dept;
-    }
-
-    /**
-     * @param mixed $dept
-     */
-    public function setDept($dept)
-    {
-        $this->dept = $dept;
-    }
 
     /**
      * @return mixed
