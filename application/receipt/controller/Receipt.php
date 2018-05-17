@@ -211,8 +211,8 @@ class Receipt extends Base{
         var_dump($plastic);
         var_dump($software);
         exit();*/
-        $excel = new Excel();
-        return $excel->export($pro, $plastic, $software, $pro['no']);
+        $excel = new Pdfexport();
+        return $excel->exportPdf($pro, $plastic, $software, $pro['no']);
 
     }
 

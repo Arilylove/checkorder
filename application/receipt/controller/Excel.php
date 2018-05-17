@@ -155,7 +155,6 @@ class Excel extends Controller{
         /*var_dump($profomaData);
         var_dump($plasticData);
         var_dump($softwareData);exit();*/
-        //获取年月和考勤天数
         $date = date('Ymd-His', time());
         Vendor('phpexcel.PHPExcel');
         Vendor('phpexcel.PHPExcel.IOFactory');

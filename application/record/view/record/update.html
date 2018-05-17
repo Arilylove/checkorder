@@ -78,7 +78,7 @@
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3" for="first-name">问题描述 <span class="required">*</span>
                                             </label>
                                             <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
-                                                <input type="text" id="first-name" name="description" required="required" class="form-control col-md-7 col-xs-12" value="{$record['description']}">
+                                                <textarea type="text" id="first-name" row="3" name="description" required="required" class="form-control col-md-7 col-xs-12">{$record['description']}</textarea>
                                             </div>
 
                                         </div>
@@ -114,7 +114,7 @@
                                         <div class="form-group">
                                             <label for="solved" class="control-label col-md-3 col-sm-3 col-xs-12">解决方案 <span class="required">*</span></label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <input type="text" id="solution" name="solution" class="form-control col-md-7 col-xs-12" value="{$record['solution']}">
+                                                <textarea type="text" row="3" id="solution" name="solution" class="form-control col-md-7 col-xs-12">{$record['solution']}</textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">
