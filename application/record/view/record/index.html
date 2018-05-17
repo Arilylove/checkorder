@@ -18,6 +18,21 @@
             text-overflow:ellipsis;
             overflow:hidden;
         }
+        table th{
+            white-space: nowrap;
+        }
+        table td{
+            white-space: nowrap;
+        }
+        body,table{
+            font-size:12px;
+        }
+        table{
+            empty-cells:show;
+            border-collapse: collapse;
+            margin:0 auto;
+        }
+
     </style>
 </head>
 
@@ -106,7 +121,7 @@
 
                                             <td class="trHid">{$v.solution}</td>
                                             <td>{$v.recorder}</td>
-                                            <td class="trHid">{$v.recordDate}</td>
+                                            <td>{$v.recordDate}</td>
                                             <td style="text-align: center;">
                                                 <a href="{:url('Record/view',['rid'=>$v['rid']])}" class="glyphicon glyphicon-sunglasses" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
                                                 <a href="{:url('Record/eRe',['rid'=>$v['rid']])}" class="glyphicon glyphicon-edit" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;

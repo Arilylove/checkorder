@@ -19,7 +19,7 @@ class Pdfexport extends Base{
         Vendor('phpexcel.PHPExcel.Reader.Excel5');
         //Vendor('phpexcel.PHPExcel.Writer.Excel2007');
         Vendor('phpexcel.PHPExcel.Writer.PDF');
-        Vendor('phpexcel.PHPExcel.Writer.PDF.DomPDF');
+        Vendor('phpexcel.PHPExcel.Writer.PDF.mPDF');
         $temPath = ROOT_PATH.'public'.DS."model".DS."model.xls";
         //var_dump($temPath);exit();
         //检查文件路径
@@ -117,9 +117,10 @@ class Pdfexport extends Base{
 
         /*DomPDF*/
 
-        $rendererName = \PHPExcel_Settings::PDF_RENDERER_DOMPDF;
+        $rendererName = \PHPExcel_Settings::PDF_RENDERER_MPDF;
         //$rendererLibrary = 'domPDF0.6.0beta3';
-        $rendererLibraryPath = ROOT_PATH.'public'.DS.'img';
+        //$rendererLibraryPath = ROOT_PATH.'public'.DS.'img';
+        $rendererLibraryPath = 'E:\web-linux-20180129\linux\web0111\vendor\phpexcel\PHPExcel\Writer\PDF\mPDF.php';
         //  Here's the magic: you __tell__ PHPExcel what rendering engine to use
         //     and where the library is located in your filesystem
         if (!\PHPExcel_Settings::setPdfRenderer(

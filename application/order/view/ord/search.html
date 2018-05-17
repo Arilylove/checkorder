@@ -47,8 +47,14 @@
 
             </div><br/>
             <div>
-                <label style="width:80px;">模块交付日期</label>
-                <input type="date" name="deliveryTime"  placeholder="请输入.." autocomplete="off" class="bordrad" style="width:172px;">
+                <label style="width:80px;">生产状态</label>
+                <select class="bordrad" name="deliveryStatus" style="width:172px;">
+                    <option value=""></option>
+                    <option value="0">已发货</option>
+                    <option value="1">生产中</option>
+                    <option value="2">已下单</option>
+                    <option value="3">未下单</option>
+                </select>
             </div>
 
         </div>

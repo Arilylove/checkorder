@@ -55,9 +55,9 @@ class Manufacturer{
      */
     public function searchLike($search){
         $count = Db::table($this->tableName)->where('mfId', 'like', "%$search%")
-            ->whereOr('manufacturer', 'like', "%$search%")->whereOr('state', 'like', "%$search%")->count();
+            ->whereOr('manufacturer', 'like', "%$search%")->count();
         $manus = Db::table($this->tableName)->where('mfId', 'like', "%$search%")
-            ->whereOr('manufacturer', 'like', "%$search%")->whereOr('state', 'like', "%$search%")->paginate(10, $count);
+            ->whereOr('manufacturer', 'like', "%$search%")->paginate(10, $count);
         return $manus;
     }
 

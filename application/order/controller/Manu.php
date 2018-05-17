@@ -11,7 +11,7 @@ class Manu extends Base{
 
 
     public function index(){
-        $field = 'mfId,manufacturer,state';
+        $field = 'mfId,manufacturer';
         $count = $this->manus()->count('');
         $manus = $this->manus()->selectPage($field, '', $count);
         $this->page($manus);
@@ -49,7 +49,7 @@ class Manu extends Base{
      */
     public function manu(){
         $mfId = input('param.mfId');
-        $field = 'mfId,manufacturer,state';
+        $field = 'mfId,manufacturer';
         $where = array('mfId'=>$mfId);
         $data = $this->manus()->select($field, $where);
         //var_dump($data);
@@ -62,10 +62,9 @@ class Manu extends Base{
      */
     public function eManu(){
         $mfId = input('param.mfId');
-        $field = 'mfId,manufacturer,state';
         $where = array('mfId'=>$mfId);
-        $data = $this->manus()->select($field, $where);
-        $this->assign('manus', $data['0']);
+        $data = $this->manus()->findById($where);
+        $this->assign('manus', $data);
         $this->assignState();
         return $this->fetch('manu/update');
     }
@@ -75,7 +74,7 @@ class Manu extends Base{
      */
     public function editManu(){
         $mfId = input('param.mfId');
-        $field = 'mfId,manufacturer,state';
+        $field = 'mfId,manufacturer';
         $where = array('mfId'=>$mfId);
         $find = $this->manus()->findById($where);
         if(!$find){

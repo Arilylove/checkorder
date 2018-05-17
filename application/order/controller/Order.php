@@ -60,6 +60,7 @@ class Order extends Base{
         }
         $start = "1".$orders['meterStart'];
         $end = "1".$orders['meterEnd'];
+
         //orders验证
         $this->validateOrder($orders);
 

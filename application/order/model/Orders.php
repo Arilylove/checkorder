@@ -122,7 +122,7 @@ class Orders{
      */
     public function join($search){
         $num = 10;
-        $deliveryTime = $search['deliveryTime'];
+        $deliveryStatus = $search['deliveryStatus'];
         $meterNum = $search['meterNum'];
         $orderNum = $search['orderNum'];
         $modelNum = $search['modelNum'];
@@ -131,53 +131,30 @@ class Orders{
         //var_dump($deliveryTime);exit();
         //1.根据表号查询
         if(empty($meterNum)){
-            //2.根据交付日期查询
-            if(empty($deliveryTime)){
-                $count = Db::table($this->tableName)
-                    ->where('sid', 'like', "%$sid%")->where('cid', 'like', "%$cid%")->where('orderNum', 'like', "%$orderNum%")
-                    ->where('modelNum', 'like', "%$modelNum%")
-                    ->count();
-                $orders = Db::table($this->tableName)
-                    ->where('sid', 'like', "%$sid%")->where('cid', 'like', "%$cid%")->where('orderNum', 'like', "%$orderNum%")
-                    ->where('modelNum', 'like', "%$modelNum%")
-                    ->paginate($num, $count);
-            }else{
-                $count = Db::table($this->tableName)->where(array('deliveryTime'=>$deliveryTime))
-                    ->where('sid', 'like', "%$sid%")->where('cid', 'like', "%$cid%")->where('orderNum', 'like', "%$orderNum%")
-                    ->where('modelNum', 'like', "%$modelNum%")
-                    ->count();
-                $orders = Db::table($this->tableName)->where(array('deliveryTime'=>$deliveryTime))
-                    ->where('sid', 'like', "%$sid%")->where('cid', 'like', "%$cid%")->where('orderNum', 'like', "%$orderNum%")
-                    ->where('modelNum', 'like', "%$modelNum%")
-                    ->paginate($num, $count);
-                $sql = Db::table('orders')->getLastSql();
-                //var_dump($sql);
-                //var_dump($orders);exit();
-            }
+
+            $count = Db::table($this->tableName)->where('deliveryStatus', 'like', "%$deliveryStatus%")
+                ->where('sid', 'like', "%$sid%")->where('cid', 'like', "%$cid%")->where('orderNum', 'like', "%$orderNum%")
+                ->where('modelNum', 'like', "%$modelNum%")
+                ->count();
+            $orders = Db::table($this->tableName)->where('deliveryStatus', 'like', "%$deliveryStatus%")
+                ->where('sid', 'like', "%$sid%")->where('cid', 'like', "%$cid%")->where('orderNum', 'like', "%$orderNum%")
+                ->where('modelNum', 'like', "%$modelNum%")
+                ->paginate($num, $count);
+            $sql = Db::table('orders')->getLastSql();
+            //var_dump($sql);
+            //var_dump($orders);exit();
+
         }else{
-            if(empty($deliveryTime)){
-                $count = Db::table($this->tableName)
-                    ->where('sid', 'like', "%$sid%")->where('cid', 'like', "%$cid%")->where('orderNum', 'like', "%$orderNum%")
-                    ->where('modelNum', 'like', "%$modelNum%")->where('meterStart', '<=', $meterNum)->where("meterEnd", '>=', $meterNum)
-                    ->whereOr('meterStart', 'like', "%$meterNum%")->whereOr('meterEnd', 'like', "%$meterNum%")
-                    ->count();
-                $orders = Db::table($this->tableName)
-                    ->where('sid', 'like', "%$sid%")->where('cid', 'like', "%$cid%")->where('orderNum', 'like', "%$orderNum%")
-                    ->where('modelNum', 'like', "%$modelNum%")->where('meterStart', '<=', $meterNum)->where("meterEnd", '>=', $meterNum)
-                    ->whereOr('meterStart', 'like', "%$meterNum%")->whereOr('meterEnd', 'like', "%$meterNum%")
-                    ->paginate($num, $count);
-            }else{
-                $count = Db::table($this->tableName)->where(array('deliveryTime'=>$deliveryTime))
-                    ->where('sid', 'like', "%$sid%")->where('cid', 'like', "%$cid%")->where('orderNum', 'like', "%$orderNum%")
-                    ->where('modelNum', 'like', "%$modelNum%")->where('meterStart', '<=', $meterNum)->where("meterEnd", '>=', $meterNum)
-                    ->whereOr('meterStart', 'like', "%$meterNum%")->whereOr('meterEnd', 'like', "%$meterNum%")
-                    ->count();
-                $orders = Db::table($this->tableName)->where(array('deliveryTime'=>$deliveryTime))
-                    ->where('sid', 'like', "%$sid%")->where('cid', 'like', "%$cid%")->where('orderNum', 'like', "%$orderNum%")
-                    ->where('modelNum', 'like', "%$modelNum%")->where('meterStart', '<=', $meterNum)->where("meterEnd", '>=', $meterNum)
-                    ->whereOr('meterStart', 'like', "%$meterNum%")->whereOr('meterEnd', 'like', "%$meterNum%")
-                    ->paginate($num, $count);
-            }
+            $count = Db::table($this->tableName)->where('deliveryStatus', 'like', "%$deliveryStatus%")
+                ->where('sid', 'like', "%$sid%")->where('cid', 'like', "%$cid%")->where('orderNum', 'like', "%$orderNum%")
+                ->where('modelNum', 'like', "%$modelNum%")->where('meterStart', '<=', $meterNum)->where("meterEnd", '>=', $meterNum)
+                ->whereOr('meterStart', 'like', "%$meterNum%")->whereOr('meterEnd', 'like', "%$meterNum%")
+                ->count();
+            $orders = Db::table($this->tableName)->where('deliveryStatus', 'like', "%$deliveryStatus%")
+                ->where('sid', 'like', "%$sid%")->where('cid', 'like', "%$cid%")->where('orderNum', 'like', "%$orderNum%")
+                ->where('modelNum', 'like', "%$modelNum%")->where('meterStart', '<=', $meterNum)->where("meterEnd", '>=', $meterNum)
+                ->whereOr('meterStart', 'like', "%$meterNum%")->whereOr('meterEnd', 'like', "%$meterNum%")
+                ->paginate($num, $count);
 
         }
 

@@ -8,15 +8,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>订单管理</title>
     <style>
-        .table-fixed{
-            table-layout:fixed;
+        table th{
+            white-space: nowrap;
         }
-        /*固定长度，溢出隐藏*/
-        .trHid{
-            width:180px;
-            white-space:nowrap;
-            text-overflow:ellipsis;
-            overflow:hidden;
+        table td{
+            white-space: nowrap;
+        }
+        body,table{
+            font-size:12px;
+        }
+        table{
+            empty-cells:show;
+            border-collapse: collapse;
+            margin:0 auto;
         }
     </style>
 </head>
@@ -70,17 +74,16 @@
                             <div class="x_content">
 
                                 <div class="table-responsive">
-                                    <table class="table table-striped jambo_table bulk_action table-fixed">
+                                    <table class="table table-striped jambo_table bulk_action">
                                         <thead>
                                         <tr class="headings">
-
                                             <th>客户</th>
 
                                             <th>基表型号</th>
+                                            <th>订单数量</th>
                                             <th>电子模块类型</th>
 
                                             <th>模块订单号</th>
-                                            <th>模块交付日期</th>
                                             <th>模块订单周期(天)</th>
                                             <th>基表组装周期(天)</th>
 
@@ -88,7 +91,7 @@
                                             <th>表号</th>
                                             <th>制造商</th>
                                             <th>生产负责人</th>
-                                            <th>发货状态</th>
+                                            <th>生产状态</th>
                                             <th class="column-title no-link last" style="text-align: center;"><span class="nobr">操作</span>
                                             </th>
 
@@ -98,34 +101,33 @@
                                         <tbody>
                                         {volist name="orders" id="v"}
                                         <tr class="even pointer">
+                                            <td>{$v.client}</td>
 
-                                            <td style="width:6%;">{$v.client}</td>
+                                            <td>{$v.meterType}</td>
+                                            <td>{$v.orderQty}</td>
+                                            <td>{$v.modelType}</td>
 
-                                            <td class="trHid">{$v.meterType}</td>
-                                            <td class="trHid">{$v.modelType}</td>
+                                            <td>{$v.modelNum}</td>
+                                            <td>{$v.orderCycle}</td>
+                                            <td>{$v.assemCycle}</td>
 
-                                            <td class="trHid">{$v.modelNum}</td>
-                                            <td style="width:6%;">{$v.deliveryTime}</td>
-                                            <td style="width:6%;">{$v.orderCycle}</td>
-                                            <td style="width:6%;">{$v.assemCycle}</td>
-
-                                            <td style="width:5%;">{$v.orderNum}</td>
-                                            <td class="trHid">{$v.meterStart}~{$v.meterEnd}</td>
-                                            <td style="width:8%;">{$v.manufacturer}</td>
-                                            <td style="width:8%;">{$v.productPrinciple}</td>
+                                            <td>{$v.orderNum}</td>
+                                            <td>{$v.meterStart}~{$v.meterEnd}</td>
+                                            <td>{$v.manufacturer}</td>
+                                            <td>{$v.productPrinciple}</td>
                                             {if condition="$v['deliveryStatus'] eq 0"}
-                                            <td style="width:6%;">已发货</td>
+                                            <td>已发货</td>
                                             {elseif condition="$v['deliveryStatus'] eq 1"}
-                                            <td style="width:6%;">待发货</td>
+                                            <td>生产中</td>
                                             {elseif condition="$v['deliveryStatus'] eq 2"}
-                                            <td style="width:6%;">生产中</td>
+                                            <td>已下单</td>
                                             {elseif condition="$v['deliveryStatus'] eq 3"}
-                                            <td style="width:6%;">物料准备</td>
+                                            <td>未下单</td>
                                             {else/}
                                             <td>组装中</td>
                                             {/if}
 
-                                            <td style="text-align: center;width:9%;">
+                                            <td>
                                                 <a href="{:url('Order/view',['oid'=>$v['oid']])}" class="glyphicon glyphicon-sunglasses" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
                                                 <a href="{:url('Order/eOrd',['oid'=>$v['oid']])}" class="glyphicon glyphicon-edit" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
                                                 <a href="javascript:void (0);" class="glyphicon glyphicon-remove class-del" onclick=confirmDel("{$v['oid']}") style="color: red;font-size: 18px;"></a>

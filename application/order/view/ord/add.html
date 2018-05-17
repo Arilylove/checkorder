@@ -87,6 +87,13 @@
                         </div>
                       </div>
                       <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">订单数量 <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" name="orderQty" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                      <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelType">电子模块类型 <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
@@ -103,13 +110,6 @@
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <input type="text" id="modelNum" name="modelNum" required="required" class="form-control col-md-7 col-xs-12">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="deliveryTime">模块交付日期 <span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="date" id="deliveryTime" name="deliveryTime" required="required" class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>
                       <div class="form-group">
@@ -148,17 +148,17 @@
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="assemStart">基表组装开始时间 <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="assemStart">基表组装开始时间
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="date" id="assemStart" name="assemStart" required="required" class="form-control col-md-7 col-xs-12">
+                          <input type="date" id="assemStart" name="assemStart" class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="assemEnd">基表组装完成时间 <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="assemEnd">基表组装完成时间
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="date" id="assemEnd" name="assemEnd" required="required" class="form-control col-md-7 col-xs-12">
+                          <input type="date" id="assemEnd" name="assemEnd" class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>
 
@@ -185,15 +185,14 @@
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="deliveryStatus">发货状态 <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="deliveryStatus">生产状态 <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <select id="deliveryStatus" class="form-control col-md-7 col-xs-12" name="deliveryStatus" required="required">
                             <option value="0">已发货</option>
-                            <option value="1">待发货</option>
-                            <option value="2">生产中</option>
-                            <option value="3">物料准备中</option>
-                            <option value="4">组装中</option>
+                            <option value="1">生产中</option>
+                            <option value="2">已下单</option>
+                            <option value="3">未下单</option>
                           </select>
                         </div>
                       </div>
