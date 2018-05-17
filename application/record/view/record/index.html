@@ -8,16 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>记录管理</title>
     <style>
-        .table-fixed{
-            table-layout:fixed;
-        }
-        /*固定长度，溢出隐藏*/
-        .trHid{
-            width:180px;
-            white-space:nowrap;
-            text-overflow:ellipsis;
-            overflow:hidden;
-        }
         table th{
             white-space: nowrap;
         }
@@ -85,7 +75,7 @@
                             <div class="x_content">
 
                                 <div class="table-responsive">
-                                    <table class="table table-striped jambo_table bulk_action table-fixed">
+                                    <table class="table table-striped jambo_table bulk_action">
                                         <thead>
                                         <tr class="headings">
                                             <th>解决时长(小时)</th>
@@ -108,9 +98,9 @@
                                         <tr class="even pointer">
                                             <td>{$v.solveCycle}</td>
                                             <td>{$v.state}</td>
-                                            <td class="trHid">{$v.client}</td>
+                                            <td>{$v.client}</td>
                                             <td>{$v.classify}</td>
-                                            <td class="trHid">{$v.description}</td>
+                                            <td>{$v.description|substr=0,36}...</td>
                                             {if condition="$v.solved eq 0"}
                                             <td>已解决</td>
                                             {elseif condition="$v.solved eq 1"}
@@ -119,7 +109,7 @@
                                             <td>正在解决</td>
                                             {/if}
 
-                                            <td class="trHid">{$v.solution}</td>
+                                            <td>{$v.solution|substr=0,36}...</td>
                                             <td>{$v.recorder}</td>
                                             <td>{$v.recordDate}</td>
                                             <td style="text-align: center;">
