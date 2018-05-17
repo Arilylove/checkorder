@@ -14,17 +14,35 @@
                 height:38px;
             }
         }
+
+        @media screen and (min-width:1448px){
+            .sear-width{
+                width:172px;
+            }
+            .sear{
+                width:120px;
+            }
+        }
+        @media screen and (max-width:1448px){
+            .sear-width{
+                width:100px;
+            }
+            .sear{
+                width:88px;
+            }
+        }
+
     </style>
 </head>
 <body>
 <form method="post" action="{:url('Record/search')}" style="float: right;">
 
     <div>
-        <div class="col-md-3 col-sm-3 col-xs-12 col-lg-3"></div>
-        <div class="col-md-2 col-sm-2 col-xs-12 col-lg-2">
+        <div class="col-md-3 col-sm-12 col-xs-12 col-lg-3"></div>
+        <div class="col-md-2 col-sm-12 col-xs-12 col-lg-2">
             <div>
                 <label style="width:80px;">记录人</label>
-                <select name="recorder" class="bordrad" style="width:172px;">
+                <select name="recorder" class="bordrad sear-width">
                     <option value=""></option>
                     {volist name="admins" id="v"}
                     <option value="{$v.username}">{$v.username}</option>
@@ -33,10 +51,10 @@
             </div><br/>
         </div>
 
-        <div class="col-md-2 col-sm-2 col-xs-12 col-lg-2">
+        <div class="col-md-2 col-sm-12 col-xs-12 col-lg-2">
             <div>
                 <label style="width:80px;">客户</label>
-                <select name="cid" class="bordrad" style="width:172px;">
+                <select name="cid" class="bordrad sear-width">
                     <option value=""></option>
                     {volist name="clients" id="v"}
                     <option value="{$v.cid}">{$v.client}</option>
@@ -45,10 +63,10 @@
 
             </div><br/>
         </div>
-        <div class="col-md-2 col-sm-2 col-xs-12 col-lg-2">
+        <div class="col-md-2 col-sm-12 col-xs-12 col-lg-2">
             <div>
                 <label style="width:80px;">问题分类</label>
-                <select name="pcId" class="bordrad" style="width:172px;">
+                <select name="pcId" class="bordrad sear-width">
                     <option value=""></option>
                     {volist name="classifies" id="v"}
                     <option value="{$v.pcId}">{$v.classify}</option>
@@ -57,10 +75,10 @@
             </div><br/>
 
         </div>
-        <div class="col-md-3 col-sm-3 col-xs-12 col-lg-3">
+        <div class="col-md-3 col-sm-12 col-xs-12 col-lg-3">
             <div class="col-md-7 col-sm-7 col-xs-12 col-lg-7">
                 <label style="width:80px;">是否解决</label>
-                <select name="solved" class="bordrad" style="width:140px;">
+                <select name="solved" class="bordrad sear">
                     <option value=""></option>
                     <option value="0">已解决</option>
                     <option value="1">未解决</option>

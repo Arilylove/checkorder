@@ -219,6 +219,7 @@ class Record extends Base{
         //不分页下总的解决时长
         $summery = $this->records()->sumSolveCycle($search);
         $records = $this->records()->searchCondition($search);
+        //var_dump($search);exit();
         $len = count($records);
         //分页，每一页的解决时长
         $sum = 0.0;
