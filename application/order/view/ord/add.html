@@ -94,10 +94,10 @@
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelType">电子模块类型 <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelType">电子模块类型
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <select id="modelType" class="form-control col-md-7 col-xs-12" name="modelId" required="required">
+                          <select id="modelType" class="form-control col-md-7 col-xs-12" name="modelId">
                             {volist name="modelType" id="v"}
                             <option value="{$v.modelId}">{$v.modelType}</option>
                             {/volist}
@@ -106,45 +106,45 @@
                       </div>
 
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelNum">模块订单号 <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelNum">模块订单号
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="modelNum" name="modelNum" required="required" class="form-control col-md-7 col-xs-12">
+                          <input type="text" id="modelNum" name="modelNum" class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelStart">模块下单开始时间 <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelStart">模块下单开始时间
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="date" id="modelStart" name="modelStart" required="required" class="form-control col-md-7 col-xs-12">
+                          <input type="date" id="modelStart" name="modelStart" class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelEnd">模块下单结束时间 <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelEnd">模块下单结束时间
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="date" id="modelEnd" name="modelEnd" required="required" class="form-control col-md-7 col-xs-12">
+                          <input type="date" id="modelEnd" name="modelEnd" class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="orderNum">基表订单号 <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="orderNum">基表订单号
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="orderNum" name="orderNum" required="required" class="form-control col-md-7 col-xs-12">
+                          <input type="text" id="orderNum" name="orderNum" class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="meterStart">开始表号 <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="meterStart">开始表号
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="meterStart" name="meterStart" required="required" class="form-control col-md-7 col-xs-12">
+                          <input type="text" id="meterStart" name="meterStart" class="form-control col-md-7 col-xs-12"/>
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="meterEnd">结束表号 <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="meterEnd">结束表号
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="meterEnd" name="meterEnd" required="required" class="form-control col-md-7 col-xs-12">
+                          <input type="text" id="meterEnd" name="meterEnd" class="form-control col-md-7 col-xs-12"/>
                         </div>
                       </div>
                       <div class="form-group">
@@ -194,6 +194,13 @@
                             <option value="2">已下单</option>
                             <option value="3">未下单</option>
                           </select>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">备注
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <textarea type="text" rows="2" name="comments" class="form-control col-md-7 col-xs-12"></textarea>
                         </div>
                       </div>
 

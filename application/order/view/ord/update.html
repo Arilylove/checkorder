@@ -97,10 +97,10 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelType">电子模块类型 <span class="required">*</span>
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelType">电子模块类型
                                             </label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <select id="modelType" class="form-control col-md-7 col-xs-12" name="modelId" required="required">
+                                                <select id="modelType" class="form-control col-md-7 col-xs-12" name="modelId">
                                                     <option value="{$order['modelId']}">{$order['modelType']}</option>
                                                     {volist name="modelType" id="v"}
                                                     <option value="{$v.modelId}">{$v.modelType}</option>
@@ -110,46 +110,46 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelNum">模块订单号 <span class="required">*</span>
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelNum">模块订单号
                                             </label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <input type="text" id="modelNum" name="modelNum" value="{$order['modelNum']}" required="required" class="form-control col-md-7 col-xs-12">
+                                                <input type="text" id="modelNum" name="modelNum" value="{$order['modelNum']}" class="form-control col-md-7 col-xs-12">
                                             </div>
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelStart">模块下单开始时间 <span class="required">*</span>
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelStart">模块下单开始时间
                                             </label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <input type="date" id="modelStart" name="modelStart" value="{$order['modelStart']}" required="required" class="form-control col-md-7 col-xs-12">
+                                                <input type="date" id="modelStart" name="modelStart" value="{$order['modelStart']}" class="form-control col-md-7 col-xs-12">
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelEnd">模块下单结束时间 <span class="required">*</span>
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelEnd">模块下单结束时间
                                             </label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <input type="date" id="modelEnd" name="modelEnd" value="{$order['modelEnd']}" required="required" class="form-control col-md-7 col-xs-12">
+                                                <input type="date" id="modelEnd" name="modelEnd" value="{$order['modelEnd']}" class="form-control col-md-7 col-xs-12">
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="orderNum">基表订单号 <span class="required">*</span>
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="orderNum">基表订单号
                                             </label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <input type="text" id="orderNum" name="orderNum" value="{$order['orderNum']}" required="required" class="form-control col-md-7 col-xs-12">
+                                                <input type="text" id="orderNum" name="orderNum" value="{$order['orderNum']}" class="form-control col-md-7 col-xs-12">
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="meterStart">开始表号 <span class="required">*</span>
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="meterStart">开始表号
                                             </label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <input type="text" id="meterStart" name="meterStart" value="{$order['meterStart']}" required="required" class="form-control col-md-7 col-xs-12">
+                                                <input type="text" id="meterStart" name="meterStart" value="{$order['meterStart']}" class="form-control col-md-7 col-xs-12">
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="meterEnd">结束表号 <span class="required">*</span>
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="meterEnd">结束表号
                                             </label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <input type="text" id="meterEnd" name="meterEnd" value="{$order['meterEnd']}" required="required" class="form-control col-md-7 col-xs-12">
+                                                <input type="text" id="meterEnd" name="meterEnd" value="{$order['meterEnd']}" class="form-control col-md-7 col-xs-12">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -218,6 +218,13 @@
                                                     <option value="0">已发货</option>
                                                     {/if}
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">备注
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <textarea type="text" rows="2" name="comments" class="form-control col-md-7 col-xs-12">{$order['comments']}</textarea>
                                             </div>
                                         </div>
 

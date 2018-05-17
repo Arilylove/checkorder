@@ -210,7 +210,7 @@ class Base extends Controller{
     /**
      * 验证表号
      */
-    public function verifyNum($startNum, $endNum){
+    protected function verifyNum($startNum, $endNum){
         //1.长度10,,11,12,13;2.长度相等；3.前四位相同;4.都是数字；5.如果是13位，只保留前面12位。
         $startLen = strlen($startNum);
         $endLen = strlen($endNum);

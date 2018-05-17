@@ -92,6 +92,7 @@
                                             <th>制造商</th>
                                             <th>生产负责人</th>
                                             <th>生产状态</th>
+                                            <th>备注说明</th>
                                             <th class="column-title no-link last" style="text-align: center;"><span class="nobr">操作</span>
                                             </th>
 
@@ -126,6 +127,7 @@
                                             {else/}
                                             <td>组装中</td>
                                             {/if}
+                                            <td>{$v.comments}</td>
 
                                             <td>
                                                 <a href="{:url('Order/view',['oid'=>$v['oid']])}" class="glyphicon glyphicon-sunglasses" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
@@ -137,7 +139,7 @@
                                         </tbody>
                                     </table>
                                     <div style="float: right;">
-
+                                        {$page}
                                     </div>
                                 </div>
 

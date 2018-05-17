@@ -50,20 +50,27 @@ class Order extends Base{
      */
     public function addOrd(){
         $orders = input("post.");
-
+        //基本验证
+        $validate = $this->validate($orders, 'Orders');
+        //var_dump($validate);exit();
+        if(true !== $validate){
+            return $this->error(" $validate ");
+        }
         $startLen = strlen($orders['meterStart']);
         $endLen = strlen($orders['meterEnd']);
+       /* var_dump($startLen);
+        var_dump($endLen);exit();*/
+        //表号验证,允许为空
+        $this->verifyMeterNum($orders, $startLen, $endLen);
         //5.如果是13位，只保留前面12位。
-        if(($startLen == 13) && ($endLen == 13)){
+        if($startLen == 13){
             $orders['meterStart'] = substr($orders['meterStart'], 0, ($startLen-1));
+        }
+        if($endLen == 13){
             $orders['meterEnd'] = substr($orders['meterEnd'], 0, ($endLen-1));
         }
         $start = "1".$orders['meterStart'];
         $end = "1".$orders['meterEnd'];
-
-        //orders验证
-        $this->validateOrder($orders);
-
         //计算周期
         if(!intval($orders['deliveryStatus'])){
             $orders['orderCycle'] = $this->countDate($orders['modelStart'], $orders['modelEnd']);
@@ -82,9 +89,6 @@ class Order extends Base{
             return $this->error("添加订单失败");
         }
 
-        $oid = $this->getOid($orders['orderNum']);
-        //添加表号
-        $this->meterListAdd($start, $end, $oid);
         return $this->success('添加成功', 'Order/index');
 
     }
@@ -123,25 +127,24 @@ class Order extends Base{
         }
         $startLen = strlen($orders['meterStart']);
         $endLen = strlen($orders['meterEnd']);
+
+        //基本验证
+        $validate = $this->validate($orders, 'Orders');
+        //var_dump($validate);exit();
+        if(true !== $validate){
+            return $this->error(" $validate ");
+        }
+        //表号验证,允许为空
+        $this->verifyMeterNum($orders, $startLen, $endLen);
         //5.如果是13位，只保留前面12位。
-        if(($startLen == 13) && ($endLen == 13)){
+        if($startLen == 13){
             $orders['meterStart'] = substr($orders['meterStart'], 0, ($startLen-1));
+        }
+        if($endLen == 13){
             $orders['meterEnd'] = substr($orders['meterEnd'], 0, ($endLen-1));
         }
         $start = "1".$orders['meterStart'];
         $end = "1".$orders['meterEnd'];
-        //查看表号是否没变,如果有一个变了，去判断是否重复
-        if(($find['meterStart'] != $orders['meterStart']) || ($find['meterEnd'] != $orders['meterEnd'])){
-            //看是否有重复表号，如果有，直接报错
-            $meterNum = $this->meterNumList($start, $end);
-            $isExist = $this->isExist($meterNum, $oid);
-            if($isExist){
-                return $this->error("该表号已被使用");
-            }
-        }
-
-        //orders验证
-        $this->validateOrder($orders);
 
         //计算周期
         if(!intval($orders['deliveryStatus'])){
@@ -155,15 +158,10 @@ class Order extends Base{
             $orders['assemCycle'] = 0;
         }
         //var_dump($orders);exit();
-        //获取之前的表号
-        $mid = $this->getMeterNumBeforeEdit($oid);
         $edit = $this->orders()->update($orders, $where);
         if($edit < 1){
             return $this->error("修改订单失败");
         }
-        //添加表号
-        $this->meterListAdd($start, $end, $orders['oid']);
-        $this->delMeter($mid);
         return $this->success('修改成功', 'Order/index');
 
     }
@@ -235,6 +233,29 @@ class Order extends Base{
     }
 
     /**
+     * 表号验证，允许都为空，也可以结束表号单为空
+     * @param $orders
+     * @param $startLen
+     * @param $endLen
+     */
+    public function verifyMeterNum($orders, $startLen, $endLen){
+        //表号验证,允许为空
+        ////1.长度10,,11,12,13;2.长度相等；3.前四位相同;4.都是数字；5.如果是13位，只保留前面12位。
+        if($startLen > 0){
+            if(($startLen < 10) || ($startLen > 13)){
+                return $this->error("表号长度只能是10,11,12,13位");
+            }
+            //结束表号是否为空
+            if($endLen > 0){
+                $this->verifyNum($orders['meterStart'], $orders['meterEnd']);
+            }
+
+        }else if($endLen > 0){
+            return $this->error("不允许只有结束表号");
+        }
+    }
+
+    /**
      * //修改订单之后删除之前添加的表号
      */
     private function delMeter($num){
@@ -252,30 +273,6 @@ class Order extends Base{
         }
     }
 
-    /**
-     * order验证
-     * @param $orders
-     */
-    private function validateOrder($orders){
-        //开始表号和结束表号的判断
-        //1.长度10,,11,12,13;2.长度相等；3.前四位相同;4.都是数字；5.如果是13位，只保留前面12位。
-        /*//判断结束先保存到meter表
-        $meter['meterStart'] = $orders['meterStart'];
-        $meter['meterEnd'] = $orders['meterEnd'];
-        $validate = $this->validate($meter, 'Meters');
-        //var_dump($validate);exit();
-        if(true !== $validate){
-            return $this->error(" $validate ");
-        }*/
-        $this->verifyNum($orders['meterStart'], $orders['meterEnd']);
-        //$orders['mid'] = '';
-        $validate = $this->validate($orders, 'Orders');
-        //var_dump($validate);exit();
-        if(true !== $validate){
-            return $this->error(" $validate ");
-        }
-
-    }
 
 
     /**
@@ -327,12 +324,22 @@ class Order extends Base{
         $where = array('oid'=>$oid);
         //$field = "oid,numStartToEnd";
         $order = $this->orders()->findById($where);
-        $start = "1".$order['meterStart'];
-        $end = "1".$order['meterEnd'];
-        $num = $this->meterNumList($start, $end);
-        foreach ($num as $ke=>$value){
-            $meter = $this->meters()->findById(array('meterNum'=>$value));
-            $mid[$ke] = $meter['mid'];
+        $mid = array();
+        if($order['meterStart'] != ''){
+            //结束表号也存在
+            if($order['meterEnd'] != ''){
+                $start = "1".$order['meterStart'];
+                $end = "1".$order['meterEnd'];
+                $num = $this->meterNumList($start, $end);
+                foreach ($num as $ke=>$value){
+                    $meter = $this->meters()->findById(array('meterNum'=>$value, 'oid'=>$oid));
+                    $mid[$ke] = $meter['mid'];
+                }
+            }else{   //只有开始表号
+                $findOne = $this->meters()->findById(array('meterNum'=>$order['meterStart'], 'oid'=>$oid));
+                $mid = array($findOne['mid']);
+
+            }
         }
         return $mid;
     }
