@@ -80,14 +80,8 @@
                                             <th>订单数量</th>
                                             <th>电子模块类型</th>
 
-                                            <th>模块订单号</th>
-                                            <th>模块订单周期(天)</th>
-                                            <th>基表组装周期(天)</th>
-
-                                            <th>基表订单号</th>
                                             <th>表号</th>
                                             <th>制造商</th>
-                                            <th>生产负责人</th>
                                             <th>生产状态</th>
                                             <th>备注说明</th>
                                             <th class="column-title no-link last" style="text-align: center;"><span class="nobr">操作</span>
@@ -105,14 +99,8 @@
                                             <td>{$v.orderQty}</td>
                                             <td>{$v.modelType}</td>
 
-                                            <td>{$v.modelNum}</td>
-                                            <td>{$v.orderCycle}</td>
-                                            <td>{$v.assemCycle}</td>
-
-                                            <td>{$v.orderNum}</td>
                                             <td>{$v.meterStart}~{$v.meterEnd}</td>
                                             <td>{$v.manufacturer}</td>
-                                            <td>{$v.productPrinciple}</td>
                                             {if condition="$v['deliveryStatus'] eq 0"}
                                             <td>已发货</td>
                                             {elseif condition="$v['deliveryStatus'] eq 1"}

@@ -8,7 +8,7 @@
 <body>
 <form method="post" action="{:url('MeterOrder/search')}">
     <div>
-        <div class="col-md-1 col-sm-1 col-xs-1 col-lg-1"></div>
+        <div class="col-md-4 col-sm-4 col-xs-12 col-lg-4"></div>
         <div class="col-md-3 col-sm-3 col-xs-12 col-lg-3">
             <div>
                 <label style="width:80px;">表号&nbsp;&nbsp;</label>
@@ -27,16 +27,6 @@
 
         <div class="col-md-3 col-sm-3 col-xs-12 col-lg-3">
             <div>
-                <label style="width:80px;">基表订单号&nbsp;&nbsp;</label>
-                <input type="text" name="orderNum" placeholder="基表订单号.." autocomplete="off" class="bordrad">
-            </div><br/>
-            <div>
-                <label style="width:80px;">模块订单号&nbsp;&nbsp;</label>
-                <input type="text" name="modelNum" placeholder="模块订单号.." autocomplete="off" class="bordrad">
-            </div><br/>
-        </div>
-        <div class="col-md-3 col-sm-3 col-xs-12 col-lg-3">
-            <div>
                 <label style="width:80px;">客户&nbsp;&nbsp;</label>
                 <select name="cid" class="bordrad" style="width:172px;">
                     <option value=""></option>
@@ -52,8 +42,7 @@
                     <option value=""></option>
                     <option value="0">已发货</option>
                     <option value="1">生产中</option>
-                    <option value="2">已下单</option>
-                    <option value="3">未下单</option>
+                    <option value="2">未下单</option>
                 </select>
             </div>
 

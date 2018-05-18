@@ -274,17 +274,19 @@ class Order extends Base{
      */
     public function search(){
         $search = input('post.');
-        //var_dump($search);exit();
-        $orders = $this->orders()->join($search, '');
+        $deliveryStatus = input('param.deliveryStatus');
+        $meterNum = input('param.meterNum');
+        $orderNum = input('param.orderNum');
+        $modelNum = input('param.modelNum');
+        $sid = input('param.sid');
+        $cid = input('param.cid');
+        $orders = $this->orders()->join($meterNum, $deliveryStatus, $sid, $cid, $orderNum, $modelNum, '');
         //var_dump($orders);exit();
         $len = count($orders);
         //存在搜索的结果
         if($len >= 1){
             $orders = $this->getJoinId($orders);
         }
-        //$sql = Db::table('orders')->getLastSql();
-        //var_dump($sql);
-        //var_dump($orders);exit();
         $this->assignState();
         $this->assignClient();
         $this->page($orders);

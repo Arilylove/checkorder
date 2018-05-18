@@ -121,6 +121,7 @@ class Admin extends Base{
         $ad = $this->admin();
         $time = $_SERVER['REQUEST_TIME'];         //客户端向服务端发送请求的时间
         $admin = input('post.');
+        $admin['password'] = $this->hex()->encrypt($admin['password']);   //密码用AES加密；
         $admin['updateTime'] = date('Y-m-d H:i:s', $time);
         //var_dump($admin);exit();
         $where = array('username'=>$admin['username']);

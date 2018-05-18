@@ -45,19 +45,20 @@ class MeterOrder extends Base{
      */
     public function search(){
         $search = input('post.');
+        $deliveryStatus = input('param.deliveryStatus');
+        $meterNum = input('param.meterNum');
+        $sid = input('param.sid');
+        $cid = input('param.cid');
         //var_dump($search);exit();
         $pid = $this->getPid();
         $where = array('pid'=>$pid);
-        $orders = $this->orders()->join($search, $where);
+        $orders = $this->orders()->newJoin($meterNum, $deliveryStatus, $sid, $cid, $where);
         //var_dump($orders);exit();
         $len = count($orders);
         //存在搜索的结果
         if($len >= 1){
             $orders = $this->getJoinId($orders);
         }
-        //$sql = Db::table('orders')->getLastSql();
-        //var_dump($sql);
-        //var_dump($orders);exit();
         $this->assignState();
         $this->assignClient();
         $this->page($orders);

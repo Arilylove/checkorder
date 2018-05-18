@@ -106,13 +106,6 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelNum">模块订单号
-                                            </label>
-                                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <input type="text" id="modelNum" name="modelNum" value="{$order['modelNum']}" readonly class="form-control col-md-7 col-xs-12">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelStart">模块下单开始时间
                                             </label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
@@ -126,20 +119,7 @@
                                                 <input type="date" id="modelEnd" name="modelEnd" value="{$order['modelEnd']}" readonly class="form-control col-md-7 col-xs-12">
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="orderNum">基表订单号
-                                            </label>
-                                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <input type="text" id="orderNum" name="orderNum" value="{$order['orderNum']}" readonly class="form-control col-md-7 col-xs-12">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="orderCycle">模块订单周期
-                                            </label>
-                                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <input type="text" id="orderCycle" name="orderCycle" value="{$order['orderCycle']}&nbsp;天" readonly class="form-control col-md-7 col-xs-12">
-                                            </div>
-                                        </div>
+
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="meterStart">开始表号
                                             </label>
@@ -168,13 +148,6 @@
                                                 <input type="date" id="assemEnd" name="assemEnd" value="{$order['assemEnd']}" readonly class="form-control col-md-7 col-xs-12">
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="assemCycle">基表组装周期
-                                            </label>
-                                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <input type="text" id="assemCycle" name="assemCycle" value="{$order['assemCycle']}&nbsp;天" readonly class="form-control col-md-7 col-xs-12">
-                                            </div>
-                                        </div>
 
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="manufacturer">制造商
@@ -186,16 +159,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="productPrinciple">生产负责人
-                                            </label>
-                                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <select id="productPrinciple" class="form-control col-md-7 col-xs-12" name="productPrinciple" readonly>
-                                                    <option value="{$order['productPrinciple']}">{$order['productPrinciple']}</option>
 
-                                                </select>
-                                            </div>
-                                        </div>
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="deliveryStatus">生产状态
                                             </label>
