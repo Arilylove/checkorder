@@ -275,7 +275,7 @@ class Order extends Base{
     public function search(){
         $search = input('post.');
         //var_dump($search);exit();
-        $orders = $this->orders()->join($search);
+        $orders = $this->orders()->join($search, '');
         //var_dump($orders);exit();
         $len = count($orders);
         //存在搜索的结果
@@ -294,13 +294,116 @@ class Order extends Base{
 
     }
 
+    public function exportExcel(){
+        Vendor('phpexcel.PHPExcel');
+        Vendor('phpexcel.PHPExcel.IOFactory');
+        Vendor('phpexcel.PHPExcel.Reader.Excel5');
+        Vendor('phpexcel.PHPExcel.Writer.Excel2007');
+
+        $phpexcel = new \PHPExcel();
+        $phpexcel->getActiveSheet()->setTitle("订单表");
+        //var_dump($phpCreate);exit();
+        // 设置单元格高度
+        // 所有单元格默认高度
+        $phpexcel->getActiveSheet()->getDefaultRowDimension()->setRowHeight(25);
+        // 第一行的默认高度
+        $phpexcel->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
+        // 垂直居中
+        $phpexcel->getActiveSheet()->getDefaultStyle()->getAlignment()->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);
+        // 设置水平居中
+        $phpexcel->getActiveSheet()->getDefaultStyle()->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        //Excel表格式
+        $letter = array('A','B','C','D','E','F','G');
+        //设置表头
+        $tableheader = array('订单编号 ','客户','基表型号','订单数量','电子模块类型','生产状态','备注');
+        //设置表头表格宽度
+        /*$tablestyle = array(
+            array('width'=>'15'),   //username
+            array('width'=>'15'),   //password
+            array('width'=>'15'),   //surname
+            array('width'=>'20'),   //createTime
+            array('width'=>'20'),   //updateTime
+            array('width'=>'20'),   //status
+            array('width'=>'20')
+        );*/
+        //填充表头信息
+        for($i = 0;$i < count($tableheader);$i++) {
+            $phpexcel->getActiveSheet()->setCellValue("$letter[$i]1","$tableheader[$i]");
+            //$phpexcel->getActiveSheet()->getColumnDimension($letter[$i])->setWidth($tablestyle[$i]['width']);
+        }
+        //设置标题字体加粗和大小
+        $phpexcel->getActiveSheet()->getStyle( 'A1:G1')->getFont()->setSize(12);
+        $phpexcel->getActiveSheet()->getStyle( 'A1:G1')->getFont()->setBold(true);
+        $phpexcel->getActiveSheet()->getColumnDimension('A')->setWidth(15);
+        $phpexcel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true); //宽度自适应
+        $phpexcel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true); //宽度自适应
+        $phpexcel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
+        $phpexcel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true); //宽度自适应
+        $phpexcel->getActiveSheet()->getColumnDimension('F')->setWidth(15);
+        $phpexcel->getActiveSheet()->getColumnDimension('G')->setAutoSize(true); //宽度自适应
+        //$phpexcel->getActiveSheet()->getColumnDimension('A')->setWidth(40);
+
+        //数据
+        $field = 'oid,cid,meterId,orderQty,modelId,deliveryStatus,comments';
+        $data = $this->orders()->select($field, '');
+        //var_dump($data);exit();
+        //数据处理
+        $data = $this->setData($data);
+        //var_dump($data);exit();
+        //填充表格信息
+
+        $rowIndex = 2;
+        for ($i=0;$i<count($data);$i++) {
+
+            $phpexcel->getActiveSheet()->setCellValue("A".$rowIndex,$data[$i]['oid']);
+            $phpexcel->getActiveSheet()->setCellValue("B".$rowIndex,$data[$i]['client']);
+            $phpexcel->getActiveSheet()->setCellValue("C".$rowIndex,$data[$i]['meterType']);
+            $phpexcel->getActiveSheet()->setCellValue("D".$rowIndex,$data[$i]['orderQty']);
+            $phpexcel->getActiveSheet()->setCellValue("E".$rowIndex,$data[$i]['modelType']);
+            if($data[$i]['deliveryStatus'] == 0){
+                $status = '已发货';
+            }else if($data[$i]['deliveryStatus'] == 1){
+                $status = '生产中';
+            }else{
+                $status = '未下单';
+            }
+            $phpexcel->getActiveSheet()->setCellValue("F".$rowIndex,$status);
+            $phpexcel->getActiveSheet()->setCellValue(  "G".$rowIndex,$data[$i]['comments']);
+            //设置默认行高
+            $phpexcel->getActiveSheet($rowIndex)->getDefaultRowDimension()->setRowHeight(30);
+            $rowIndex++;
+        }
+
+
+
+        //导出属性设置
+        $date = date('Ymd', time());
+        $outputFileName = "订单".$date.".xlsx";
+        //require_once("Classes/PHPExcel/Writer/Excel2007.php");
+        ob_end_clean();//清除缓冲区,避免乱码
+        $objWriter = new \PHPExcel_Writer_Excel2007($phpexcel, 'Excel2007');
+        header("Content-Type: application/force-download");
+        header("Content-Type: application/octet-stream");
+        header("Content-Type: application/download");
+        header('Content-Disposition:inline;filename="'.$outputFileName);
+        header("Content-Transfer-Encoding: binary");
+        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Pragma: no-cache");
+        $objWriter->save('php://output');
+    }
+
+
+    ///////////////////////////
+
     /**
      * 表号验证，允许都为空，也可以结束表号单为空
      * @param $orders
      * @param $startLen
      * @param $endLen
      */
-    public function verifyMeterNum($orders, $startLen, $endLen){
+    private function verifyMeterNum($orders, $startLen, $endLen){
         //表号验证,允许为空
         ////1.长度10,,11,12,13;2.长度相等；3.前四位相同;4.都是数字；5.如果是13位，只保留前面12位。
         if($startLen > 0){
@@ -455,49 +558,21 @@ class Order extends Base{
         return $oid;
     }
 
-    /**
-     * 获取联合表中的值
-     * @param $orders
-     * @return mixed
-     */
-    private function getJoinId($orders){
 
-        for($k=0;$k<count($orders);$k++){
-            //国家，客户，基表型号，电子模块类型，制造商，生产负责人
-            $orders[$k] = $this->getOneJoinId($orders[$k]);
+    private function setData($data){
+        for($k=0;$k<count($data);$k++){
+            //客户，基表型号，电子模块类型
+            $clients = $this->clients()->findById(array('cid'=>$data[$k]['cid']));
+            $meterTypes = $this->meterTypes()->findById(array('meterId'=>$data[$k]['meterId']));
+            $modelTypes = $this->modelTypes()->findById(array('modelId'=>$data[$k]['modelId']));
+            $data[$k]['client'] = $clients['client'];
+            $data[$k]['meterType'] = $meterTypes['meterType'];
+            $data[$k]['modelType'] = $modelTypes['modelType'];
+            unset($data[$k]['cid']);
+            unset($data[$k]['meterId']);
+            unset($data[$k]['modelId']);
         }
-        return $orders;
-    }
-
-    /**
-     * 获取一个order联合表中的值
-     * @param $order
-     * @return mixed
-     */
-    private function getOneJoinId($order){
-        if(count($order) >= 1){
-            $states = $this->state()->findById(array('sid'=>$order['sid']));
-            $clients = $this->clients()->findById(array('cid'=>$order['cid']));
-            $meterTypes = $this->meterTypes()->findById(array('meterId'=>$order['meterId']));
-            $modelTypes = $this->modelTypes()->findById(array('modelId'=>$order['modelId']));
-            $manufacturers = $this->manus()->findById(array('mfId'=>$order['mfId']));
-            $productPrinciples = $this->principles()->findById(array('pid'=>$order['pid']));
-            $order['state'] = $states['state'];
-            $order['client'] = $clients['client'];
-            $order['meterType'] = $meterTypes['meterType'];
-            $order['modelType'] = $modelTypes['modelType'];
-            $order['manufacturer'] = $manufacturers['manufacturer'];
-            $order['productPrinciple'] = $productPrinciples['productPrinciple'];
-
-        }else{
-            $order['state'] = "";
-            $order['client'] = "";
-            $order['meterType'] = "";
-            $order['modelType'] = "";
-            $order['manufacturer'] = "";
-            $order['productPrinciple'] = "";
-        }
-        return $order;
+        return $data;
     }
 
 }

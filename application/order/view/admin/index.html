@@ -94,8 +94,10 @@
                           <td>{$v.createTime}</td>
                           {if condition="$v['status'] eq '0'"}
                           <td>管理员</td>
-                          {else/}
+                          {elseif condition="$v['status'] eq '1'"}
                           <td>用户</td>
+                          {else/}
+                          <td>表计组</td>
                           {/if}
                           <td style="text-align: center;">
                             <a href="{:url('Admin/edit',['adId'=>$v['adId']])}" title="修改" class="glyphicon glyphicon-edit" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;

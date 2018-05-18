@@ -39,12 +39,15 @@ class Login extends Controller{
         }
         //var_dump($admin['username']);exit();
         session('username', $admin['username']);
+        session('surname', $hasAdmin['surname']);
         session('status', $hasAdmin['status']); //保存用户权限，判断是管理员还是用户。
         //var_dump($hasAdmin['status']);exit;
         if ($hasAdmin['status'] == 0){
             return $this->success('登录成功', 'Admin/index');
+        }else if($hasAdmin['status'] == 1){
+            return $this->success('登录成功', 'State/stLi');
         }
-        return $this->success('登录成功', 'State/stLi');
+        return $this->success('登录成功', 'MeterOrder/index');
 
     }
     //验证码

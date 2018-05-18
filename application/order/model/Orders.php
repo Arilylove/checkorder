@@ -129,7 +129,7 @@ class Orders{
      * @param $count
      * @return \think\paginator\Collection
      */
-    public function join($search){
+    public function join($search, $where){
         $num = 10;
         $deliveryStatus = $search['deliveryStatus'];
         $meterNum = $search['meterNum'];
@@ -140,12 +140,13 @@ class Orders{
         //var_dump($deliveryTime);exit();
         //1.根据表号查询
         if(empty($meterNum)){
-
-            $count = Db::table($this->tableName)->where('deliveryStatus', 'like', "%$deliveryStatus%")
+            $count = Db::table($this->tableName)->where($where)
+                ->where('deliveryStatus', 'like', "%$deliveryStatus%")
                 ->where('sid', 'like', "%$sid%")->where('cid', 'like', "%$cid%")->where('orderNum', 'like', "%$orderNum%")
                 ->where('modelNum', 'like', "%$modelNum%")
                 ->count();
-            $orders = Db::table($this->tableName)->where('deliveryStatus', 'like', "%$deliveryStatus%")
+            $orders = Db::table($this->tableName)->where($where)
+                ->where('deliveryStatus', 'like', "%$deliveryStatus%")
                 ->where('sid', 'like', "%$sid%")->where('cid', 'like', "%$cid%")->where('orderNum', 'like', "%$orderNum%")
                 ->where('modelNum', 'like', "%$modelNum%")
                 ->paginate($num, $count);
@@ -154,12 +155,14 @@ class Orders{
             //var_dump($orders);exit();
 
         }else{
-            $count = Db::table($this->tableName)->where('deliveryStatus', 'like', "%$deliveryStatus%")
+            $count = Db::table($this->tableName)->where($where)
+                ->where('deliveryStatus', 'like', "%$deliveryStatus%")
                 ->where('sid', 'like', "%$sid%")->where('cid', 'like', "%$cid%")->where('orderNum', 'like', "%$orderNum%")
                 ->where('modelNum', 'like', "%$modelNum%")->where('meterStart', '<=', $meterNum)->where("meterEnd", '>=', $meterNum)
                 ->whereOr('meterStart', 'like', "%$meterNum%")->whereOr('meterEnd', 'like', "%$meterNum%")
                 ->count();
-            $orders = Db::table($this->tableName)->where('deliveryStatus', 'like', "%$deliveryStatus%")
+            $orders = Db::table($this->tableName)->where($where)
+                ->where('deliveryStatus', 'like', "%$deliveryStatus%")
                 ->where('sid', 'like', "%$sid%")->where('cid', 'like', "%$cid%")->where('orderNum', 'like', "%$orderNum%")
                 ->where('modelNum', 'like', "%$modelNum%")->where('meterStart', '<=', $meterNum)->where("meterEnd", '>=', $meterNum)
                 ->whereOr('meterStart', 'like', "%$meterNum%")->whereOr('meterEnd', 'like', "%$meterNum%")

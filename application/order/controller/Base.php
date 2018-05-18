@@ -23,6 +23,7 @@ class Base extends Controller{
     public function _initialize(){
         $username = session('username');
         $status = session('status');
+        $surname = session('surname');
         $a = is_null($username);
         //var_dump($a);exit();
         //判断用户是否已经登录
@@ -30,6 +31,7 @@ class Base extends Controller{
             return $this->error('对不起,您还没有登录!请先登录', 'Login/index');
         }
         $this->assign("username", $username);
+        $this->assign("surname", $surname);
         $this->assign("status", $status);
         return true;
     }
@@ -229,6 +231,49 @@ class Base extends Controller{
             return $this->error("结束表号要大于开始表号");
         }
 
+    }
+    /**
+     * 获取联合表中的值
+     * @param $orders
+     * @return mixed
+     */
+    protected function getJoinId($orders){
+
+        for($k=0;$k<count($orders);$k++){
+            //国家，客户，基表型号，电子模块类型，制造商，生产负责人
+            $orders[$k] = $this->getOneJoinId($orders[$k]);
+        }
+        return $orders;
+    }
+    /**
+     * 获取一个order联合表中的值
+     * @param $order
+     * @return mixed
+     */
+    protected function getOneJoinId($order){
+        if(count($order) >= 1){
+            $states = $this->state()->findById(array('sid'=>$order['sid']));
+            $clients = $this->clients()->findById(array('cid'=>$order['cid']));
+            $meterTypes = $this->meterTypes()->findById(array('meterId'=>$order['meterId']));
+            $modelTypes = $this->modelTypes()->findById(array('modelId'=>$order['modelId']));
+            $manufacturers = $this->manus()->findById(array('mfId'=>$order['mfId']));
+            $productPrinciples = $this->principles()->findById(array('pid'=>$order['pid']));
+            $order['state'] = $states['state'];
+            $order['client'] = $clients['client'];
+            $order['meterType'] = $meterTypes['meterType'];
+            $order['modelType'] = $modelTypes['modelType'];
+            $order['manufacturer'] = $manufacturers['manufacturer'];
+            $order['productPrinciple'] = $productPrinciples['productPrinciple'];
+
+        }else{
+            $order['state'] = "";
+            $order['client'] = "";
+            $order['meterType'] = "";
+            $order['modelType'] = "";
+            $order['manufacturer'] = "";
+            $order['productPrinciple'] = "";
+        }
+        return $order;
     }
 
     /*

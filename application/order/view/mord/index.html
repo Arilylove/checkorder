@@ -47,8 +47,6 @@
         {include file="lic/top"/}
         <!-- /top navigation -->
 
-        <!--del-->
-        {include file="ord/del"/}
 
         <!-- page content -->
         <div class="right_col" role="main">
@@ -61,8 +59,6 @@
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="x_panel">
                             <div class="x_title">
-                                <a href="{:url('Order/aOrd')}" class="add-btn">添加订单</a>
-                                <a href="{:url('Order/exportExcel')}" class="add-btn">导出订单</a>
                                 <ul class="nav navbar-right panel_toolbox">
                                     <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                                     </li>
@@ -70,7 +66,7 @@
                             </div>
                             <!--搜索-->
                             <div class="col-md-12 col-sm-12 col-xs-12" style="float:right;">
-                                {include file="ord/search"/}
+                                {include file="mord/search"/}
                             </div>
                             <div class="x_content">
 
@@ -127,9 +123,8 @@
                                             <td>{$v.comments}</td>
 
                                             <td>
-                                                <a href="{:url('Order/view',['oid'=>$v['oid']])}" title="查看明细" class="glyphicon glyphicon-sunglasses" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
-                                                <a href="{:url('Order/eOrd',['oid'=>$v['oid']])}" title="修改" class="glyphicon glyphicon-edit" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
-                                                <a href="javascript:void (0);" title="删除" class="glyphicon glyphicon-remove class-del" onclick=confirmDel("{$v['oid']}") style="color: red;font-size: 18px;"></a>
+                                                <a href="{:url('MeterOrder/view',['oid'=>$v['oid']])}" title="查看明细" class="glyphicon glyphicon-sunglasses" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
+
                                             </td>
                                         </tr>
                                         {/volist}
@@ -195,16 +190,7 @@
         })
 
     })
-    function confirmDel(oid) {
-        //console.log(adId);
-        $.post("{:url('Order/order')}",{oid:oid},function(data){
-            // console.log(data);
-            if(data) {
-                // console.log(data['id']);
-                $("input[name='oid']").val(data[0].oid)
-            }
-        },'json');
-    }
+
 </script>
 </body>
 

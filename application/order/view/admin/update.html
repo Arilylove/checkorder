@@ -80,8 +80,14 @@
                                             {if condition="$admin['status'] eq 0"}
                                             <option value="{$admin['status']}">管理员</option>
                                             <option value="1">用户</option>
-                                            {else/}
+                                            <option value="2">表计组</option>
+                                            {elseif condition="$admin['status'] eq 1"}
                                             <option value="{$admin['status']}">用户</option>
+                                            <option value="2">表计组</option>
+                                            <option value="0">管理员</option>
+                                            {else/}
+                                            <option value="{$admin['status']}">表计组</option>
+                                            <option value="1">用户</option>
                                             <option value="0">管理员</option>
                                             {/if}
                                         </select>

@@ -1,0 +1,76 @@
+            <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="__RECORD__/search.css"/>
+</head>
+<body>
+<form method="post" action="{:url('MeterOrder/search')}">
+    <div>
+        <div class="col-md-1 col-sm-1 col-xs-1 col-lg-1"></div>
+        <div class="col-md-3 col-sm-3 col-xs-12 col-lg-3">
+            <div>
+                <label style="width:80px;">表号&nbsp;&nbsp;</label>
+                <input type="text" name="meterNum"  placeholder="表号.." autocomplete="off" class="bordrad">
+            </div><br/>
+            <div>
+                <label style="width:80px;">国家&nbsp;&nbsp;</label>
+                <select name="sid" class="bordrad" style="width:172px;">
+                    <option value=""></option>
+                    {volist name="state" id="v"}
+                    <option value="{$v.sid}">{$v.state}</option>
+                    {/volist}
+                </select>
+            </div><br/>
+        </div>
+
+        <div class="col-md-3 col-sm-3 col-xs-12 col-lg-3">
+            <div>
+                <label style="width:80px;">基表订单号&nbsp;&nbsp;</label>
+                <input type="text" name="orderNum" placeholder="基表订单号.." autocomplete="off" class="bordrad">
+            </div><br/>
+            <div>
+                <label style="width:80px;">模块订单号&nbsp;&nbsp;</label>
+                <input type="text" name="modelNum" placeholder="模块订单号.." autocomplete="off" class="bordrad">
+            </div><br/>
+        </div>
+        <div class="col-md-3 col-sm-3 col-xs-12 col-lg-3">
+            <div>
+                <label style="width:80px;">客户&nbsp;&nbsp;</label>
+                <select name="cid" class="bordrad" style="width:172px;">
+                    <option value=""></option>
+                    {volist name="clients" id="v"}
+                    <option value="{$v.cid}">{$v.client}</option>
+                    {/volist}
+                </select>
+
+            </div><br/>
+            <div>
+                <label style="width:80px;">生产状态</label>
+                <select class="bordrad" name="deliveryStatus" style="width:172px;">
+                    <option value=""></option>
+                    <option value="0">已发货</option>
+                    <option value="1">生产中</option>
+                    <option value="2">已下单</option>
+                    <option value="3">未下单</option>
+                </select>
+            </div>
+
+        </div>
+        <div class="col-md-2 col-sm-2 col-xs-12 col-lg-2">
+            <div>
+                <label></label>
+            </div>
+            <div>
+                <button type="submit" class="add-btn" style="border-radius:5px;">搜索</button>
+            </div>
+
+        </div>
+
+    </div>
+
+
+</form>
+</body>
+</html>
