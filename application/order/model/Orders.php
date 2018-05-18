@@ -75,6 +75,15 @@ class Orders{
     }
 
     /**
+     * 获取上次添加的id
+     * @return string
+     */
+    public function lastSql(){
+        $lastId = Db::table($this->tableName)->getLastInsID();
+        return $lastId;
+    }
+
+    /**
      * id查找
      * @param $where
      * @return array|false|\PDOStatement|string|\think\Model

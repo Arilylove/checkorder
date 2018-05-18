@@ -44,7 +44,7 @@ class Meters{
         $count = Db::table($this->tableName)->where($where)->count();
         return $count;
     }
-    public function findExist($where, $oid){
+    public function findUserd($where, $oid){
         $result = Db::table($this->tableName)->where($where)->where('oid', '<>', $oid)->find();
         return $result;
     }

@@ -120,19 +120,15 @@
                                             <td>已发货</td>
                                             {elseif condition="$v['deliveryStatus'] eq 1"}
                                             <td>生产中</td>
-                                            {elseif condition="$v['deliveryStatus'] eq 2"}
-                                            <td>已下单</td>
-                                            {elseif condition="$v['deliveryStatus'] eq 3"}
-                                            <td>未下单</td>
                                             {else/}
-                                            <td>组装中</td>
+                                            <td>未下单</td>
                                             {/if}
                                             <td>{$v.comments}</td>
 
                                             <td>
-                                                <a href="{:url('Order/view',['oid'=>$v['oid']])}" class="glyphicon glyphicon-sunglasses" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
-                                                <a href="{:url('Order/eOrd',['oid'=>$v['oid']])}" class="glyphicon glyphicon-edit" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
-                                                <a href="javascript:void (0);" class="glyphicon glyphicon-remove class-del" onclick=confirmDel("{$v['oid']}") style="color: red;font-size: 18px;"></a>
+                                                <a href="{:url('Order/view',['oid'=>$v['oid']])}" title="查看明细" class="glyphicon glyphicon-sunglasses" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
+                                                <a href="{:url('Order/eOrd',['oid'=>$v['oid']])}" title="修改" class="glyphicon glyphicon-edit" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
+                                                <a href="javascript:void (0);" title="删除" class="glyphicon glyphicon-remove class-del" onclick=confirmDel("{$v['oid']}") style="color: red;font-size: 18px;"></a>
                                             </td>
                                         </tr>
                                         {/volist}

@@ -88,7 +88,20 @@ class Order extends Base{
         if($addOrder < 1){
             return $this->error("添加订单失败");
         }
+        $lastId = $this->orders()->lastSql();
 
+        //添加到表号
+        $addMeter = 0;
+        //1.两个表号都有
+        if(($startLen > 0) && ($endLen > 0)){
+            //$meterNums = $this->meterNumList($start, $end);
+            $addMeter = $this->meterListAdd($start, $end, $lastId);
+        }else if($startLen > 0){
+            //2.只有一个表号
+            $meters['meterNum'] = $orders['meterStart'];
+            $meters['oid'] = $lastId;
+            $addMeter = $this->meters()->add($meters, '');
+        }
         return $this->success('添加成功', 'Order/index');
 
     }
@@ -122,6 +135,9 @@ class Order extends Base{
         $oid = $orders['oid'];
         $where = array('oid'=>$oid);
         $find = $this->orders()->findById($where);
+        //更新之前获取更新之前的表号
+        $meterStart = $find['meterStart'];
+        $meterEnd = $find['meterEnd'];
         if(!$find){
             return $this->error("订单不存在");
         }
@@ -134,6 +150,7 @@ class Order extends Base{
         if(true !== $validate){
             return $this->error(" $validate ");
         }
+
         //表号验证,允许为空
         $this->verifyMeterNum($orders, $startLen, $endLen);
         //5.如果是13位，只保留前面12位。
@@ -145,6 +162,24 @@ class Order extends Base{
         }
         $start = "1".$orders['meterStart'];
         $end = "1".$orders['meterEnd'];
+        /*var_dump($start);
+        var_dump($end);exit();*/
+        //表号是否被其他订单使用
+        if($startLen > 0){
+            if($endLen > 0){
+                //1.两个表号都不为空，需要连续验证是否被使用
+                $num = $this->meterNumList($start, $end);
+                foreach ($num as $value){
+                    $findUsed = $this->meters()->findUserd(array('meterNum'=>$value), $oid);
+                }
+            }else{
+                //2.结束表号为空，只要验证一个表号
+                $findUsed = $this->meters()->findUserd(array('meterNum'=>$orders['meterStart']), $oid);
+            }
+            if($findUsed){
+                return $this->error("表号已被使用");
+            }
+        }
 
         //计算周期
         if(!intval($orders['deliveryStatus'])){
@@ -157,11 +192,38 @@ class Order extends Base{
             $orders['orderCycle'] = 0;
             $orders['assemCycle'] = 0;
         }
-        //var_dump($orders);exit();
+
+        /*var_dump($meterStart);
+        var_dump($meterEnd);exit();*/
         $edit = $this->orders()->update($orders, $where);
         if($edit < 1){
             return $this->error("修改订单失败");
         }
+        //只有当表号变了的时候需要添加新的表号，删除原来的表号
+        if(($meterStart != $orders['meterStart']) || ($meterEnd != $orders['meterEnd'])){
+            //删除原来表号
+            if(($meterStart != '') && ($meterEnd != '')){
+                $oldStart = "1".$meterStart;
+                $oldEnd = "1".$meterEnd;
+                $this->meterListDel($oldStart, $oldEnd, $oid);
+            }else if($meterStart != ''){
+                $where = array('meterNum'=>$meterStart, 'oid'=>$oid);
+                $this->meters()->del($where);
+            }
+
+            //添加到表号
+            //1.两个表号都有
+            if(($orders['meterStart'] != '') && ($orders['meterEnd'] != '')){
+                //$meterNums = $this->meterNumList($start, $end);
+                $addMeter = $this->meterListAdd($start, $end, $oid);
+            }else if($orders['meterStart'] != ''){
+                //2.只有一个表号
+                $meters['meterNum'] = $orders['meterStart'];
+                $meters['oid'] = $oid;
+                $addMeter = $this->meters()->add($meters, '');
+            }
+        }
+
         return $this->success('修改成功', 'Order/index');
 
     }
@@ -281,13 +343,14 @@ class Order extends Base{
     private function meterListAdd($start, $end, $oid){
 
         $num = $this->meterNumList($start, $end);
+        //var_dump($num);exit();
         foreach ($num as $v){
             $meterNums['meterNum'] = $v;
             $meterNums['oid'] = $oid;
             Db::startTrans();
             //var_dump($meterNums);exit();
             try{
-                $result = $this->meters()->add($meterNums, '');
+                $this->meters()->add($meterNums, '');
                 Db::commit();
             }catch (\Exception $e) {
                 // 回滚事务
@@ -295,7 +358,30 @@ class Order extends Base{
             }
         }
 
+    }
 
+    /**
+     * 表号的序列删除
+     * @param $start
+     * @param $end
+     * @param $oid
+     */
+    private function meterListDel($start, $end, $oid){
+        $num = $this->meterNumList($start, $end);
+        foreach ($num as $v){
+            $meterNums['meterNum'] = $v;
+            $meterNums['oid'] = $oid;
+            Db::startTrans();
+            //var_dump($meterNums);exit();
+            $where = array('meterNum'=>$v, 'oid'=>$oid);
+            try{
+                $this->meters()->del($where);
+                Db::commit();
+            }catch (\Exception $e) {
+                // 回滚事务
+                Db::rollback();
+            }
+        }
     }
 
     /**

@@ -98,8 +98,8 @@
                           <td>用户</td>
                           {/if}
                           <td style="text-align: center;">
-                            <a href="{:url('Admin/edit',['adId'=>$v['adId']])}" class="glyphicon glyphicon-edit" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
-                            <a href="javascript:void (0);" class="glyphicon glyphicon-remove class-del" onclick=confirmDel("{$v['adId']}") style="color: red;font-size: 18px;"></a>
+                            <a href="{:url('Admin/edit',['adId'=>$v['adId']])}" title="修改" class="glyphicon glyphicon-edit" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
+                            <a href="javascript:void (0);" title="删除" class="glyphicon glyphicon-remove class-del" onclick=confirmDel("{$v['adId']}") style="color: red;font-size: 18px;"></a>
                           </td>
                         </tr>
                         {/volist}
