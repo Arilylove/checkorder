@@ -78,6 +78,7 @@
                                     <table class="table table-striped jambo_table bulk_action">
                                         <thead>
                                         <tr class="headings">
+                                            <th>国家</th>
                                             <th>客户</th>
 
                                             <th>基表型号</th>
@@ -103,6 +104,7 @@
                                         <tbody>
                                         {volist name="orders" id="v"}
                                         <tr class="even pointer">
+                                            <td>{$v.state}</td>
                                             <td>{$v.client}</td>
 
                                             <td>{$v.meterType}</td>
