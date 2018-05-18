@@ -48,7 +48,8 @@ class Clients{
         return $count;
     }
     public function selectPage($tableName2, $param, $field, $where, $num, $count){
-        $client = Db::table($this->tableName)->join($tableName2, $this->tableName.'.'.$param.'='.$tableName2.'.'.$param)->field($field)->where($where)->paginate($num, $count);
+        $client = Db::table($this->tableName)->join($tableName2, $this->tableName.'.'.$param.'='.$tableName2.'.'.$param)
+            ->field($field)->where($where)->paginate($num, $count, ['query' => request()->param()]);
         return $client;
     }
     /**

@@ -41,7 +41,7 @@ class MeterTypes{
     }
     public function selectPage($field, $where, $count){
         $num = 10;
-        $admin = Db::table($this->tableName)->field($field)->where($where)->paginate($num, $count);
+        $admin = Db::table($this->tableName)->field($field)->where($where)->paginate($num, $count, ['query' => request()->param()]);
         return $admin;
     }
     public function count($where){
@@ -58,7 +58,8 @@ class MeterTypes{
      */
     public function searchLike($search){
         $count = Db::table($this->tableName)->where('meterId', 'like', "%$search%")->whereOr('meterType', 'like', "%$search%")->count();
-        $meterTypes = Db::table($this->tableName)->where('meterId', 'like', "%$search%")->whereOr('meterType', 'like', "%$search%")->paginate(10, $count);
+        $meterTypes = Db::table($this->tableName)->where('meterId', 'like', "%$search%")->whereOr('meterType', 'like', "%$search%")
+            ->paginate(10, $count, ['query' => request()->param()]);
         return $meterTypes;
     }
 

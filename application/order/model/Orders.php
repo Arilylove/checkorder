@@ -143,7 +143,7 @@ class Orders{
                 ->where('deliveryStatus', 'like', "%$deliveryStatus%")
                 ->where('sid', 'like', "%$sid%")->where('cid', 'like', "%$cid%")->where('orderNum', 'like', "%$orderNum%")
                 ->where('modelNum', 'like', "%$modelNum%")
-                ->paginate($num, $count);
+                ->paginate($num, $count, ['query' => request()->param()]);
             $sql = Db::table('orders')->getLastSql();
             //var_dump($sql);
             //var_dump($orders);exit();
@@ -160,7 +160,7 @@ class Orders{
                 ->where('sid', 'like', "%$sid%")->where('cid', 'like', "%$cid%")->where('orderNum', 'like', "%$orderNum%")
                 ->where('modelNum', 'like', "%$modelNum%")->where('meterStart', '<=', $meterNum)->where("meterEnd", '>=', $meterNum)
                 ->whereOr('meterStart', 'like', "%$meterNum%")->whereOr('meterEnd', 'like', "%$meterNum%")
-                ->paginate($num, $count);
+                ->paginate($num, $count, ['query'=>request()->param()]);
 
         }
 
@@ -182,7 +182,7 @@ class Orders{
             $orders = Db::table($this->tableName)->where($where)
                 ->where('deliveryStatus', 'like', "%$deliveryStatus%")
                 ->where('sid', 'like', "%$sid%")->where('cid', 'like', "%$cid%")
-                ->paginate($num, $count);
+                ->paginate($num, $count, ['query' => request()->param()]);
             $sql = Db::table('orders')->getLastSql();
             //var_dump($sql);
             //var_dump($orders);exit();
@@ -198,7 +198,7 @@ class Orders{
                 ->where('sid', 'like', "%$sid%")->where('cid', 'like', "%$cid%")
                 ->where('meterStart', '<=', $meterNum)->where("meterEnd", '>=', $meterNum)
                 ->whereOr('meterStart', 'like', "%$meterNum%")->whereOr('meterEnd', 'like', "%$meterNum%")
-                ->paginate($num, $count);
+                ->paginate($num, $count, ['query' => request()->param()]);
 
         }
 

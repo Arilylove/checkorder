@@ -74,7 +74,7 @@ class Records{
     }
     public function pageWhere($count, $where){
         $num = 10;
-        $data = Db::table($this->tableName)->where($where)->paginate($num, $count);
+        $data = Db::table($this->tableName)->where($where)->paginate($num, $count, ['query' => request()->param()]);
         return $data;
     }
     public function count($where){
@@ -94,7 +94,7 @@ class Records{
         $record = Db::table($this->tableName)
             ->where("recorder", 'like', "%$recorder%")->where('pcId', 'like', "%$pcId%")
             ->where("cid", 'like', "%$cid%")->where('solved', 'like', "%$solved%")
-            ->paginate($num, $count);
+            ->paginate($num, $count, ['query' => request()->param()]);
         return $record;
     }
 
@@ -136,7 +136,7 @@ class Records{
             ->where("recorder", 'like', "%$search%")->whereOr('solution', 'like', "%$search%")
             ->whereOr("rid", 'like', "%$search%")->whereOr('classify', 'like', "%$search%")
             ->whereOr("description", 'like', "%$search%")->whereOr('solveCycle', 'like', "%$search%")
-            ->whereOr('solved', 'like', "%$search%")->paginate($num, $count);
+            ->whereOr('solved', 'like', "%$search%")->paginate($num, $count, ['query' => request()->param()]);
         return $record;
     }
     /**
@@ -156,7 +156,7 @@ class Records{
         $record = Db::table($this->tableName)->join($joinTable, $this->tableName.'.'.$param.'='.$joinTable.'.'.$param)
             ->join($joinState, $this->tableName.'.'.$param2.'='.$joinState.'.'.$param2)
             ->join($joinClassify, $this->tableName.'.'.$param3.'='.$joinClassify.'.'.$param3)
-            ->field($field)->where($where)->paginate($num, $count);
+            ->field($field)->where($where)->paginate($num, $count, ['query' => request()->param()]);
         return $record;
     }
 

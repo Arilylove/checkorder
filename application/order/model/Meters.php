@@ -37,7 +37,7 @@ class Meters{
     }
     public function selectPage($field, $where, $count){
         $num = 10;
-        $admin = Db::table($this->tableName)->field($field)->where($where)->paginate($num, $count);
+        $admin = Db::table($this->tableName)->field($field)->where($where)->paginate($num, $count, ['query' => request()->param()]);
         return $admin;
     }
     public function count($where){
@@ -62,7 +62,7 @@ class Meters{
         $count = Db::table($this->tableName)->join($joinTable, $this->tableName.'.'.$param.'='.$joinTable.'.'.$param)
             ->where($where)->count();
         $orders = Db::table($this->tableName)->join($joinTable, $this->tableName.'.'.$param.'='.$joinTable.'.'.$param)
-            ->where($where)->paginate($num, $count);
+            ->where($where)->paginate($num, $count, ['query' => request()->param()]);
         return $orders;
     }
 

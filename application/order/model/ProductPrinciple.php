@@ -42,7 +42,7 @@ class ProductPrinciple{
     }
     public function selectPage($field, $where, $count){
         $num = 10;
-        $admin = Db::table($this->tableName)->field($field)->where($where)->paginate($num, $count);
+        $admin = Db::table($this->tableName)->field($field)->where($where)->paginate($num, $count, ['query' => request()->param()]);
         return $admin;
     }
     public function count($where){
@@ -61,7 +61,7 @@ class ProductPrinciple{
         $principles = Db::table($this->tableName)->where('pid', 'like', "%$search%")
             ->whereOr('productPrinciple', 'like', "%$search%")
             ->whereOr('position', 'like', "%$search%")
-            ->paginate(10, $count);
+            ->paginate(10, $count, ['query' => request()->param()]);
         return $principles;
     }
 

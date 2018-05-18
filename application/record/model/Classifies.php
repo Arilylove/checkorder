@@ -69,7 +69,7 @@ class Classifies
 
     public function selectPage($field, $where, $num, $count)
     {
-        $state = Db::table($this->tableName)->field($field)->where($where)->paginate($num, $count);
+        $state = Db::table($this->tableName)->field($field)->where($where)->paginate($num, $count, ['query' => request()->param()]);
         return $state;
     }
 
@@ -79,7 +79,8 @@ class Classifies
     public function searchLike($search, $num)
     {
         $count = Db::table($this->tableName)->where("pcId", 'like', "%$search%")->whereOr('classify', 'like', "%$search%")->count();
-        $classify = Db::table($this->tableName)->where("pcId", 'like', "%$search%")->whereOr('classify', 'like', "%$search%")->paginate($num, $count);
+        $classify = Db::table($this->tableName)->where("pcId", 'like', "%$search%")->whereOr('classify', 'like', "%$search%")
+            ->paginate($num, $count, ['query' => request()->param()]);
         return $classify;
     }
 

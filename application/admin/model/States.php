@@ -39,7 +39,7 @@ class States{
         return $count;
     }
     public function selectPage($field, $where, $num, $count){
-        $state = Db::table($this->tableName)->field($field)->where($where)->paginate($num, $count);
+        $state = Db::table($this->tableName)->field($field)->where($where)->paginate($num, $count, ['query' => request()->param()]);
         return $state;
     }
 

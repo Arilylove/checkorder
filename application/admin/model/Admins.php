@@ -57,7 +57,7 @@ class Admins{
         return $result;
     }
     public function selectPage($field, $where, $num, $count){
-        $admin = Db::table($this->tableName)->field($field)->where($where)->paginate($num, $count);
+        $admin = Db::table($this->tableName)->field($field)->where($where)->paginate($num, $count, ['query' => request()->param()]);
         return $admin;
     }
     public function count($where){
