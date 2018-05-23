@@ -75,7 +75,7 @@
                             <div class="x_content">
 
                                 <div class="table-responsive">
-                                    <table class="table table-striped jambo_table bulk_action">
+                                    <table id="table" class="table table-striped jambo_table bulk_action" data-toggle="table">
                                         <thead>
                                         <tr class="headings">
                                             <th>国家</th>
@@ -94,8 +94,11 @@
                                             <th>制造商</th>
                                             <th>生产负责人</th>
                                             <th>生产状态</th>
+                                            <th>客户化工具</th>
+                                            <th>生产数据校验</th>
+                                            <th>发货状态</th>
                                             <th>备注说明</th>
-                                            <th class="column-title no-link last" style="text-align: center;"><span class="nobr">操作</span>
+                                            <th class="column-title no-link last" style="text-align: center;width:240px;"><span>操作</span>
                                             </th>
 
                                         </tr>
@@ -104,6 +107,7 @@
                                         <tbody>
                                         {volist name="orders" id="v"}
                                         <tr class="even pointer">
+
                                             <td>{$v.state}</td>
                                             <td>{$v.client}</td>
 
@@ -120,11 +124,26 @@
                                             <td>{$v.manufacturer}</td>
                                             <td>{$v.productPrinciple}</td>
                                             {if condition="$v['deliveryStatus'] eq 0"}
-                                            <td>已发货</td>
+                                            <td>已完成</td>
                                             {elseif condition="$v['deliveryStatus'] eq 1"}
                                             <td>生产中</td>
                                             {else/}
                                             <td>未下单</td>
+                                            {/if}
+                                            {if condition="$v['customTool'] eq 0"}
+                                            <td>是</td>
+                                            {else/}
+                                            <td>否</td>
+                                            {/if}
+                                            {if condition="$v['dataVerify'] eq 0"}
+                                            <td>是</td>
+                                            {else/}
+                                            <td>否</td>
+                                            {/if}
+                                            {if condition="$v['isStatus'] eq 0"}
+                                            <td>是</td>
+                                            {else/}
+                                            <td>否</td>
                                             {/if}
                                             <td>{$v.comments}</td>
 
@@ -196,6 +215,7 @@
             $("#alert-pass-update").css("display","block")
         })
 
+
     })
     function confirmDel(oid) {
         //console.log(adId);
@@ -207,6 +227,7 @@
             }
         },'json');
     }
+
 </script>
 </body>
 

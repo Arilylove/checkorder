@@ -7,6 +7,7 @@
  */
 namespace app\order\controller;
 
+use app\order\model\Admins;
 use app\order\model\Meters;
 use app\order\model\MeterTypes;
 use app\order\model\ModelTypes;
@@ -18,6 +19,9 @@ use app\order\crypt\AesCrypt;
 use app\order\model\States;
 use app\order\model\Clients;
 use app\order\model\Manufacturer;
+use app\order\model\Roles;
+use app\order\model\Ways;
+use app\order\model\Depts;
 
 class Base extends Controller{
     public function _initialize(){
@@ -33,9 +37,62 @@ class Base extends Controller{
         $this->assign("username", $username);
         $this->assign("surname", $surname);
         $this->assign("status", $status);
+        //登录成功，将用户的权限操作id传给前端
+        $this->assignOwnWays($username);
         return true;
     }
+    /*{if condition="in_array('Role',$ownways['w_control']) && in_array('add',$ownways['w_way'])"}*/
+    /**
+     * 根据UID获取该用户所有权限
+     * @param $uid
+     * @return array|int
+     */
+    protected function getWaysByUid($username){
+        //$uid = session('uid');
+        $find = $this->admins()->findById(array('username'=>$username));
+        $role_id = $find['role_id'];
+        $wid = $this->roles()->findById(array('role_id'=>$role_id));
+        //查看是否有权限
+        $len = strlen($wid['wid']);
+        if($len < 1){
+            return null;
+        }
+        //去除最后一个','
+        $wid['wid'] = substr($wid['wid'], 0, strlen($wid['wid'])-1);
+        $widArr = explode(',', $wid['wid']);
+        $ways = array();
+        for($i=0;$i<count($widArr);$i++){
+            $wid = $widArr[$i];
+            $findWay = $this->ways()->findById(array('wid'=>$wid));
+            $ways['w_control'][$i] = $findWay['w_control'];
+            $ways['w_way'][$i] = $findWay['w_way'];
+        }
+        return $ways;
+    }
+    protected function assignOwnWays($username){
+        $ways = $this->getWaysByUid($username);
+        //var_dump($ways);exit();
+        if(count($ways) == 0){
+            $ways['w_control'] = [];
+            $ways['w_way'] = [];
+            $this->assign('ownways', $ways);
+        }else{
+            //var_dump($ways);exit();
+            $this->assign('ownways', $ways);
+        }
+
+    }
+
+
     ///////model类
+    protected function admins(){
+        $admins = new Admins();
+        return $admins;
+    }
+    protected function hex(){
+        $hex = new AesCrypt();
+        return $hex;
+    }
     protected function clients(){
         $client = new Clients();
         return $client;
@@ -68,6 +125,19 @@ class Base extends Controller{
         $meters = new Meters();
         return $meters;
     }
+    protected function roles(){
+        $roles = new Roles();
+        return $roles;
+    }
+    protected function ways(){
+        $ways = new Ways();
+        return $ways;
+    }
+    protected function depts(){
+        $depts = new Depts();
+        return $depts;
+    }
+
     /**
      * 分页
      * @param $table
@@ -192,11 +262,45 @@ class Base extends Controller{
         $this->assign('meters', $meter);
     }
 
+    /**
+     * 订单
+     */
     protected function assignOrder(){
         $field = "oid,state,client,meterType,modelType,modelStart,modelEnd,modelNum,meterStart,meterEnd,assemStart,assemEnd,deliveryTime,orderNum,manufacturer,productPrinciple,deliveryStatus,orderCycle,assemCycle";
         $order = $this->orders()->select($field, '');
         $this->assign('order', $order);
     }
+
+    /**
+     * 部门
+     */
+    protected function assignDept(){
+        $field = 'de_id,dept_name,description,create_time';
+        $where = '';
+        $depts = $this->depts()->select($field, $where);
+        $this->assign('depts', $depts);
+    }
+
+    /**
+     * 角色
+     */
+    protected function assignRole(){
+        $field = 'role_id,role_name,remark,create_time,wid,status';
+        $where = '';
+        $roles = $this->roles()->select($field, $where);
+        $this->assign('roles', $roles);
+    }
+
+    /**
+     * 所有权限操作
+     */
+    protected function assignWays(){
+        $field = 'wid,w_name,pid,w_control,w_way,url,create_time,status';
+        $where = '';
+        $ways = $this->ways()->select($field, $where);
+        $this->assign('ways', $ways);
+    }
+
 
     /**
      * 日期计算-》周期(单位：日)

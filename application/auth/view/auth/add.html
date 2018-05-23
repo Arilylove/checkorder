@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加</title>
+    <!--<link rel="stylesheet" href="__BOOT__/css/bootstrap.css">-->
+    <style>
+        #alert-add{
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: rgba(0,0,0,0.5);
+        }
+        #alert-add form{
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            margin: auto;
+            width: 462px;
+            height:360px;
+            background: #fff;
+        }
+        #alert-add form h2{
+            text-align: center;
+            font-size: 18px;
+            color: #000000;
+        }
+
+    </style>
+</head>
+<body>
+<div id="alert-add">
+    <form action="#" method="post" enctype="multipart/form-data"  data-parsley-validate class="form-horizontal form-label-left">
+        <h2>添加操作菜单</h2>
+        <div class="form-group">
+            <div class="col-sm-2 col-md-2 col-lg-2 col-xs-12"></div>
+            <label class="col-sm-3 col-md-3 col-lg-3 col-xs-12">标签1</label>
+            <div class="col-sm-6 col-md-6 col-lg-6 col-xs-12">
+                <input type="text" name="" class="form-control col-md-7 col-xs-12">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 col-md-2 col-lg-2 col-xs-12"></div>
+            <label class="col-sm-3 col-md-3 col-lg-3 col-xs-12">标签2</label>
+            <div class="col-sm-6 col-md-6 col-lg-6 col-xs-12">
+                <input type="text" name="" class="form-control col-md-7 col-xs-12">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 col-md-2 col-lg-2 col-xs-12"></div>
+            <label class="col-sm-3 col-md-3 col-lg-3 col-xs-12">标签3</label>
+            <div class="col-sm-6 col-md-6 col-lg-6 col-xs-12">
+                <input type="text" name="" class="form-control col-md-7 col-xs-12">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 col-md-2 col-lg-2 col-xs-12"></div>
+            <label class="col-sm-3 col-md-3 col-lg-3 col-xs-12">标签4</label>
+            <div class="col-sm-6 col-md-6 col-lg-6 col-xs-12">
+                <input type="text" name="" class="form-control col-md-7 col-xs-12">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 col-md-2 col-lg-2 col-xs-12"></div>
+            <div class="col-sm-6 col-md-6 col-lg-6 col-xs-12">
+                <button type="submit" name="">确定</button>
+                <button type="button" class="alert-cancel">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

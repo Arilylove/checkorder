@@ -197,7 +197,7 @@
                                             <div class="col-md-6 col-sm-6 col-xs-12">
                                                 <select id="deliveryStatus" class="form-control col-md-7 col-xs-12" name="deliveryStatus" required="required">
                                                     {if condition="$order['deliveryStatus'] eq 0"}
-                                                    <option value="{$order['deliveryStatus']}">已发货</option>
+                                                    <option value="{$order['deliveryStatus']}">已完成</option>
                                                     <option value="1">生产中</option>
                                                     <option value="2">未下单</option>
                                                     {elseif condition="$order['deliveryStatus'] eq 1"}
@@ -208,6 +208,51 @@
                                                     <option value="{$order['deliveryStatus']}">未下单</option>
                                                     <option value="1">生产中</option>
                                                     <option value="0">已发货</option>
+                                                    {/if}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">客户化工具 <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <select class="form-control col-md-7 col-xs-12" name="customTool" required="required">
+                                                    {if condition="$order['customTool'] eq 0"}
+                                                    <option value="{$order['customTool']}">是</option>
+                                                    <option value="1">否</option>
+                                                    {else/}
+                                                    <option value="{$order['customTool']}">否</option>
+                                                    <option value="0">是</option>
+                                                    {/if}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">生产数据校验 <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <select class="form-control col-md-7 col-xs-12" name="dataVerify" required="required">
+                                                    {if condition="$order['dataVerify'] eq 0"}
+                                                    <option value="{$order['dataVerify']}">是</option>
+                                                    <option value="1">否</option>
+                                                    {else/}
+                                                    <option value="{$order['dataVerify']}">否</option>
+                                                    <option value="0">是</option>
+                                                    {/if}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">发货状态 <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <select class="form-control col-md-7 col-xs-12" name="isStatus" required="required">
+                                                    {if condition="$order['isStatus'] eq 0"}
+                                                    <option value="{$order['isStatus']}">是</option>
+                                                    <option value="1">否</option>
+                                                    {else/}
+                                                    <option value="{$order['isStatus']}">否</option>
+                                                    <option value="0">是</option>
                                                     {/if}
                                                 </select>
                                             </div>

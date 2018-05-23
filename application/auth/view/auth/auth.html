@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>权限管理</title>
+    <link rel="stylesheet" href="__BOOT__/css/bootstrap.css">
+    <link rel="stylesheet" href="__BOOT__/css/index.css"/>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button class="navbar-toggle" data-toggle="collapse" data-target="#left" style="float: left;">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="#" class="navbar-brand">bootstrap响应式首页</a>
+        </div>
+
+        <div id="lleft" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">首页</a></li>
+                <li><a href="#">用户</a></li>
+                <li><a href="#">客户</a></li>
+                <li><a href="#">其他</a></li>
+
+            </ul>
+        </div>
+
+    </div>
+
+</nav>
+<div class="container-fluid">
+    <!--左边列表页-->
+    <div class="row">
+        <div id="left" class="col-sm-4 col-md-4 col-lg-4 navbar-collapse collapse sidebar">
+            <ul class="nav nav-sidebar" style="margin-top: 10px;">
+                <li><a href="#">系统管理</a></li>
+                <li><a href="#">权限管理</a></li>
+                <li><a href="#">用户管理</a></li>
+                <li><a href="#">OA管理</a></li>
+                <li><a href="#">售后管理</a></li>
+                <li><a href="#">其他</a></li>
+            </ul>
+        </div>
+        <!--添加弹出框-->
+        {include file="auth/add"/}
+
+        <!--中间内容页-->
+        <div class="col-sm-8 col-md-8 col-lg-8 col-sm-offset-1 col-md-offset-1 col-lg-offset-1 main">
+            <h3 class="sub-header"><a href="#" class="class-add">添加操作菜单</a></h3>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>Header</th>
+                        <th>Header</th>
+                        <th>Header</th>
+                        <th>Header</th>
+                        <th>operation</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>1,001</td>
+                        <td>Lorem</td>
+                        <td>ipsum</td>
+                        <td>dolor</td>
+                        <td>sit</td>
+                        <td class="danger">
+                            <a href="#" class="class-edit">edit</a> |
+                            <a href="#" class="class-del">delete</a>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!--底部-->
+
+    </div>
+</div>
+
+<script type="application/javascript" src="__BOOT__/js/jquery-3.2.1.min.js"></script>
+<script type="application/javascript" src="__BOOT__/js/bootstrap.js"></script>
+<script>
+    $(function () {
+        $(".class-add").click(function () {
+            $("#alert-add").css("display","block")
+            $("#page").css("display","none")
+        })
+        $('.alert-cancel').click(function(){
+            $('#alert-box-update').hide();
+            $("#alert-add").hide();
+            window.location.reload();  //自动刷新本页面
+        });
+    })
+
+
+
+</script>
+</body>
+</html>

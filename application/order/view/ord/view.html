@@ -202,11 +202,50 @@
                                             <div class="col-md-6 col-sm-6 col-xs-12">
                                                 <select id="deliveryStatus" class="form-control col-md-7 col-xs-12" name="deliveryStatus" readonly>
                                                     {if condition="$order['deliveryStatus'] eq 0"}
-                                                    <option value="{$order['deliveryStatus']}">已发货</option>
+                                                    <option value="{$order['deliveryStatus']}">已完成</option>
                                                     {elseif condition="$order['deliveryStatus'] eq 1"}
                                                     <option value="{$order['deliveryStatus']}">生产中</option>
                                                     {else/}
                                                     <option value="{$order['deliveryStatus']}">未下单</option>
+                                                    {/if}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">客户化工具
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <select class="form-control col-md-7 col-xs-12" readonly name="customTool" required="required">
+                                                    {if condition="$order['customTool'] eq '0'"}
+                                                    <option value="{$order['customTool']}">是</option>
+                                                    {else/}
+                                                    <option value="{$order['customTool']}">否</option>
+                                                    {/if}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">生产数据校验
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <select class="form-control col-md-7 col-xs-12" readonly name="dataVerify" required="required">
+                                                    {if condition="$order['dataVerify'] eq 0"}
+                                                    <option value="{$order['dataVerify']}">是</option>
+                                                    {else/}
+                                                    <option value="{$order['dataVerify']}">否</option>
+                                                    {/if}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">发货状态 <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <select class="form-control col-md-7 col-xs-12" readonly name="isStatus" required="required">
+                                                    {if condition="$order['isStatus'] eq 0"}
+                                                    <option value="{$order['isStatus']}">是</option>
+                                                    {else/}
+                                                    <option value="{$order['isStatus']}">否</option>
                                                     {/if}
                                                 </select>
                                             </div>

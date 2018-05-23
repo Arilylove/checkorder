@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>订单管理</title>
+
     <style>
         table th{
             white-space: nowrap;
@@ -71,7 +72,7 @@
                             <div class="x_content">
 
                                 <div class="table-responsive">
-                                    <table class="table table-striped jambo_table bulk_action">
+                                    <table id="table" class="table table-striped jambo_table bulk_action">
                                         <thead>
                                         <tr class="headings">
                                             <th>国家</th>
@@ -79,10 +80,12 @@
                                             <th>基表型号</th>
                                             <th>订单数量</th>
                                             <th>电子模块类型</th>
-
+                                            <th>模块下单结束时间</th>
+                                            <th>基表订单号</th>
                                             <th>表号</th>
                                             <th>制造商</th>
                                             <th>生产状态</th>
+                                            <th>客户化工具</th>
                                             <th>备注说明</th>
                                             <th class="column-title no-link last" style="text-align: center;"><span class="nobr">操作</span>
                                             </th>
@@ -98,21 +101,27 @@
                                             <td>{$v.meterType}</td>
                                             <td>{$v.orderQty}</td>
                                             <td>{$v.modelType}</td>
-
+                                            <td>{$v.modelEnd}</td>
+                                            <td>{$v.orderNum}</td>
                                             <td>{$v.meterStart}~{$v.meterEnd}</td>
                                             <td>{$v.manufacturer}</td>
                                             {if condition="$v['deliveryStatus'] eq 0"}
-                                            <td>已发货</td>
+                                            <td>已完成</td>
                                             {elseif condition="$v['deliveryStatus'] eq 1"}
                                             <td>生产中</td>
                                             {else/}
                                             <td>未下单</td>
                                             {/if}
+                                            {if condition="$v['customTool'] eq 0"}
+                                            <td>是</td>
+                                            {else/}
+                                            <td>否</td>
+                                            {/if}
                                             <td>{$v.comments}</td>
 
                                             <td>
                                                 <a href="{:url('MeterOrder/view',['oid'=>$v['oid']])}" title="查看明细" class="glyphicon glyphicon-sunglasses" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
-
+                                                <a href="{:url('MeterOrder/eOrd',['oid'=>$v['oid']])}" title="修改" class="glyphicon glyphicon-edit" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
                                             </td>
                                         </tr>
                                         {/volist}
@@ -159,6 +168,7 @@
 <script src="__VENDOR__/jszip/dist/jszip.min.js"></script>
 <script src="__VENDOR__/pdfmake/build/pdfmake.min.js"></script>
 <script src="__VENDOR__/pdfmake/build/vfs_fonts.js"></script>
+
 
 <!-- Custom Theme Scripts -->
 <script src="__JS__/build/js/custom.min.js"></script>

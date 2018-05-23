@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>修改角色</title>
+
+    <link rel="stylesheet" href="__RECORD__/ztree/demo.css" type="text/css">
+    <link rel="stylesheet" href="__RECORD__/ztree/metroStyle.css" type="text/css">
+    <style type="text/css">
+        div#rMenu {position:absolute; visibility:hidden; top:0; background-color: #555;text-align: left;padding: 2px;}
+        div#rMenu ul li{
+            margin: 1px 0;
+            padding: 0 5px;
+            cursor: pointer;
+            list-style: none outside none;
+            background-color: #DFDFDF;
+        }
+        ul.ztree {
+            margin-top: 10px;
+            width:240px;
+            height:360px;
+            overflow: auto;
+            border:0 solid #000000;
+            background: white;
+        }
+        .ztree * {
+            font-size: 14px;
+            font-family: inherit;
+            color: #2f332a;
+        }
+    </style>
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+                <!--head-->
+                {include file="lic/head"/}
+                <!--head-->
+                <br />
+                <!-- sidebar menu -->
+                {include file="lic/left"/}
+                <!--/sidebar menu-->
+
+                <!-- /menu footer buttons -->
+                {include file="lic/foot"/}
+                <!-- /menu footer buttons -->
+            </div>
+        </div>
+        <!-- top navigation -->
+        {include file="lic/top"/}
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+            <div class="">
+                <div class="page-title">
+                    <div class="title_left">
+
+                    </div>
+
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>修改角色信息</h2>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <br />
+                            <form id="demo-form2" method="post" action="{:url('Role/eSave')}" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">角色名 <span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input type="text" id="last-name" name="role_name" value="{$role['role_name']}" required="required" class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">备注 <span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input type="text" name="remark" value="{$role['remark']}" required="required" class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">状态 </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <select id="middle-name" class="form-control col-md-7 col-xs-12" name="status">
+                                            <option value="{$role['status']}">{$role['status']}</option>
+                                            <option value="1" selected>正常</option>
+                                            <option value="0">禁用</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">权限 <span class="required">*</span>
+                                    </label>
+                                    <div class="control-label col-md-6 col-sm-6 col-xs-6">
+                                        <div class="zTreeDemoBackground left form-group">
+                                            <ul id="treeDemo" class="ztree"></ul>
+                                            <input type="hidden" name="wid" value="{$role['wid']}">
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="ln_solid"></div>
+                                <div class="form-group">
+                                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                        <a class="btn btn-primary" href="{:url('Role/index')}" type="button">取消</a>
+                                        <button type="submit" class="btn btn-success">确定</button>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /page content -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- jQuery -->
+<script src="__VENDOR__/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="__VENDOR__/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- FastClick -->
+<script src="__VENDOR__/fastclick/lib/fastclick.js"></script>
+<!-- NProgress -->
+<script src="__VENDOR__/nprogress/nprogress.js"></script>
+<!-- bootstrap-progressbar -->
+<script src="__VENDOR__/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+<!-- iCheck -->
+<script src="__VENDOR__/iCheck/icheck.min.js"></script>
+<!-- bootstrap-daterangepicker -->
+<script src="__VENDOR__/moment/min/moment.min.js"></script>
+<script src="__VENDOR__/bootstrap-daterangepicker/daterangepicker.js"></script>
+<!-- bootstrap-wysiwyg -->
+<script src="__VENDOR__/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js"></script>
+<script src="__VENDOR__/jquery.hotkeys/jquery.hotkeys.js"></script>
+<script src="__VENDOR__/google-code-prettify/src/prettify.js"></script>
+<!-- jQuery Tags Input -->
+<script src="__VENDOR__/jquery.tagsinput/src/jquery.tagsinput.js"></script>
+<!-- Switchery -->
+<script src="__VENDOR__/switchery/dist/switchery.min.js"></script>
+<!-- Select2 -->
+<script src="__VENDOR__/select2/dist/js/select2.full.min.js"></script>
+<!-- Parsley -->
+<script src="__VENDOR__/parsleyjs/dist/parsley.min.js"></script>
+<!-- Autosize -->
+<script src="__VENDOR__/autosize/dist/autosize.min.js"></script>
+<!-- jQuery autocomplete -->
+<script src="__VENDOR__/devbridge-autocomplete/dist/jquery.autocomplete.min.js"></script>
+<!-- starrr -->
+<script src="__VENDOR__/starrr/dist/starrr.js"></script>
+<!-- Custom Theme Scripts -->
+<script src="__JS__/build/js/custom.min.js"></script>
+
+<!--ztree-->
+<script type="text/javascript" src="__RECORD__/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="__RECORD__/ztree/jquery.ztree.excheck.js"></script>
+<script type="text/javascript" src="__RECORD__/ztree/jquery.ztree.exedit.js"></script>
+<script>
+    var setting = {
+        view: {
+            selectedMulti: true             /*允许选中多个节点*/
+        },
+        check: {
+            enable: true,
+            autoCheckTrigger: true
+        },
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        edit: {
+            enable: false
+        }
+    };
+    setting.check.chkboxType = { "Y" : "s", "N" : "s" };
+
+    var roleJson = '{$roleJson}';
+    roleJson = JSON.parse(roleJson);
+    console.log(roleJson)
+    //获取wid值
+    var widString = roleJson.wid;
+    widString = widString.substr(0, widString.length-1)
+    var widArr = widString.split(',');
+    console.log(widArr)
+    var data = '{$jsonways}'
+    data = JSON.parse(data);
+    console.log(data)
+    var zNodes = [];
+    for(var i=0;i<data.length;i++){
+        for(var j=0;j<widArr.length;j++){
+            if(data[i].pid == '0'){
+                if(data[i].wid == widArr[j]){
+                    zNodes[i] = {id:data[i].wid, pId:data[i].pid, name:data[i].w_name, open:true, isParent:true,checked:true}
+                }else {
+                    zNodes[i] = {id:data[i].wid, pId:data[i].pid, name:data[i].w_name, open:true, isParent:true}
+                }
+            }else{
+                if(data[i].wid == widArr[j]){
+                    zNodes[i] = {id:data[i].wid, pId:data[i].pid, name:data[i].w_name,checked:true}
+                }else {
+                    zNodes[i] = {id: data[i].wid, pId: data[i].pid, name: data[i].w_name}
+
+                }
+            }
+        }
+
+    }
+
+    $(document).ready(function(){
+        $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+        /*添加的*/
+        var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+
+        var nodes = treeObj.getChangeCheckedNodes()
+        //nodes = Json
+        //console.log(nodes)
+        var tree = '';
+        for(var i=0;i<nodes.length;i++){
+            var treeNode = nodes[i]
+            if(treeNode.checked == true){
+                tree += treeNode.id + ',';
+            }
+            //console.log((treeNode?treeNode.name:"root") + "checked " +(treeNode.checked?"true":"false"));
+        }
+        //console.log(tree)
+        $("input[name='tree']").val(tree)
+
+    });
+
+    var newCount = 1;
+    function addHoverDom(treeId, treeNode) {
+        var sObj = $("#" + treeNode.tId + "_span");
+        if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
+        /*var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+            + "' title='add node' onfocus='this.blur();'></span>";
+        sObj.after(addStr);*/
+        var btn = $("#addBtn_"+treeNode.tId);
+        if (btn) btn.bind("click", function(){
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+            zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name:"new node" + (newCount++)});
+            return false;
+        });
+    };
+    function removeHoverDom(treeId, treeNode) {
+        $("#addBtn_"+treeNode.tId).unbind().remove();
+    };
+
+    function update() {
+        var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+        var nodes = treeObj.getChangeCheckedNodes();
+        //console.log(nodes,'nodesnodesnodesnodes')
+        var role_name = $("input[name='role_name']").val()
+        var remark = $("input[name='remark']").val()
+        var status = $("select[name='status']").val()
+
+        var tree = '';
+        for(var i=0;i<nodes.length;i++){
+            var treeNode = nodes[i]
+            if(treeNode.checked == true){
+                tree += treeNode.id + ',';
+            }
+            //console.log((treeNode?treeNode.name:"root") + "checked " +(treeNode.checked?"true":"false"));
+        }
+        //console.log(tree)
+        $("input[name='wid']").val(tree)
+
+        var jsonData = {'role_name':role_name,'remark':remark,'status':status,'wid':tree}
+        //console.log(jsonData)
+        //alert(jsonData)
+        $.ajax({
+            //几个参数需要注意一下
+            type: "POST",//方法类型
+            dataType: "json",//预期服务器返回的数据类型
+            url: '' ,//url
+            data: jsonData,
+            success: function (result) {
+                //console.log(result);//打印服务端返回的数据(调试用)
+                //$("input[name='tree']").val(tree)
+                //return true;
+            }
+        });
+    }
+
+</script>
+
+</body>
+</html>

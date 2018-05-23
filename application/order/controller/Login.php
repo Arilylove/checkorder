@@ -10,7 +10,7 @@ use app\order\crypt\AesCrypt;
 /*
 *登录控制器
 */
-class Login extends Controller{
+class Login extends Controller {
 
     public function admin(){
         $a = new Admins();
@@ -19,6 +19,7 @@ class Login extends Controller{
     public function index(){
         return $this->fetch('login/index');
     }
+
 
     //后台登录
     public function login(){
@@ -37,17 +38,20 @@ class Login extends Controller{
         if ($admin['password'] != $hasAdmin['password']){
             return $this->error('密码错误');
         }
-        //var_dump($admin['username']);exit();
+        //var_dump($hasAdmin);exit();
         session('username', $admin['username']);
         session('surname', $hasAdmin['surname']);
         session('status', $hasAdmin['status']); //保存用户权限，判断是管理员还是用户。
+
         //var_dump($hasAdmin['status']);exit;
         if ($hasAdmin['status'] == 0){
             return $this->success('登录成功', 'Admin/index');
         }else if($hasAdmin['status'] == 1){
             return $this->success('登录成功', 'State/stLi');
+        }else if($hasAdmin['status'] == 2){
+            return $this->success('登录成功', 'MeterOrder/index');
         }
-        return $this->success('登录成功', 'MeterOrder/index');
+        return $this->success('登录成功', 'Admin/index');
 
     }
     //验证码
@@ -65,6 +69,7 @@ class Login extends Controller{
         if (true){
             session('username', null);
             session('surname', null);
+            session('uid', null);
             return $this->fetch('login/index');
         }
         return false;

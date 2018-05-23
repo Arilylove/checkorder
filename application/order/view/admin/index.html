@@ -71,6 +71,8 @@
                           <th class="column-title">用户名</th>
                           <th class="column-title">密码</th>
                           <th class="column-title">姓名</th>
+                          <th class="column-title">部门</th>
+                          <th class="column-title">角色</th>
                           <th class="column-title">创建日期</th>
                           <th class="column-title">用户类型</th>
                           <th class="column-title no-link last" style="text-align: center;"><span class="nobr">操作</span>
@@ -91,13 +93,17 @@
                           <td>{$v.username}</td>
                           <td>{$v.password}</td>
                           <td>{$v.surname}</td>
+                          <td>{$v.de_id}</td>
+                          <td>{$v.role_id}</td>
                           <td>{$v.createTime}</td>
                           {if condition="$v['status'] eq '0'"}
                           <td>管理员</td>
                           {elseif condition="$v['status'] eq '1'"}
                           <td>用户</td>
-                          {else/}
+                          {elseif condition="$v['status'] eq '2'"/}
                           <td>表计组</td>
+                          {else/}
+                          <td>超级管理员</td>
                           {/if}
                           <td style="text-align: center;">
                             <a href="{:url('Admin/edit',['adId'=>$v['adId']])}" title="修改" class="glyphicon glyphicon-edit" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;

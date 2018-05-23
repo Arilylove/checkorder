@@ -14,25 +14,13 @@ class Admin extends Base{
 
 
     /**
-     * 引用其他类
-     **/
-    public function admin(){
-        $ad = new Admins();
-        return $ad;
-    }
-    public function hex(){
-        $hex = new AesCrypt();
-        return $hex;
-    }
-
-    /**
 	*查询修改的信息
 	*/
     public function one(){
         $adId = input('param.adId');
         $where = array('adId'=>$adId);
-        $field = 'adId,username,surname,password,status,createTime';
-        $data = $this->admin()->select($field, $where);
+        $field = 'adId,username,surname,password,status,createTime,role_id,de_id';
+        $data = $this->admins()->select($field, $where);
         echo json_encode($data);
     }
 
@@ -40,19 +28,26 @@ class Admin extends Base{
      * 用户列表
      * */
     public function index(){
-        $field = 'username,surname,password,adId,status,createTime';
-        $where = '';
+        $field = 'username,surname,password,adId,status,createTime,role_id,de_id';
+        //显示比自己权限小的用户（0管理员，1用户，2表计组）
+        $status = session('status');
+        if($status == 3){
+            $where = '';
+        }else{
+            $where = array('status'=>['>=', $status], 'status'=>['<>', 3]);
+        }
+        //$where = '';
         $order = 'createTime desc';
-        $admin = $this->admin()->selectPage($field, $where, $order);
+        $admin = $this->admins()->selectPage($field, $where, $order);
         $this->page($admin);
         $this->assign('admin', $admin);
         return $this->fetch("admin/index");
     }
 
     public function table(){
-        $field = 'adId,username,surname,password,createTime,status';
+        $field = 'adId,username,surname,password,createTime,status,role_id,de_id';
         $where = '';
-        $admin = $this->admin()->select($field, $where);
+        $admin = $this->admins()->select($field, $where);
         foreach ($admin as $key=>$value){
             if($admin[$key]['status'] == '0'){
                 $admin[$key]['status'] = '管理员';
@@ -70,6 +65,8 @@ class Admin extends Base{
      * @return mixed
      */
     public function add(){
+        $this->assignDept();
+        $this->assignRole();
         return $this->fetch('admin/add');
     }
     
@@ -78,7 +75,7 @@ class Admin extends Base{
      * */
     public function addAdmin(){
         $hex = $this->hex();
-        $ad = $this->admin();
+        $ad = $this->admins();
         $admin = input('post.');
         //$postPassword = input('param.password');    //获取的默认密码值：123456；
         $admin['password'] = '123456';
@@ -108,8 +105,10 @@ class Admin extends Base{
     public function edit(){
         $adId = input('param.adId');
         $where = array('adId'=>$adId);
-        $field = 'adId,username,surname,password,status,createTime';
-        $data = $this->admin()->select($field, $where);
+        $field = 'adId,username,surname,password,status,createTime,role_id,de_id';
+        $data = $this->admins()->select($field, $where);
+        $this->assignDept();
+        $this->assignRole();
         $this->assign('admin', $data[0]);
         return $this->fetch('admin/update');
     }
@@ -118,7 +117,7 @@ class Admin extends Base{
      * */
     public function editAdmin(){
         
-        $ad = $this->admin();
+        $ad = $this->admins();
         $time = $_SERVER['REQUEST_TIME'];         //客户端向服务端发送请求的时间
         $admin = input('post.');
         $admin['password'] = $this->hex()->encrypt($admin['password']);   //密码用AES加密；
@@ -144,15 +143,15 @@ class Admin extends Base{
     public function deleteAdmin(){
         $adId = input('param.adId');
         //var_dump($adId);exit();
-        $admin = $this->admin();
+        $admin = $this->admins();
         $where = array('adId'=>$adId);
-        $user = $this->admin()->findById($where);
+        $user = $this->admins()->findById($where);
         $self = session('username');
         //var_dump($self);exit();
         if($self == $user['username']){
             return $this->error('不能删除自己');
         }
-        if($user['username'] == 'administrator'){
+        if($user['status'] == 3){
             return $this->error('超级管理员不可删除');
         }
         $delete = $admin->del($where);
@@ -168,7 +167,7 @@ class Admin extends Base{
      */
     public function search(){
         $search = input('param.search');
-        $data = $this->admin()->searchLike($search);
+        $data = $this->admins()->searchLike($search);
         $this->page($data);
         $this->assign('admin', $data);
         return $this->fetch('admin/index');
