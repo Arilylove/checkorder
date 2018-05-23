@@ -202,12 +202,12 @@
                                                     <option value="2">未下单</option>
                                                     {elseif condition="$order['deliveryStatus'] eq 1"}
                                                     <option value="{$order['deliveryStatus']}">生产中</option>
-                                                    <option value="0">已发货</option>
+                                                    <option value="0">已完成</option>
                                                     <option value="2">未下单</option>
                                                     {else/}
                                                     <option value="{$order['deliveryStatus']}">未下单</option>
                                                     <option value="1">生产中</option>
-                                                    <option value="0">已发货</option>
+                                                    <option value="0">已完成</option>
                                                     {/if}
                                                 </select>
                                             </div>
