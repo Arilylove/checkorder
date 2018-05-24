@@ -118,6 +118,7 @@ class Role extends Base{
             'wid'=>$post['wid'],
             'status'=>$post['status']
         );
+        var_dump($roles);exit();
         $update = $this->roles()->update($roles, $where);
         if(!$update){
             return $this->error('修改失败');

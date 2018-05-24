@@ -86,6 +86,8 @@
                                             <th>制造商</th>
                                             <th>生产状态</th>
                                             <th>客户化工具</th>
+                                            <th>生产数据校验</th>
+                                            <th>发货状态</th>
                                             <th>备注说明</th>
                                             <th class="column-title no-link last" style="text-align: center;"><span class="nobr">操作</span>
                                             </th>
@@ -113,6 +115,16 @@
                                             <td>未下单</td>
                                             {/if}
                                             {if condition="$v['customTool'] eq 0"}
+                                            <td>是</td>
+                                            {else/}
+                                            <td>否</td>
+                                            {/if}
+                                            {if condition="$v['dataVerify'] eq 0"}
+                                            <td>是</td>
+                                            {else/}
+                                            <td>否</td>
+                                            {/if}
+                                            {if condition="$v['isStatus'] eq 0"}
                                             <td>是</td>
                                             {else/}
                                             <td>否</td>

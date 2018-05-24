@@ -75,8 +75,9 @@
                         </div>
                         <div class="x_content">
                             <br />
-                            <form id="demo-form2" method="post" action="{:url('Role/eSave')}" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
+                            <form id="demo-form2" method="post" onsubmit="update()" action="{:url('Role/eSave')}" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
 
+                                <input type="hidden" name="role_id" value="{$role['role_id']}">
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">角色名 <span class="required">*</span>
                                     </label>
@@ -195,31 +196,66 @@
 
     var roleJson = '{$roleJson}';
     roleJson = JSON.parse(roleJson);
-    console.log(roleJson)
+    //console.log(roleJson)
     //获取wid值
     var widString = roleJson.wid;
     widString = widString.substr(0, widString.length-1)
     var widArr = widString.split(',');
     var widLen = widArr.length;
+    /*整数数组*/
+   /* var intWid = [];
+    intWid = widArr.map(function(data){
+        return +data;
+    });
+    //console.log(intWid);
+    /!*数字按顺序排列*!/
+    //外层控制排序轮次
+    function sortWid(arr) {
+        var len = arr.length;
+        var minIndex, temp;
+        //console.time('选择排序耗时');
+        for (var i = 0; i < len - 1; i++) {
+            minIndex = i;
+            for (var j = i + 1; j < len; j++) {
+                if (arr[j] < arr[minIndex]) { //寻找最小的数
+                    minIndex = j; //将最小数的索引保存
+                }
+            }
+            temp = arr[i];
+            arr[i] = arr[minIndex];
+            arr[minIndex] = temp;
+        }
+        //console.timeEnd('选择排序耗时');
+        return arr;
+    }
+    widArr = sortWid(intWid);*/
     console.log(widArr)
+
+    var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
     var data = '{$jsonways}'
     data = JSON.parse(data);
-    console.log(data)
+    // console.log(data)
     var zNodes = [];
-    /* widLen小于i */
-    for(var j=0;j<widLen;j++){
-        for(var i = j;i<data.length;i++){
-            if(data[i].pid == '0'){
+    for(var i=0;i<data.length;i++){
+        for(var j=0;j<widLen;j++){
+            //父节点
+            if(data[i].pid == 0){
                 if(data[i].wid == widArr[j]){
+                     data[i].checked = true;
                     zNodes[i] = {id:data[i].wid, pId:data[i].pid, name:data[i].w_name, isParent:true, checked:true}
-                }else {
-                    zNodes[i] = {id:data[i].wid, pId:data[i].pid, name:data[i].w_name, isParent:true}
+                 }else{
+                     zNodes[i] = {id:data[i].wid, pId:data[i].pid, name:data[i].w_name, isParent:true, checked:data[i].checked}
                 }
-            }else{
+
+            }else {    //子节点
                 if(data[i].wid == widArr[j]){
+                    data[i].checked = true;
+                    //console.log(data[i].wid)
+                    //console.log(typeof (data[i].wid))
                     zNodes[i] = {id:data[i].wid, pId:data[i].pid, name:data[i].w_name, checked:true}
-                }else {
-                    zNodes[i] = {id: data[i].wid, pId: data[i].pid, name: data[i].w_name}
+                }else{
+                    zNodes[i] = {id:data[i].wid, pId:data[i].pid, name:data[i].w_name, checked:data[i].checked}
+                    //console.log(data[i].wid)
                 }
 
             }
@@ -227,12 +263,36 @@
 
     }
 
+
+    /*for(var j=0;j<widLen;j++){
+        // console.log(widArr[j],'ssssss')
+
+        for(var i=0;i<data.length;i++){
+            // console.log(data[i],'iiiiiiii')
+            if(data[i].wid == widArr[j]){
+                data[i].checked=true
+
+            }
+
+
+        }
+    }
+    //console.log(data,'iiiiiiii')
+    for(var i=0;i<data.length;i++){
+        if(data[i].pid == '0'){
+            zNodes[i] = {id:data[i].wid, pId:data[i].pid, name:data[i].w_name, isParent:true,checked:data[i].checked}
+        }else{
+            zNodes[i] = {id:data[i].wid, pId:data[i].pid, name:data[i].w_name,checked:data[i].checked}
+        }
+    }*/
+
+
     $(document).ready(function(){
         $.fn.zTree.init($("#treeDemo"), setting, zNodes);
         /*添加的*/
         var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
 
-        var nodes = treeObj.getChangeCheckedNodes()
+        var nodes = treeObj.getCheckedNodes()
         //nodes = Json
         //console.log(nodes)
         var tree = '';
@@ -268,7 +328,7 @@
 
     function update() {
         var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
-        var nodes = treeObj.getChangeCheckedNodes();
+        var nodes = treeObj.getCheckedNodes();
         //console.log(nodes,'nodesnodesnodesnodes')
         var role_name = $("input[name='role_name']").val()
         var remark = $("input[name='remark']").val()

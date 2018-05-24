@@ -212,6 +212,8 @@
               zNodes[i] = {id:data[i].wid, pId:data[i].pid, name:data[i].w_name}
           }
       }
+      console.log(zNodes)
+
       $(document).ready(function(){
           $.fn.zTree.init($("#treeDemo"), setting, zNodes);
           /*添加的*/
@@ -252,7 +254,7 @@
 
       function add() {
           var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
-          var nodes = treeObj.getChangeCheckedNodes();
+          var nodes = treeObj.getCheckedNodes();
           //console.log(nodes,'nodesnodesnodesnodes')
           var role_name = $("input[name='role_name']").val()
           var remark = $("input[name='remark']").val()
