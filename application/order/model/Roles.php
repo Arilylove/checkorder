@@ -57,6 +57,14 @@ class Roles
         $data = Db::table($this->tableName)->field($field)->where($where)->order($order)->paginate($num, $count, ['query' => request()->param()]);
         return $data;
     }
+    public function searchLike($search){
+        $num = 10;
+        $count = Db::table($this->tableName)->where('role_name', 'like', "%$search%")->whereOr('remark', 'like', "%$search%")
+            ->count();
+        $data = Db::table($this->tableName)->where('role_name', 'like', "%$search%")->whereOr('remark', 'like', "%$search%")
+            ->paginate($num, $count, ['query' => request()->param()]);
+        return $data;
+    }
 
 
 }

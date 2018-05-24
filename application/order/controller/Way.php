@@ -55,6 +55,11 @@ class Way extends Base{
             'status'=>$post['status'],
             'url'=>$post['w_control'].'/'.$post['w_way']
         );
+        //基本验证
+        $validate = $this->validate($data, 'Ways');
+        if(true !== $validate){
+            return $this->error(" $validate ");
+        }
         $add = $this->ways()->add($data, '');
         if(!$add){
             return $this->error('添加失败');
@@ -93,6 +98,11 @@ class Way extends Base{
             'status'=>$post['status'],
             'url'=>$post['w_control'].'/'.$post['w_way']
         );
+        //基本验证
+        $validate = $this->validate($data, 'Ways');
+        if(true !== $validate){
+            return $this->error(" $validate ");
+        }
         $update = $this->ways()->update($data, $where);
         if(!$update){
             return $this->error('修改失败');

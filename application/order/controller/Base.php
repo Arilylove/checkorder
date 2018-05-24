@@ -25,8 +25,8 @@ use app\order\model\Depts;
 
 class Base extends Controller{
     public function _initialize(){
-        $username = session('username');
-        $status = session('status');
+        $username = session('orderuser');
+        $status = session('orderstatus');
         $surname = session('surname');
         $a = is_null($username);
         //var_dump($a);exit();
@@ -155,13 +155,13 @@ class Base extends Controller{
       *修改密码
       * */
     public function update(){
-        $username = session('username');
+        $username = session('orderuser');
         $this->assign('username', $username);
         return $this->fetch('lic/upPass');
     }
 
     public function updatePassword(){
-        $username = session('username');
+        $username = session('orderuser');
         //$this->assign('username', $username);
         $where = array('username'=>$username);
         $admin = Db::table('admin')->where($where)->find();
@@ -194,7 +194,7 @@ class Base extends Controller{
         if (!$result){
             return $this->error('修改失败');
         }
-        session('username', null);
+        session('orderuser', null);
         return $this->success('修改成功,返回登录界面', 'Login/index');
 
     }

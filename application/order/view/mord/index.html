@@ -80,7 +80,7 @@
                                             <th>基表型号</th>
                                             <th>订单数量</th>
                                             <th>电子模块类型</th>
-                                            <th>模块下单结束时间</th>
+                                            <th>模块交付时间</th>
                                             <th>基表订单号</th>
                                             <th>表号</th>
                                             <th>制造商</th>
@@ -130,7 +130,6 @@
                                             <td>否</td>
                                             {/if}
                                             <td>{$v.comments}</td>
-
                                             <td>
                                                 <a href="{:url('MeterOrder/view',['oid'=>$v['oid']])}" title="查看明细" class="glyphicon glyphicon-sunglasses" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
                                                 <a href="{:url('MeterOrder/eOrd',['oid'=>$v['oid']])}" title="修改" class="glyphicon glyphicon-edit" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;

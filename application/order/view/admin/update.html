@@ -97,6 +97,7 @@
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">部门 </label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                         <select class="form-control col-md-7 col-xs-12" name="de_id">
+                                            <option value="{$admin['de_id']}">{$admin['dept_name']}</option>
                                             {volist name="depts" id="v"}
                                             <option value="{$v['de_id']}">{$v.dept_name}</option>
                                             {/volist}
@@ -106,11 +107,19 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">角色 </label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <!--不可修改自己所属角色-->
+                                    {if condition="$username eq $admin['username']"}
+                                        <select class="form-control col-md-7 col-xs-12" readonly name="role_id">
+                                            <option value="{$admin['role_id']}">{$admin['role_name']}</option>
+                                        </select>
+                                    {else/}
                                         <select class="form-control col-md-7 col-xs-12" name="role_id">
+                                            <option value="{$admin['role_id']}">{$admin['role_name']}</option>
                                             {volist name="roles" id="v"}
                                             <option value="{$v['role_id']}">{$v.role_name}</option>
                                             {/volist}
                                         </select>
+                                    {/if}
                                     </div>
                                 </div>
 

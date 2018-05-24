@@ -21,7 +21,7 @@ class Dept extends Base{
     public function index(){
         $field = 'de_id,dept_name,description,create_time';
         $where = '';
-        $order = 'create_time desc';
+        $order = 'create_time asc';
         $data = $this->depts()->page($field, $where, $order);
         $this->page($data);
         $this->assign('depts', $data);
@@ -45,6 +45,11 @@ class Dept extends Base{
             'description'=>$post['description'],
             'create_time'=>date('Y-m-d H:i:s', time())
         );
+        //基本验证
+        $validate = $this->validate($data, 'Depts');
+        if(true !== $validate){
+            return $this->error(" $validate ");
+        }
         $add = $this->depts()->add($data, '');
         if(!$add){
             return $this->error('添加失败');
@@ -92,6 +97,11 @@ class Dept extends Base{
             'dept_name'=>$post['dept_name'],
             'description'=>$post['description']
         );
+        //基本验证
+        $validate = $this->validate($data, 'Depts');
+        if(true !== $validate){
+            return $this->error(" $validate ");
+        }
         $update = $this->depts()->update($data, $where);
         if(!$update){
             return $this->error('修改失败');
@@ -122,6 +132,15 @@ class Dept extends Base{
             return $this->error('删除失败');
         }
         return $this->success("删除成功", 'Dept/index');
+    }
+
+    public function search(){
+        $search = input('param.search');
+        $data = $this->depts()->searchLike($search);
+        //var_dump($data);exit();
+        $this->page($data);
+        $this->assign('depts', $data);
+        return $this->fetch('Dept/index');
     }
 
 

@@ -96,9 +96,13 @@
                                     <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">状态 </label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                         <select id="middle-name" class="form-control col-md-7 col-xs-12" name="status">
-                                            <option value="{$role['status']}">{$role['status']}</option>
-                                            <option value="1" selected>正常</option>
+                                            {if condition="$role['status'] eq 1"}
+                                            <option value="{$role['status']}">正常</option>
                                             <option value="0">禁用</option>
+                                            {else/}
+                                            <option value="{$role['status']}">禁用</option>
+                                            <option value="1">正常</option>
+                                            {/if}
                                         </select>
                                     </div>
                                 </div>
@@ -271,10 +275,7 @@
             // console.log(data[i],'iiiiiiii')
             if(data[i].wid == widArr[j]){
                 data[i].checked=true
-
             }
-
-
         }
     }
     //console.log(data,'iiiiiiii')
@@ -285,7 +286,6 @@
             zNodes[i] = {id:data[i].wid, pId:data[i].pid, name:data[i].w_name,checked:data[i].checked}
         }
     }*/
-
 
     $(document).ready(function(){
         $.fn.zTree.init($("#treeDemo"), setting, zNodes);
@@ -329,7 +329,7 @@
     function update() {
         var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
         var nodes = treeObj.getCheckedNodes();
-        //console.log(nodes,'nodesnodesnodesnodes')
+        // console.log(nodes,'nodesnodesnodesnodes')
         var role_name = $("input[name='role_name']").val()
         var remark = $("input[name='remark']").val()
         var status = $("select[name='status']").val()
@@ -355,9 +355,6 @@
             url: '' ,//url
             data: jsonData,
             success: function (result) {
-                //console.log(result);//打印服务端返回的数据(调试用)
-                //$("input[name='tree']").val(tree)
-                //return true;
             }
         });
     }

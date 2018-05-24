@@ -30,15 +30,17 @@ class Admin extends Base{
     public function index(){
         $field = 'username,surname,password,adId,status,createTime,role_id,de_id';
         //显示比自己权限小的用户（0管理员，1用户，2表计组）
-        $status = session('status');
+        $status = session('orderstatus');
         if($status == 3){
             $where = '';
         }else{
             $where = array('status'=>['>=', $status], 'status'=>['<>', 3]);
         }
         //$where = '';
-        $order = 'createTime desc';
+        $order = 'createTime asc';
         $admin = $this->admins()->selectPage($field, $where, $order);
+        $admin = $this->resetAdmins($admin);
+        //var_dump($admin);exit();
         $this->page($admin);
         $this->assign('admin', $admin);
         return $this->fetch("admin/index");
@@ -106,10 +108,12 @@ class Admin extends Base{
         $adId = input('param.adId');
         $where = array('adId'=>$adId);
         $field = 'adId,username,surname,password,status,createTime,role_id,de_id';
-        $data = $this->admins()->select($field, $where);
+        $data = $this->admins()->findById($where);
+        //var_dump($data);exit();
+        $data = $this->resetAdmin($data);
         $this->assignDept();
         $this->assignRole();
-        $this->assign('admin', $data[0]);
+        $this->assign('admin', $data);
         return $this->fetch('admin/update');
     }
     /**
@@ -146,7 +150,7 @@ class Admin extends Base{
         $admin = $this->admins();
         $where = array('adId'=>$adId);
         $user = $this->admins()->findById($where);
-        $self = session('username');
+        $self = session('orderuser');
         //var_dump($self);exit();
         if($self == $user['username']){
             return $this->error('不能删除自己');
@@ -171,6 +175,40 @@ class Admin extends Base{
         $this->page($data);
         $this->assign('admin', $data);
         return $this->fetch('admin/index');
+
+    }
+
+    /**
+     * 用户信息重新组合
+     * @param $admins
+     * @return mixed
+     */
+    private function resetAdmins($admins){
+        $len = count($admins);
+        for ($i=0;$i<$len;$i++){
+            $admins[$i] = $this->resetAdmin($admins[$i]);
+        }
+        return $admins;
+    }
+
+    /**
+     * 单个用户信息重新组合
+     * @param $admin
+     */
+    private function resetAdmin($admin){
+        $len = count($admin);
+        if($len >= 1){
+            $de_id = $admin['de_id'];
+            $role_id = $admin['role_id'];
+            $findDept = $this->depts()->findById(array('de_id'=>$de_id));
+            $findRole = $this->roles()->findById(array('role_id'=>$role_id));
+            $admin['role_name'] = $findRole['role_name'];
+            $admin['dept_name'] = $findDept['dept_name'];
+        }else{
+            $admin['role_name'] = '';
+            $admin['dept_name'] = '';
+        }
+        return $admin;
 
     }
 

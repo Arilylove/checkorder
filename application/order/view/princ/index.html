@@ -45,7 +45,9 @@
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="x_panel">
                             <div class="x_title">
+                                {if condition="in_array('Principle',$ownways['w_control']) && in_array('aPrinc',$ownways['w_way'])"}
                                 <a href="{:url('Principle/aPrinc')}" class="add-btn">添加生产负责人</a>
+                                {/if}
                                 <ul class="nav navbar-right panel_toolbox">
                                     <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                                     </li>
@@ -83,8 +85,12 @@
                                             <td>{$v.productPrinciple}</td>
                                             <td>{$v.position}</td>
                                             <td style="text-align: center;">
+                                                {if condition="in_array('Principle',$ownways['w_control']) && in_array('ePrinc',$ownways['w_way'])"}
                                                 <a href="{:url('Principle/ePrinc',['pid'=>$v['pid']])}" title="修改" class="glyphicon glyphicon-edit" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
+                                                {/if}
+                                                {if condition="in_array('Principle',$ownways['w_control']) && in_array('dPrinc',$ownways['w_way'])"}
                                                 <a href="javascript:void (0);" title="删除" class="glyphicon glyphicon-remove class-del" onclick=confirmDel("{$v['pid']}") style="color: red;font-size: 18px;"></a>
+                                                {/if}
                                             </td>
                                         </tr>
                                         {/volist}

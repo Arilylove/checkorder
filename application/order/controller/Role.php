@@ -23,7 +23,7 @@ class Role extends Base{
     public function index(){
         $field = 'role_id,role_name,remark,create_time,wid,status';
         $where = '';
-        $order = 'create_time desc';
+        $order = 'create_time asc';
         $data = $this->roles()->page($field, $where, $order);
         $this->page($data);
         $this->assign('roles', $data);
@@ -57,6 +57,12 @@ class Role extends Base{
            'wid'=>$post['wid'],
            'status'=>$post['status']
         );
+        //基本验证
+        $validate = $this->validate($roles, 'Roles');
+        if(true !== $validate){
+            return $this->error(" $validate ");
+        }
+        //var_dump($roles);exit();
         $add = $this->roles()->add($roles, '');
         if(!$add){
             return $this->error('添加失败');
@@ -71,14 +77,11 @@ class Role extends Base{
      */
     public function edit(){
         $id = input('param.role_id');
-        //不可修改自己所属角色
-        $uid = session('uid');
-        $findOwnRole = $this->admins()->findById(array('adId'=>$uid));
-        if($id == $findOwnRole['role_id']){
-            return $this->error("不可修改自己的角色");
-        }
         $where = array('role_id'=>$id);
         $find = $this->roles()->findById($where);
+        if(!$find){
+            return $this->error("角色不存在");
+        }
         $field = 'wid,w_name,pid,w_control,w_way,url,create_time,status';
         $where = '';
         $data = $this->ways()->select($field, $where);
@@ -91,16 +94,6 @@ class Role extends Base{
         return $this->fetch('role/update');
     }
 
-    /**
-     * json数据u
-     */
-    public function orderJson(){
-        $id = input('param.role_id');
-        $where = array('role_id'=>$id);
-        $field = 'role_id,role_name,remark,create_time,wid,status';
-        $data = $this->roles()->select($field, $where);
-        echo json_encode($data);
-    }
     /**
      * 修改action
      */
@@ -118,13 +111,28 @@ class Role extends Base{
             'wid'=>$post['wid'],
             'status'=>$post['status']
         );
-        var_dump($roles);exit();
+        //基本验证
+        $validate = $this->validate($roles, 'Roles');
+        if(true !== $validate){
+            return $this->error(" $validate ");
+        }
+        //var_dump($roles);exit();
         $update = $this->roles()->update($roles, $where);
         if(!$update){
             return $this->error('修改失败');
         }
         return $this->success("修改成功", 'Role/index');
 
+    }
+    /**
+     * json数据
+     */
+    public function orderJson(){
+        $id = input('param.role_id');
+        $where = array('role_id'=>$id);
+        $field = 'role_id,role_name,remark,create_time,wid,status';
+        $data = $this->roles()->select($field, $where);
+        echo json_encode($data);
     }
 
     /**
@@ -149,7 +157,15 @@ class Role extends Base{
         return $this->success("删除成功", 'Role/index');
     }
 
+    public function search(){
+        $search = input('param.search');
+        $data = $this->roles()->searchLike($search);
+        //var_dump($data);exit();
+        $this->page($data);
+        $this->assign('roles', $data);
+        return $this->fetch('Role/index');
 
+    }
 
 
 

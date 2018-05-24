@@ -57,4 +57,12 @@ class Depts{
         return $find;
     }
 
+    public function searchLike($search){
+        $num = 10;
+        $count = Db::table($this->tableName)->where('dept_name', 'like', "%$search%")->whereOr('description', 'like', "%$search%")
+            ->count();
+        $data = Db::table($this->tableName)->where('dept_name', 'like', "%$search%")->whereOr('description', 'like', "%$search%")
+            ->paginate($num, $count, ['query' => request()->param()]);
+        return $data;
+    }
 }
