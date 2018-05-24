@@ -23,7 +23,10 @@ class MeterType extends Base
      * 跳转到添加页
      */
     public function aMT(){
-        $this->authVerify();
+        $auth = $this->auth('MeterType', 'aMT');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         return $this->fetch('met/add');
     }
 
@@ -114,7 +117,10 @@ class MeterType extends Base
      * @return mixed
      */
     public function eMT(){
-        $this->authVerify();
+        $auth = $this->auth('MeterType', 'eMT');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $meterId = input('param.meterId');
         $field = 'meterId,meterType';
         $where = array('meterId'=>$meterId);
@@ -155,6 +161,10 @@ class MeterType extends Base
      * @return mixed
      */
     public function dMT(){
+        $auth = $this->auth('MeterType', 'dMT');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         return $this->fetch("met/del");
     }
 

@@ -15,7 +15,10 @@ class State extends Base {
      * @return mixed
      */
     public function aSt(){
-        $this->authVerify();
+        $auth = $this->auth('State', 'aSt');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         return $this->fetch('state/add');
     }
     /*
@@ -95,7 +98,10 @@ class State extends Base {
      * 国家列表
      */
     public function stLi(){
-        $this->authVerify();
+        $auth = $this->auth('State', 'stLi');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $where = '';
         $field = 'sid,state';
         $num = 10;
@@ -122,7 +128,10 @@ class State extends Base {
      * @return mixed
      */
     public function eSt(){
-        $this->authVerify();
+        $auth = $this->auth('State', 'eSt');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $sid = input('sid/s');
         //var_dump($sid);exit();
         $where = array('sid'=>$sid);
@@ -169,7 +178,10 @@ class State extends Base {
      * 删除国家
      * */
     public function delStates(){
-        $this->authVerify();
+        $auth = $this->auth('State', 'delStates');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $sid = input('param.sid');
         //var_dump($sid);exit();
         $result = $this->delSta($sid);

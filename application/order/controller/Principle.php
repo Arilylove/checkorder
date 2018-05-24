@@ -23,7 +23,10 @@ class Principle extends Base{
      * 跳转到添加页
      */
     public function aPrinc(){
-        $this->authVerify();
+        $auth = $this->auth('Principle', 'aPrinc');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         return $this->fetch('princ/add');
     }
 
@@ -65,7 +68,10 @@ class Principle extends Base{
      * @return mixed
      */
     public function ePrinc(){
-        $this->authVerify();
+        $auth = $this->auth('Principle', 'ePrinc');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $pid = input('param.pid');
         $field = 'pid,productPrinciple,position';
         $where = array('pid'=>$pid);
@@ -106,6 +112,10 @@ class Principle extends Base{
      * @return mixed
      */
     public function dPrinc(){
+        $auth = $this->auth('Principle', 'dPrinc');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         return $this->fetch("princ/del");
     }
 

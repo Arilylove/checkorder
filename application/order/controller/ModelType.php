@@ -23,7 +23,10 @@ class ModelType extends Base{
      * 跳转到添加页
      */
     public function aMT(){
-        $this->authVerify();
+        $auth = $this->auth('ModelType', 'aMT');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         return $this->fetch('mot/add');
     }
 
@@ -108,7 +111,10 @@ class ModelType extends Base{
      * @return mixed
      */
     public function eMT(){
-        $this->authVerify();
+        $auth = $this->auth('ModelType', 'eMT');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $modelId = input('param.modelId');
         $field = 'modelId,modelType';
         $where = array('modelId'=>$modelId);
@@ -149,6 +155,10 @@ class ModelType extends Base{
      * @return mixed
      */
     public function dMT(){
+        $auth = $this->auth('ModelType', 'dMT');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         return $this->fetch("mot/del");
     }
 

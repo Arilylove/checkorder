@@ -324,7 +324,10 @@ class Order extends Base{
      * @throws \PHPExcel_Writer_Exception
      */
     public function exportExcel(){
-        $this->authVerify();
+        $auth = $this->auth('Order', 'exportExcel');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         Vendor('phpexcel.PHPExcel');
         Vendor('phpexcel.PHPExcel.IOFactory');
         Vendor('phpexcel.PHPExcel.Reader.Excel5');
