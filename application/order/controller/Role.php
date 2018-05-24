@@ -21,6 +21,7 @@ class Role extends Base{
      * @return mixed
      */
     public function index(){
+        $this->authVerify();
         $field = 'role_id,role_name,remark,create_time,wid,status';
         $where = '';
         $order = 'create_time asc';
@@ -34,6 +35,7 @@ class Role extends Base{
      * 跳转到添加页
      */
     public function add(){
+        $this->authVerify();
         //获取所有权限操作
         $field = 'wid,w_name,pid,w_control,w_way,url,create_time,status';
         $where = '';
@@ -49,6 +51,10 @@ class Role extends Base{
      * 添加action
      */
     public function save(){
+        $auth = $this->auth('Role', 'add');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $post = input('post.');
         $roles = array(
           'role_name'=>$post['role_name'],
@@ -76,6 +82,7 @@ class Role extends Base{
      * @return mixed
      */
     public function edit(){
+        $this->authVerify();
         $id = input('param.role_id');
         $where = array('role_id'=>$id);
         $find = $this->roles()->findById($where);
@@ -98,6 +105,10 @@ class Role extends Base{
      * 修改action
      */
     public function eSave(){
+        $auth = $this->auth('Role', 'edit');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $id = input('param.role_id');
         $where = array('role_id'=>$id);
         $find = $this->roles()->findById($where);
@@ -139,6 +150,7 @@ class Role extends Base{
      * 删除action
      */
     public function del(){
+        $this->authVerify();
         $id = input('param.role_id');
         $where = array('role_id'=>$id);
         //不可删除有用户的角色

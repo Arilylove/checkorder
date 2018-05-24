@@ -16,6 +16,7 @@ class Client extends Base{
         return $this->fetch("cli/clients");
     }
     public function cliLi(){
+        $this->authVerify();
         $where = '';
         $field = 'cid,state,client';
         $joinTable = 'state';
@@ -34,6 +35,7 @@ class Client extends Base{
      * @return mixed
      */
     public function aCli(){
+        $this->authVerify();
         //需要从国家列表中获取国家名称
         $states = $this->state()->select('sid,state', '');
         $this->assign('states', $states);
@@ -43,6 +45,10 @@ class Client extends Base{
      * 增加客户
      * */
     public function addClient(){
+        $auth = $this->auth('Client', 'aCli');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $cid = input("param.cid");
         $state = input('param.state');
         $client = input('param.client');
@@ -68,6 +74,7 @@ class Client extends Base{
      * 删除客户
      * */
     public function delClient(){
+        $this->authVerify();
         $cliId = input('param.cid');
         //var_dump($cliId);exit();
         $where = array('cid'=>$cliId);
@@ -99,6 +106,7 @@ class Client extends Base{
      * @return mixed
      */
     public function eCli(){
+        $this->authVerify();
         //需要从国家列表中获取国家名称
         $states = $this->state()->select('sid,state', '');
         $this->assign('states', $states);
@@ -117,6 +125,10 @@ class Client extends Base{
      * 编辑客户信息
      * */
     public function editClient(){
+        $auth = $this->auth('Client', 'eCli');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $cliId = input('param.cid');
         //var_dump($cliId);exit();
         $where = array('cid'=>$cliId);

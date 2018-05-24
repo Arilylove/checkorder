@@ -41,6 +41,27 @@ class Base extends Controller{
         $this->assignOwnWays($username);
         return true;
     }
+    /**
+     * 1表示有权限，0表示无权限
+     */
+    public function auth($controller, $action){
+        $username = session('orderuser');
+        $ways = $this->getWaysByUid($username);
+        //$controller = request()->controller();
+        //$action = request()->action();
+        if(in_array($controller, $ways['w_control']) && in_array($action, $ways['w_way'])){
+            return 1;
+        }
+        return 0;
+    }
+    public function authVerify(){
+        $controller = request()->controller();
+        $action = request()->action();
+        $auth = $this->auth($controller, $action);
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
+    }
     /*{if condition="in_array('Role',$ownways['w_control']) && in_array('add',$ownways['w_way'])"}*/
     /**
      * 根据UID获取该用户所有权限
@@ -48,7 +69,6 @@ class Base extends Controller{
      * @return array|int
      */
     protected function getWaysByUid($username){
-        //$uid = session('uid');
         $find = $this->admins()->findById(array('username'=>$username));
         $role_id = $find['role_id'];
         $wid = $this->roles()->findById(array('role_id'=>$role_id));

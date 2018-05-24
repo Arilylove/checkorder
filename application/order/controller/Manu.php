@@ -11,6 +11,7 @@ class Manu extends Base{
 
 
     public function index(){
+        $this->authVerify();
         $field = 'mfId,manufacturer';
         $count = $this->manus()->count('');
         $manus = $this->manus()->selectPage($field, '', $count);
@@ -23,6 +24,7 @@ class Manu extends Base{
      * 跳转到添加页
      */
     public function aManu(){
+        $this->authVerify();
         $this->assignState();
         return $this->fetch('manu/add');
     }
@@ -31,6 +33,10 @@ class Manu extends Base{
      * 添加action
      */
     public function addManu(){
+        $auth = $this->auth('Manu', 'aManu');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $manus = input('post.');
         $validate = $this->validate($manus, 'Manus');
         //var_dump($validate);exit();
@@ -61,6 +67,7 @@ class Manu extends Base{
      * @return mixed
      */
     public function eManu(){
+        $this->authVerify();
         $mfId = input('param.mfId');
         $where = array('mfId'=>$mfId);
         $data = $this->manus()->findById($where);
@@ -73,6 +80,10 @@ class Manu extends Base{
      * 更新action
      */
     public function editManu(){
+        $auth = $this->auth('Manu', 'eManu');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $mfId = input('param.mfId');
         $field = 'mfId,manufacturer';
         $where = array('mfId'=>$mfId);
@@ -98,9 +109,14 @@ class Manu extends Base{
      * @return mixed
      */
     public function dManu(){
+        $this->authVerify();
         return $this->fetch("manu/del");
     }
     public function delManu(){
+        $auth = $this->auth('Manu', 'dManu');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $mfId = input('param.mfId');
         $where = array('mfId'=>$mfId);
         $find = $this->manus()->findById($where);

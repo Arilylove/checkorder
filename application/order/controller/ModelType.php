@@ -10,6 +10,7 @@ namespace app\order\controller;
 class ModelType extends Base{
 
     public function index(){
+        $this->authVerify();
         $field = 'modelId,modelType';
         $count = $this->modelTypes()->count('');
         $modelTypes = $this->modelTypes()->selectPage($field, '', $count);
@@ -22,6 +23,7 @@ class ModelType extends Base{
      * 跳转到添加页
      */
     public function aMT(){
+        $this->authVerify();
         return $this->fetch('mot/add');
     }
 
@@ -29,6 +31,10 @@ class ModelType extends Base{
      * 添加action
      */
     public function addMT(){
+        $auth = $this->auth('ModelType', 'aMT');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $modelTypes = input('post.');
         $validate = $this->validate($modelTypes, 'Mot');
         //var_dump($validate);exit();
@@ -45,6 +51,10 @@ class ModelType extends Base{
      * 跳转到批量添加页
      */
     public function batchAMT(){
+        $auth = $this->auth('ModelType', 'aMT');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         return $this->fetch('mot/batchadd');
     }
 
@@ -52,6 +62,10 @@ class ModelType extends Base{
      * 批量添加action
      */
     public function batchAddMT(){
+        $auth = $this->auth('ModelType', 'aMT');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $post = input('post.');
         //var_dump($post);exit();
         $modelType = $post['modelType'];
@@ -94,6 +108,7 @@ class ModelType extends Base{
      * @return mixed
      */
     public function eMT(){
+        $this->authVerify();
         $modelId = input('param.modelId');
         $field = 'modelId,modelType';
         $where = array('modelId'=>$modelId);
@@ -106,6 +121,10 @@ class ModelType extends Base{
      * 更新action
      */
     public function editMT(){
+        $auth = $this->auth('ModelType', 'eMT');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $modelId = input('param.modelId');
         $where = array('modelId'=>$modelId);
         $find = $this->modelTypes()->findById($where);
@@ -137,6 +156,10 @@ class ModelType extends Base{
      * 删除action
      */
     public function delMT(){
+        $auth = $this->auth('ModelType', 'dMT');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $modelId = input('param.modelId');
         $where = array('modelId'=>$modelId);
         $find = $this->modelTypes()->findById($where);

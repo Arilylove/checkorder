@@ -15,12 +15,17 @@ class State extends Base {
      * @return mixed
      */
     public function aSt(){
+        $this->authVerify();
         return $this->fetch('state/add');
     }
     /*
      * 添加国家
      * */
     public function addStates(){
+        $auth = $this->auth('State', 'aSt');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $states =input('post.');
         $validate = $this->validate($states, 'States');
         if(true !== $validate){
@@ -36,6 +41,10 @@ class State extends Base {
      * 跳转到批量添加页
      */
     public function batchASt(){
+        $auth = $this->auth('State', 'aSt');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         return $this->fetch('state/batchadd');
     }
 
@@ -43,6 +52,10 @@ class State extends Base {
      * 批量添加action
      */
     public function batchAddSt(){
+        $auth = $this->auth('State', 'aSt');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $post = input('post.');
         $state = $post['state'];
         //var_dump(count($state));exit();
@@ -82,6 +95,7 @@ class State extends Base {
      * 国家列表
      */
     public function stLi(){
+        $this->authVerify();
         $where = '';
         $field = 'sid,state';
         $num = 10;
@@ -108,6 +122,7 @@ class State extends Base {
      * @return mixed
      */
     public function eSt(){
+        $this->authVerify();
         $sid = input('sid/s');
         //var_dump($sid);exit();
         $where = array('sid'=>$sid);
@@ -127,6 +142,10 @@ class State extends Base {
      * 修改国家信息
      * */
     public function editStates(){
+        $auth = $this->auth('State', 'eSt');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $sid = input('sid/s');
         //var_dump($sid);exit();
         $where = array('sid'=>$sid);
@@ -150,6 +169,7 @@ class State extends Base {
      * 删除国家
      * */
     public function delStates(){
+        $this->authVerify();
         $sid = input('param.sid');
         //var_dump($sid);exit();
         $result = $this->delSta($sid);

@@ -11,6 +11,7 @@ use think\Db;
 class Order extends Base{
 
     public function index(){
+        $this->authVerify();
 
         //先从订单表中获取全部信息，mid，在由mid获取表号
         $field = "oid,state,client,meterType,modelType,modelStart,modelEnd,modelNum,meterStart,meterEnd,assemStart,assemEnd,deliveryTime,orderNum,manufacturer,productPrinciple,deliveryStatus,orderCycle,assemCycle,customTool,dataVerify,isStatus";
@@ -35,6 +36,10 @@ class Order extends Base{
      * @return mixed
      */
     public function aOrd(){
+        $auth = $this->auth('Order', 'add');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         //国家，客户，基表型号，电子模块类型，制造商，生产负责人，发货状态都是下拉框选择
         $this->assignState();
         $this->assignClient();
@@ -49,6 +54,10 @@ class Order extends Base{
      * 添加action
      */
     public function addOrd(){
+        $auth = $this->auth('Order', 'add');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $orders = input("post.");
         //基本验证
         $validate = $this->validate($orders, 'Orders');
@@ -111,6 +120,10 @@ class Order extends Base{
      * @return mixed
      */
     public function eOrd(){
+        $auth = $this->auth('Order', 'edit');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         //国家，客户，基表型号，电子模块类型，制造商，生产负责人，发货状态都是下拉框选择
         $this->assignState();
         $this->assignClient();
@@ -130,6 +143,10 @@ class Order extends Base{
      * 修改action
      */
     public function editOrd(){
+        $auth = $this->auth('Order', 'edit');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $orders = input("post.");
         //订单号存在
         $oid = $orders['oid'];
@@ -244,6 +261,10 @@ class Order extends Base{
      * 删除action
      */
     public function delOrd(){
+        $auth = $this->auth('Order', 'del');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $oid = input('param.oid');
         $where = array('oid'=>$oid);
         $find = $this->orders()->findById($where);
@@ -261,6 +282,7 @@ class Order extends Base{
      * 查看详单
      */
     public function view(){
+        $this->authVerify();
         //国家，客户，基表型号，电子模块类型，制造商，生产负责人，发货状态都是下拉框选择
         $oid = input('param.oid');
         $order = $this->orders()->findById(array('oid'=>$oid));
@@ -302,6 +324,7 @@ class Order extends Base{
      * @throws \PHPExcel_Writer_Exception
      */
     public function exportExcel(){
+        $this->authVerify();
         Vendor('phpexcel.PHPExcel');
         Vendor('phpexcel.PHPExcel.IOFactory');
         Vendor('phpexcel.PHPExcel.Reader.Excel5');

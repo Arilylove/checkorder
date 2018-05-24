@@ -19,6 +19,7 @@ class Dept extends Base{
      * @return mixed
      */
     public function index(){
+        $this->authVerify();
         $field = 'de_id,dept_name,description,create_time';
         $where = '';
         $order = 'create_time asc';
@@ -32,6 +33,7 @@ class Dept extends Base{
      * 跳转到添加页
      */
     public function add(){
+        $this->authVerify();
         return $this->fetch('dept/add');
     }
 
@@ -39,6 +41,10 @@ class Dept extends Base{
      * 添加action
      */
     public function save(){
+        $auth = $this->auth('Dept', 'add');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $post = input('post.');
         $data = array(
             'dept_name'=>$post['dept_name'],
@@ -75,6 +81,7 @@ class Dept extends Base{
      * @return mixed
      */
     public function edit(){
+        $this->authVerify();
         $id = input('param.de_id');
         $where = array('de_id'=>$id);
         $find = $this->depts()->findById($where);
@@ -86,6 +93,10 @@ class Dept extends Base{
      * 修改action
      */
     public function eSave(){
+        $auth = $this->auth('Dept', 'edit');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $id = input('param.de_id');
         $where = array('de_id'=>$id);
         $find = $this->depts()->findById($where);
@@ -114,6 +125,7 @@ class Dept extends Base{
      * 删除action
      */
     public function del(){
+        $this->authVerify();
         $id = input('param.de_id');
         //var_dump($id);exit();
         $where = array('de_id'=>$id);

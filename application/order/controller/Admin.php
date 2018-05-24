@@ -28,6 +28,7 @@ class Admin extends Base{
      * 用户列表
      * */
     public function index(){
+        $this->authVerify();
         $field = 'username,surname,password,adId,status,createTime,role_id,de_id';
         //显示比自己权限小的用户（0管理员，1用户，2表计组）
         $status = session('orderstatus');
@@ -67,6 +68,7 @@ class Admin extends Base{
      * @return mixed
      */
     public function add(){
+        $this->authVerify();
         $this->assignDept();
         $this->assignRole();
         return $this->fetch('admin/add');
@@ -105,6 +107,7 @@ class Admin extends Base{
      * @return mixed
      */
     public function edit(){
+        $this->authVerify();
         $adId = input('param.adId');
         $where = array('adId'=>$adId);
         $field = 'adId,username,surname,password,status,createTime,role_id,de_id';
@@ -120,7 +123,10 @@ class Admin extends Base{
      * 用户信息编辑
      * */
     public function editAdmin(){
-        
+        $auth = $this->auth('Admin', 'edit');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $ad = $this->admins();
         $time = $_SERVER['REQUEST_TIME'];         //客户端向服务端发送请求的时间
         $admin = input('post.');
@@ -145,6 +151,10 @@ class Admin extends Base{
      * 删除用户
      * */
     public function deleteAdmin(){
+        $auth = $this->auth('Admin', 'del');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $adId = input('param.adId');
         //var_dump($adId);exit();
         $admin = $this->admins();

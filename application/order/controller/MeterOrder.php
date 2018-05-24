@@ -9,7 +9,6 @@ namespace app\order\controller;
 
 class MeterOrder extends Base{
     public function index(){
-
         //先从订单表中获取全部信息，mid，在由mid获取表号
         $field = "oid,state,client,meterType,modelType,modelStart,modelEnd,modelNum,meterStart,meterEnd,assemStart,assemEnd,deliveryTime,orderNum,manufacturer,productPrinciple,deliveryStatus,orderCycle,assemCycle";
         $pid = $this->getPid();

@@ -10,6 +10,7 @@ namespace app\order\controller;
 class Principle extends Base{
 
     public function index(){
+        $this->authVerify();
         $field = 'pid,productPrinciple,position';
         $count = $this->principles()->count('');
         $principles = $this->principles()->selectPage($field, '', $count);
@@ -22,6 +23,7 @@ class Principle extends Base{
      * 跳转到添加页
      */
     public function aPrinc(){
+        $this->authVerify();
         return $this->fetch('princ/add');
     }
 
@@ -29,6 +31,10 @@ class Principle extends Base{
      * 添加action
      */
     public function addPrinc(){
+        $auth = $this->auth('Principle', 'aPrinc');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $principles = input('post.');
         $validate = $this->validate($principles, 'Princ');
         //var_dump($validate);exit();
@@ -59,6 +65,7 @@ class Principle extends Base{
      * @return mixed
      */
     public function ePrinc(){
+        $this->authVerify();
         $pid = input('param.pid');
         $field = 'pid,productPrinciple,position';
         $where = array('pid'=>$pid);
@@ -71,6 +78,10 @@ class Principle extends Base{
      * 更新action
      */
     public function editPrinc(){
+        $auth = $this->auth('Principle', 'ePrinc');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $pid = input('param.pid');
         $where = array('pid'=>$pid);
         $find = $this->principles()->findById($where);
@@ -102,6 +113,10 @@ class Principle extends Base{
      * 删除action
      */
     public function delPrinc(){
+        $auth = $this->auth('Principle', 'dPrinc');
+        if(!$auth){
+            return $this->error("对不起,没有权限");
+        }
         $pid = input('param.pid');
         $where = array('pid'=>$pid);
         $find = $this->principles()->findById($where);
