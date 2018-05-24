@@ -73,7 +73,7 @@ class Base extends Controller{
         $count = Db::table($tableName1)->where($select, $searchText)->where($where)->count();
         //可以多级模糊查询
         $table = Db::table($tableName1)->field($field)
-            ->where("$select", 'like', "%$searchText%")->where($where)->order($order)->paginate(10, $count);
+            ->where("$select", 'like', "%$searchText%")->where($where)->order($order)->paginate(10, $count, ['query' => request()->param()]);
         //var_dump($table);exit();
         $page = $table->render();
         $currentPage = $table->currentPage();
@@ -89,7 +89,7 @@ class Base extends Controller{
     public function singleTableEmpty($tableName1, $field, $select, $searchText, $where, $html, $destination, $order){
         $count = Db::table($tableName1)->where($select, $searchText)->where($where)->count();
         //可以多级模糊查询
-        $table = Db::table($tableName1)->field($field)->where($where)->order($order)->paginate(10, $count);
+        $table = Db::table($tableName1)->field($field)->where($where)->order($order)->paginate(10, $count, ['query' => request()->param()]);
         //var_dump($table);exit();
         $page = $table->render();
         $currentPage = $table->currentPage();
@@ -111,7 +111,8 @@ class Base extends Controller{
         if (empty($searchText)){
             $count = Db::table($tableName1)->join($tableName2, $tableName1.'.'.$param.'='.$tableName2.'.'.$param)->where($where)->count();
             //没有field直接显示列表
-            $table = Db::table($tableName1)->join($tableName2, $tableName1.'.'.$param.'='.$tableName2.'.'.$param)->where($where)->order($order)->paginate(10, $count);
+            $table = Db::table($tableName1)->join($tableName2, $tableName1.'.'.$param.'='.$tableName2.'.'.$param)
+                ->where($where)->order($order)->paginate(10, $count, ['query' => request()->param()]);
             $result = $this->pulicList($html, $table, $destination);
             //var_dump($result);exit();
             return $result;
@@ -119,7 +120,8 @@ class Base extends Controller{
         $count = Db::table($tableName1)->join($tableName2, $tableName1.'.'.$param.'='.$tableName2.'.'.$param)
             ->where("$select", 'like', "%$searchText%")->where($where)->count();
         $table = Db::table($tableName1)->join($tableName2, $tableName1.'.'.$param.'='.$tableName2.'.'.$param)
-            ->field($field)->where("$select", 'like', "%$searchText%")->where($where)->order($order)->paginate(10, $count);
+            ->field($field)->where("$select", 'like', "%$searchText%")->where($where)->order($order)
+            ->paginate(10, $count, ['query' => request()->param()]);
 
         //echo Db::table($tableName1)->getLastSql().'<br/>';exit();
         $result = $this->pulicList($html, $table, $destination);

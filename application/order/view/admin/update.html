@@ -108,7 +108,7 @@
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">角色 </label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                     <!--不可修改自己所属角色-->
-                                    {if condition="$username eq $admin['username']"}
+                                    {if condition="($username eq $admin['username']) || ($status eq $admin['status'])"}
                                         <select class="form-control col-md-7 col-xs-12" readonly name="role_id">
                                             <option value="{$admin['role_id']}">{$admin['role_name']}</option>
                                         </select>

@@ -92,10 +92,11 @@ class Base extends Controller{
     protected function assignOwnWays($username){
         $ways = $this->getWaysByUid($username);
         //var_dump($ways);exit();
-        if(count($ways) == 0){
-            $ways['w_control'] = [];
-            $ways['w_way'] = [];
+        if($ways == null){
+            $ways['w_control'] = array();
+            $ways['w_way'] = array();
             $this->assign('ownways', $ways);
+            return $this->error("对不起,没有权限!", 'Login/index');
         }else{
             //var_dump($ways);exit();
             $this->assign('ownways', $ways);

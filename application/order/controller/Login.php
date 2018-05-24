@@ -19,6 +19,10 @@ class Login extends Controller {
     public function index(){
         return $this->fetch('login/index');
     }
+    public function base(){
+        $base = new Base();
+        return $base;
+    }
 
 
     //后台登录
@@ -45,8 +49,16 @@ class Login extends Controller {
 
         //var_dump($hasAdmin['status']);exit;
         if ($hasAdmin['status'] == 0){
+            $auth = $this->base()->auth('Admin', 'index');
+            if(!$auth){
+                return $this->error("对不起,没有权限");
+            }
             return $this->success('登录成功', 'Admin/index');
         }else if($hasAdmin['status'] == 1){
+            $auth = $this->base()->auth('State', 'stLi');
+            if(!$auth){
+                return $this->error("对不起,没有权限");
+            }
             return $this->success('登录成功', 'State/stLi');
         }else if($hasAdmin['status'] == 2){
             return $this->success('登录成功', 'MeterOrder/index');
