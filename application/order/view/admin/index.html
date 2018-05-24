@@ -63,15 +63,13 @@
                   <div class="x_content">
 
                     <div class="table-responsive">
-                      <table class="table table-striped jambo_table bulk_action">
+                      <table class="table table-striped jambo_table bulk_action" id="Table">
                         <thead>
                         <tr class="headings">
-                          <th>
-                            <input type="checkbox" id="check-all" class="flat">
-                          </th>
+
                           <th class="column-title">用户编号</th>
                           <th class="column-title">用户名</th>
-                          <th class="column-title">密码</th>
+                          <!--<th class="column-title">密码</th>-->
                           <th class="column-title">姓名</th>
                           <th class="column-title">部门</th>
                           <th class="column-title">角色</th>
@@ -79,21 +77,15 @@
                           <th class="column-title">用户类型</th>
                           <th class="column-title no-link last" style="text-align: center;"><span class="nobr">操作</span>
                           </th>
-                          <th class="bulk-actions" colspan="7">
-                            <a class="antoo" style="color:#fff; font-weight:500;">Action ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
-                          </th>
                         </tr>
                         </thead>
 
                         <tbody>
                         {volist name="admin" id="v"}
                         <tr class="even pointer">
-                          <td class="a-center ">
-                            <input type="checkbox" class="flat" name="table_records">
-                          </td>
                           <td>{$v.adId}</td>
                           <td>{$v.username}</td>
-                          <td>{$v.password}</td>
+                          <!--<td>{$v.password}</td>-->
                           <td>{$v.surname}</td>
                           <td>{$v.dept_name}</td>
                           <td>{$v.role_name}</td>
@@ -165,6 +157,7 @@
 
     <!-- Custom Theme Scripts -->
     <script src="__JS__/build/js/custom.min.js"></script>
+
     <script>
       $(function () {
         $(".alert-close").click(function () {
@@ -188,6 +181,8 @@
           }
         },'json');
       }
+
+
     </script>
 
   </body>

@@ -9,6 +9,8 @@
     <title>订单管理</title>
 
     <link rel="stylesheet" href="__RECORD__/table.css"/>
+    <link rel="stylesheet" href="__RECORD__/bootstrap-table.css">
+    <link rel="stylesheet" href="__RECORD__/bootstrap-table-fixed-columns.css">
 </head>
 
 <body class="nav-md">
@@ -57,7 +59,7 @@
                             <div class="x_content">
 
                                 <div class="table-responsive">
-                                    <table id="table" class="table table-striped jambo_table bulk_action">
+                                    <table id="Table" class="table table-striped jambo_table bulk_action">
                                         <thead>
                                         <tr class="headings">
                                             <th>国家</th>
@@ -168,6 +170,8 @@
 
 <!-- Custom Theme Scripts -->
 <script src="__JS__/build/js/custom.min.js"></script>
+<script src="__RECORD__/bootstrap-table.js"></script>
+<script src="__RECORD__/bootstrap-table-fixed-columns.js"></script>
 <script>
     $(function () {
         $(".alert-close").click(function () {
@@ -184,7 +188,14 @@
         })
 
     })
-
+    $("#Table").bootstrapTable('destroy').bootstrapTable({
+        //pagination: true,//分页
+        //paginationLoop: true,
+        //striped: true,//是否显示行间隔色
+        //height: $(window.innerHeight)[0] - 240,
+        fixedColumns: true,//固定列
+        fixedNumber:2 //固定前两列
+    });
 </script>
 </body>
 

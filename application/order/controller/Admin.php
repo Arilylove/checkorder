@@ -132,13 +132,13 @@ class Admin extends Base{
         $admin = input('post.');
         $admin['password'] = $this->hex()->encrypt($admin['password']);   //密码用AES加密；
         $admin['updateTime'] = date('Y-m-d H:i:s', $time);
-        //var_dump($admin);exit();
         $where = array('username'=>$admin['username']);
         $findUser = $ad->findById($where);
         //var_dump($findUser);exit();
         if (!$findUser){
             return $this->error('未找到该用户');
         }
+        //var_dump($admin);exit();
         $result = $ad->update($admin, $where);
         if (!$result){
             return $this->error('修改失败');
