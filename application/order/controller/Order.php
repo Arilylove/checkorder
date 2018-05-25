@@ -17,7 +17,14 @@ class Order extends Base{
 
         //先从订单表中获取全部信息，mid，在由mid获取表号
         $field = "oid,state,client,meterType,modelType,modelStart,modelEnd,modelNum,meterStart,meterEnd,assemStart,assemEnd,deliveryTime,orderNum,manufacturer,productPrinciple,deliveryStatus,orderCycle,assemCycle,customTool,dataVerify,isStatus";
-        $where = '';
+        //只能查看自己业务部的订单
+        //如果不是业务部门就没有
+        $sale_id = session('sale_id');
+        if($sale_id == 0){
+            $where = '';
+        }else{
+            $where = array('sale_id'=>$sale_id);
+        }
         $count = $this->orders()->count($where);
         $orders = $this->orders()->selectPage($where, $count);
         $order = $this->getJoinId($orders);
@@ -49,6 +56,7 @@ class Order extends Base{
         $this->assignModelType();
         $this->assignManu();
         $this->assignPrinc();
+        $this->assignSaleDept();
         return $this->fetch("ord/add");
     }
 
@@ -133,6 +141,7 @@ class Order extends Base{
         $this->assignModelType();
         $this->assignManu();
         $this->assignPrinc();
+        $this->assignSaleDept();
         $oid = input('param.oid');
         $order = $this->orders()->findById(array('oid'=>$oid));
         //国家，客户，基表型号，电子模块类型，制造商，生产负责人

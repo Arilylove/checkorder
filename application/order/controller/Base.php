@@ -14,6 +14,7 @@ use app\order\model\MeterTypes;
 use app\order\model\ModelTypes;
 use app\order\model\Orders;
 use app\order\model\ProductPrinciple;
+use app\order\model\SaleDepts;
 use think\Controller;
 use think\Db;
 use app\order\crypt\AesCrypt;
@@ -30,6 +31,7 @@ class Base extends Controller{
         $username = session('orderuser');
         $status = session('orderstatus');
         $surname = session('surname');
+        $sale_id = session('sale_id');
         $a = is_null($username);
         //var_dump($a);exit();
         //判断用户是否已经登录
@@ -39,6 +41,7 @@ class Base extends Controller{
         $this->assign("username", $username);
         $this->assign("surname", $surname);
         $this->assign("status", $status);
+        $this->assign("sale_id", $sale_id);
         //登录成功，将用户的权限操作id传给前端
         $this->assignOwnWays($username);
         return true;
@@ -166,6 +169,10 @@ class Base extends Controller{
     protected function logs(){
         $logs = new Logs();
         return $logs;
+    }
+    protected function sales(){
+        $sales = new SaleDepts();
+        return $sales;
     }
     /**
      * 分页
@@ -330,6 +337,16 @@ class Base extends Controller{
         $this->assign('ways', $ways);
     }
 
+    /**
+     * 业务部
+     */
+    protected function assignSaleDept(){
+        $field = 'sale_id,sale_name,remark,create_time,status';
+        $where = '';
+        $data = $this->sales()->select($field, $where);
+        $this->assign('saledepts', $data);
+    }
+
 
     /**
      * 日期计算-》周期(单位：日)
@@ -391,12 +408,14 @@ class Base extends Controller{
             $modelTypes = $this->modelTypes()->findById(array('modelId'=>$order['modelId']));
             $manufacturers = $this->manus()->findById(array('mfId'=>$order['mfId']));
             $productPrinciples = $this->principles()->findById(array('pid'=>$order['pid']));
+            $saleDepts = $this->sales()->findById(array('sale_id'=>$order['sale_id']));
             $order['state'] = $states['state'];
             $order['client'] = $clients['client'];
             $order['meterType'] = $meterTypes['meterType'];
             $order['modelType'] = $modelTypes['modelType'];
             $order['manufacturer'] = $manufacturers['manufacturer'];
             $order['productPrinciple'] = $productPrinciples['productPrinciple'];
+            $order['sale_name'] = $saleDepts['sale_name'];
 
         }else{
             $order['state'] = "";
@@ -405,6 +424,7 @@ class Base extends Controller{
             $order['modelType'] = "";
             $order['manufacturer'] = "";
             $order['productPrinciple'] = "";
+            $order['sale_name'] = '';
         }
         return $order;
     }

@@ -111,7 +111,7 @@ class Orders{
      */
     public function selectPage($where, $count){
         $num = 10;
-        $admin = Db::table($this->tableName)->where($where)->paginate($num, $count);
+        $admin = Db::table($this->tableName)->where($where)->paginate($num, $count, ['query' => request()->param()]);
         return $admin;
     }
 

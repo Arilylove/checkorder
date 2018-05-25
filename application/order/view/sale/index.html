@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>用户管理</title>
+    <title>业务部门管理</title>
     <link href="__CSS__/other.css" rel="stylesheet">
     <link rel="stylesheet" href="__RECORD__/table.css"/>
   </head>
@@ -34,22 +34,20 @@
       <!-- /top navigation -->
 
       <!--del-->
-      {include file="admin/del"/}
+      {include file="sale/del"/}
 
         <!-- page content -->
         <div class="right_col" role="main">
           <div class="">
             <div class="page-title">
               <div class="title_left">
-                <h3>用户</h3>
+                <h3>业务部门</h3>
               </div>
 
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    {if condition="in_array('Admin',$ownways['w_control']) && in_array('add',$ownways['w_way'])"}
-                    <a href="{:url('Admin/add')}" class="add-btn">添加用户</a>
-                    {/if}
+                    <a href="{:url('SaleDept/add')}" class="add-btn">添加业务部门</a>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
@@ -57,57 +55,50 @@
                   </div>
                   <!--搜索-->
                   <div class="col-md-12 col-sm-12 col-xs-12">
-                    {include file="admin/search"/}
+                    {include file="sale/search"/}
                   </div>
 
                   <div class="x_content">
 
                     <div class="table-responsive">
-                      <table class="table table-striped jambo_table bulk_action" id="Table">
+                      <table class="table table-striped jambo_table bulk_action">
                         <thead>
                         <tr class="headings">
-
-                          <th class="column-title">用户编号</th>
-                          <th class="column-title">用户名</th>
-                          <!--<th class="column-title">密码</th>-->
-                          <th class="column-title">姓名</th>
-                          <th class="column-title">部门</th>
-                          <th class="column-title">业务部门</th>
-                          <th class="column-title">角色</th>
+                          <th>
+                            <input type="checkbox" id="check-all" class="flat">
+                          </th>
+                          <th class="column-title">业务部门编号</th>
+                          <th class="column-title">业务部门名称</th>
+                          <th class="column-title">说明</th>
                           <th class="column-title">创建日期</th>
-                          <th class="column-title">用户类型</th>
+                          <th class="column-title">状态</th>
                           <th class="column-title no-link last" style="text-align: center;"><span class="nobr">操作</span>
+                          </th>
+                          <th class="bulk-actions" colspan="7">
+                            <a class="antoo" style="color:#fff; font-weight:500;">Action ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
                           </th>
                         </tr>
                         </thead>
 
                         <tbody>
-                        {volist name="admin" id="v"}
+                        {volist name="saledepts" id="v"}
                         <tr class="even pointer">
-                          <td>{$v.adId}</td>
-                          <td>{$v.username}</td>
-                          <!--<td>{$v.password}</td>-->
-                          <td>{$v.surname}</td>
-                          <td>{$v.dept_name}</td>
+                          <td class="a-center ">
+                            <input type="checkbox" class="flat" name="table_records">
+                          </td>
+                          <td>{$v.sale_id}</td>
                           <td>{$v.sale_name}</td>
-                          <td>{$v.role_name}</td>
-                          <td>{$v.createTime}</td>
-                          {if condition="$v['status'] eq '0'"}
-                          <td>管理员</td>
-                          {elseif condition="$v['status'] eq '1'"}
-                          <td>用户</td>
-                          {elseif condition="$v['status'] eq '2'"/}
-                          <td>表计组</td>
+                          <td>{$v.remark}</td>
+                          <td>{$v.create_time}</td>
+                          {if condition="$v['status'] eq 1"}
+                          <td>正常</td>
                           {else/}
-                          <td>超级管理员</td>
+                          <td style="color: red;">禁用</td>
                           {/if}
                           <td style="text-align: center;">
-                            {if condition="in_array('Admin',$ownways['w_control']) && in_array('edit',$ownways['w_way'])"}
-                            <a href="{:url('Admin/edit',['adId'=>$v['adId']])}" title="修改" class="glyphicon glyphicon-edit" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
-                            {/if}
-                            {if condition="in_array('Admin',$ownways['w_control']) && in_array('del',$ownways['w_way'])"}
-                            <a href="javascript:void (0);" title="删除" class="glyphicon glyphicon-remove class-del" onclick=confirmDel("{$v['adId']}") style="color: red;font-size: 18px;"></a>
-                            {/if}
+                            <a href="{:url('SaleDept/edit',['sale_id'=>$v['sale_id']])}" title="修改" class="glyphicon glyphicon-edit" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
+                            <a href="javascript:void (0);" title="删除" class="glyphicon glyphicon-remove class-del" onclick=confirmDel("{$v['sale_id']}") style="color: red;font-size: 18px;"></a>
+
                           </td>
                         </tr>
                         {/volist}
@@ -159,7 +150,6 @@
 
     <!-- Custom Theme Scripts -->
     <script src="__JS__/build/js/custom.min.js"></script>
-
     <script>
       $(function () {
         $(".alert-close").click(function () {
@@ -173,18 +163,16 @@
         })
 
       })
-      function confirmDel(adId) {
+      function confirmDel(sale_id) {
         //console.log(adId);
-        $.post("{:url('one')}",{adId:adId},function(data){
-          // console.log(data);
+        $.post("{:url('SaleDept/saleJson')}",{sale_id:sale_id},function(data){
+          console.log(data);
           if(data) {
             // console.log(data['id']);
-            $("input[name='adId']").val(data[0].adId)
+            $("input[name='sale_id']").val(data[0].sale_id)
           }
         },'json');
       }
-
-
     </script>
 
   </body>

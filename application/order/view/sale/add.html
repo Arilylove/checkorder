@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>添加用户</title>
+    <title>添加业务部门</title>
 
   </head>
 
@@ -45,74 +45,33 @@
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>添加用户</h2>
+                    <h2>添加业务部门</h2>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
                     <br />
-                    <form id="demo-form2" method="post" action="{:url('Admin/addAdmin')}" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
-                      <input type="hidden" name="password" value="123456"/>
+                    <form id="demo-form2" method="post" action="{:url('SaleDept/save')}" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
+
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">用户名 <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">部门名称 <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="last-name" name="username" required="required" class="form-control col-md-7 col-xs-12">
+                          <input type="text" id="last-name" name="sale_name" required="required" class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">用户姓名 <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">说明
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" name="surname" required="required" class="form-control col-md-7 col-xs-12">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">用户类型 </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <select class="form-control col-md-7 col-xs-12" name="status">
-                            <option value="1" selected>用户</option>
-                            <option value="2">表计组</option>
-                            <option value="0">管理员</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">部门 </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <select class="form-control col-md-7 col-xs-12" name="de_id">
-                            {volist name="depts" id="v"}
-                            <option value="{$v['de_id']}">{$v.dept_name}</option>
-                            {/volist}
-                          </select>
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">业务部门 </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <select class="form-control col-md-7 col-xs-12" name="sale_id">
-                            <option value=""></option>
-                            {volist name="saledepts" id="v"}
-                            <option value="{$v['sale_id']}">{$v.sale_name}</option>
-                            {/volist}
-                          </select>
+                          <input type="text" name="remark" class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>
 
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">角色 </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <select class="form-control col-md-7 col-xs-12" name="role_id">
-                            {volist name="roles" id="v"}
-                            <option value="{$v['role_id']}">{$v.role_name}</option>
-                            {/volist}
-                          </select>
-                        </div>
-                      </div>
 
                       <div class="ln_solid"></div>
                       <div class="form-group">
                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                          <a class="btn btn-primary" href="{:url('Admin/index')}" type="button">取消</a>
+                          <a class="btn btn-primary" href="{:url('SaleDept/index')}" type="button">取消</a>
 
                           <button type="submit" class="btn btn-success">确定</button>
                         </div>

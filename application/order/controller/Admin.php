@@ -20,7 +20,7 @@ class Admin extends Base{
     public function one(){
         $adId = input('param.adId');
         $where = array('adId'=>$adId);
-        $field = 'adId,username,surname,password,status,createTime,role_id,de_id';
+        $field = 'adId,username,surname,password,status,createTime,role_id,de_id,sale_id';
         $data = $this->admins()->select($field, $where);
         echo json_encode($data);
     }
@@ -30,7 +30,7 @@ class Admin extends Base{
      * */
     public function index(){
         $this->authVerify();
-        $field = 'username,surname,password,adId,status,createTime,role_id,de_id';
+        $field = 'username,surname,password,adId,status,createTime,role_id,de_id,sale_id';
         //显示比自己权限小的用户（0管理员，1用户，2表计组）
         $status = session('orderstatus');
         if($status == 3){
@@ -57,6 +57,7 @@ class Admin extends Base{
         $this->authVerify();
         $this->assignDept();
         $this->assignRole();
+        $this->assignSaleDept();
         return $this->fetch('admin/add');
     }
     
@@ -96,12 +97,13 @@ class Admin extends Base{
         $this->authVerify();
         $adId = input('param.adId');
         $where = array('adId'=>$adId);
-        $field = 'adId,username,surname,password,status,createTime,role_id,de_id';
+        $field = 'adId,username,surname,password,status,createTime,role_id,de_id,sale_id';
         $data = $this->admins()->findById($where);
         //var_dump($data);exit();
         $data = $this->resetAdmin($data);
         $this->assignDept();
         $this->assignRole();
+        $this->assignSaleDept();
         $this->assign('admin', $data);
         return $this->fetch('admin/update');
     }
@@ -196,13 +198,17 @@ class Admin extends Base{
         if($len >= 1){
             $de_id = $admin['de_id'];
             $role_id = $admin['role_id'];
+            $sale_id = $admin['sale_id'];
             $findDept = $this->depts()->findById(array('de_id'=>$de_id));
             $findRole = $this->roles()->findById(array('role_id'=>$role_id));
+            $findSale = $this->sales()->findById(array('sale_id'=>$sale_id));
             $admin['role_name'] = $findRole['role_name'];
             $admin['dept_name'] = $findDept['dept_name'];
+            $admin['sale_name'] = $findSale['sale_name'];
         }else{
             $admin['role_name'] = '';
             $admin['dept_name'] = '';
+            $admin['sale_name'] = '';
         }
         return $admin;
 

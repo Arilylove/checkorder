@@ -51,6 +51,7 @@ class Login extends Controller {
         session('orderuser', $admin['username']);
         session('surname', $hasAdmin['surname']);
         session('orderstatus', $hasAdmin['status']);     //保存用户权限，判断是管理员还是用户。
+        session('sale_id', $hasAdmin['sale_id']);
 
         //var_dump($hasAdmin['status']);exit;
         $url = 'Admin/index';

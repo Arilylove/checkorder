@@ -78,6 +78,17 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">业务部门  <span class="required">*</span></label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <select class="form-control col-md-7 col-xs-12" name="sale_id" required="required">
+                                                    <option value="{$order['sale_id']}">{$order['sale_name']}</option>
+                                                    {volist name="saledepts" id="v"}
+                                                    <option value="{$v['sale_id']}">{$v.sale_name}</option>
+                                                    {/volist}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="meterType">基表型号 <span class="required">*</span>
                                             </label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">

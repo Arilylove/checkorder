@@ -11,10 +11,6 @@ use app\order\model\Depts;
 use think\Lang;
 
 class Dept extends Base{
-    public function depts(){
-        $depts = new Depts();
-        return $depts;
-    }
     /**
      * 列表页
      * @return mixed
