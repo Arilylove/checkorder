@@ -7,6 +7,13 @@
  */
 namespace app\order\controller;
 
+use think\Lang;
+
+/**
+ * 电子模块类型
+ * Class ModelType
+ * @package app\order\controller
+ */
 class ModelType extends Base{
 
     public function index(){
@@ -25,7 +32,7 @@ class ModelType extends Base{
     public function aMT(){
         $auth = $this->auth('ModelType', 'aMT');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         return $this->fetch('mot/add');
     }
@@ -36,7 +43,7 @@ class ModelType extends Base{
     public function addMT(){
         $auth = $this->auth('ModelType', 'aMT');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $modelTypes = input('post.');
         $validate = $this->validate($modelTypes, 'Mot');
@@ -46,9 +53,9 @@ class ModelType extends Base{
         }
         $result = $this->modelTypes()->add($modelTypes, '');
         if($result < 1){
-            return $this->error("添加失败");
+            return $this->error(Lang::get('add fail'));
         }
-        return $this->success("添加成功", 'ModelType/index');
+        return $this->success(Lang::get('add success'), 'ModelType/index');
     }
     /**
      * 跳转到批量添加页
@@ -56,7 +63,7 @@ class ModelType extends Base{
     public function batchAMT(){
         $auth = $this->auth('ModelType', 'aMT');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         return $this->fetch('mot/batchadd');
     }
@@ -67,7 +74,7 @@ class ModelType extends Base{
     public function batchAddMT(){
         $auth = $this->auth('ModelType', 'aMT');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $post = input('post.');
         //var_dump($post);exit();
@@ -88,9 +95,9 @@ class ModelType extends Base{
         $result = $this->modelTypes()->insertAll($insertAll);
         //var_dump($result);exit();
         if($result < 1){
-            return $this->error("添加失败");
+            return $this->error(Lang::get('add fail'));
         }
-        return $this->success("添加成功", 'ModelType/index');
+        return $this->success(Lang::get('add success'), 'ModelType/index');
 
     }
 
@@ -113,7 +120,7 @@ class ModelType extends Base{
     public function eMT(){
         $auth = $this->auth('ModelType', 'eMT');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $modelId = input('param.modelId');
         $field = 'modelId,modelType';
@@ -129,13 +136,13 @@ class ModelType extends Base{
     public function editMT(){
         $auth = $this->auth('ModelType', 'eMT');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $modelId = input('param.modelId');
         $where = array('modelId'=>$modelId);
         $find = $this->modelTypes()->findById($where);
         if(!$find){
-            return $this->error('未找到该信息');
+            return $this->error(Lang::get('unfind modeltype'));
         }
         $modelTypes = input('post.');
         $validate = $this->validate($modelTypes, 'Mot');
@@ -145,9 +152,9 @@ class ModelType extends Base{
         }
         $result = $this->modelTypes()->update($modelTypes, $where);
         if($result < 1){
-            return $this->error("修改失败");
+            return $this->error(Lang::get('edit fail'));
         }
-        return $this->success("修改成功", 'ModelType/index');
+        return $this->success(Lang::get('edit success'), 'ModelType/index');
     }
 
     /**
@@ -157,7 +164,7 @@ class ModelType extends Base{
     public function dMT(){
         $auth = $this->auth('ModelType', 'dMT');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         return $this->fetch("mot/del");
     }
@@ -168,19 +175,19 @@ class ModelType extends Base{
     public function delMT(){
         $auth = $this->auth('ModelType', 'dMT');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $modelId = input('param.modelId');
         $where = array('modelId'=>$modelId);
         $find = $this->modelTypes()->findById($where);
         if(!$find){
-            return $this->error('未找到该信息');
+            return $this->error(Lang::get('unfind modeltype'));
         }
         $result = $this->modelTypes()->del($where);
         if($result < 1){
-            return $this->error("删除失败");
+            return $this->error(Lang::get('del fail'));
         }
-        return $this->success("删除成功", 'ModelType/index');
+        return $this->success(Lang::get('del success'), 'ModelType/index');
     }
     /**
      * 简单的模糊搜索

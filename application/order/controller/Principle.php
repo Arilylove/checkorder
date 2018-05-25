@@ -7,6 +7,13 @@
  */
 namespace app\order\controller;
 
+use think\Lang;
+
+/**
+ * 生产负责人
+ * Class Principle
+ * @package app\order\controller
+ */
 class Principle extends Base{
 
     public function index(){
@@ -25,7 +32,7 @@ class Principle extends Base{
     public function aPrinc(){
         $auth = $this->auth('Principle', 'aPrinc');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         return $this->fetch('princ/add');
     }
@@ -36,7 +43,7 @@ class Principle extends Base{
     public function addPrinc(){
         $auth = $this->auth('Principle', 'aPrinc');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $principles = input('post.');
         $validate = $this->validate($principles, 'Princ');
@@ -46,9 +53,9 @@ class Principle extends Base{
         }
         $result = $this->principles()->add($principles, '');
         if($result < 1){
-            return $this->error("添加失败");
+            return $this->error(Lang::get('add fail'));
         }
-        return $this->success("添加成功", 'Principle/index');
+        return $this->success(Lang::get('add success'), 'Principle/index');
     }
 
     /**
@@ -70,7 +77,7 @@ class Principle extends Base{
     public function ePrinc(){
         $auth = $this->auth('Principle', 'ePrinc');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $pid = input('param.pid');
         $field = 'pid,productPrinciple,position';
@@ -86,13 +93,13 @@ class Principle extends Base{
     public function editPrinc(){
         $auth = $this->auth('Principle', 'ePrinc');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $pid = input('param.pid');
         $where = array('pid'=>$pid);
         $find = $this->principles()->findById($where);
         if(!$find){
-            return $this->error('未找到该信息');
+            return $this->error(Lang::get('unfind principle'));
         }
         $principles = input('post.');
         $validate = $this->validate($principles, 'Princ');
@@ -102,9 +109,9 @@ class Principle extends Base{
         }
         $result = $this->principles()->update($principles, $where);
         if($result < 1){
-            return $this->error("修改失败");
+            return $this->error(Lang::get('edit fail'));
         }
-        return $this->success("修改成功", 'Principle/index');
+        return $this->success(Lang::get('edit success'), 'Principle/index');
     }
 
     /**
@@ -114,7 +121,7 @@ class Principle extends Base{
     public function dPrinc(){
         $auth = $this->auth('Principle', 'dPrinc');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         return $this->fetch("princ/del");
     }
@@ -125,19 +132,19 @@ class Principle extends Base{
     public function delPrinc(){
         $auth = $this->auth('Principle', 'dPrinc');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $pid = input('param.pid');
         $where = array('pid'=>$pid);
         $find = $this->principles()->findById($where);
         if(!$find){
-            return $this->error('未找到该信息');
+            return $this->error(Lang::get('unfind principle'));
         }
         $result = $this->principles()->del($where);
         if($result < 1){
-            return $this->error("删除失败");
+            return $this->error(Lang::get('del fail'));
         }
-        return $this->success("删除成功", 'Principle/index');
+        return $this->success(Lang::get('del success'), 'Principle/index');
     }
 
     /**

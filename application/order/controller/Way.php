@@ -8,6 +8,7 @@
 namespace app\order\controller;
 
 use app\order\model\Ways;
+use think\Lang;
 
 class Way extends Base{
     public function ways(){
@@ -62,9 +63,9 @@ class Way extends Base{
         }
         $add = $this->ways()->add($data, '');
         if(!$add){
-            return $this->error('添加失败');
+            return $this->error(Lang::get('add fail'));
         }
-        return $this->success("添加成功", 'Way/index');
+        return $this->success(Lang::get('add success'), 'Way/index');
 
     }
 
@@ -88,7 +89,7 @@ class Way extends Base{
         $where = array('wid'=>$id);
         $find = $this->ways()->findById($where);
         if(!$find){
-            return $this->error('方法不存在');
+            return $this->error(Lang::get('unfind auth way'));
         }
         $post = input('post.');
         $data = array(
@@ -105,9 +106,9 @@ class Way extends Base{
         }
         $update = $this->ways()->update($data, $where);
         if(!$update){
-            return $this->error('修改失败');
+            return $this->error(Lang::get('edit fail'));
         }
-        return $this->success("修改成功", 'Way/index');
+        return $this->success(Lang::get('edit success'), 'Way/index');
 
     }
 
@@ -119,13 +120,13 @@ class Way extends Base{
         $where = array('wid'=>$id);
         $find = $this->ways()->findById($where);
         if(!$find){
-            return $this->error('方法不存在');
+            return $this->error(Lang::get('unfind auth way'));
         }
         $del = $this->ways()->del($where);
         if(!$del){
-            return $this->error('删除失败');
+            return $this->error(Lang::get('del fail'));
         }
-        return $this->success("删除成功", 'Way/index');
+        return $this->success(Lang::get('del success'), 'Way/index');
     }
 
 

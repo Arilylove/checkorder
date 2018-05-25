@@ -7,6 +7,7 @@
  */
 namespace app\order\controller;
 
+use think\Lang;
 class MeterOrder extends Base{
     public function index(){
         //先从订单表中获取全部信息，mid，在由mid获取表号
@@ -68,7 +69,7 @@ class MeterOrder extends Base{
         $find = $this->orders()->findById($where);
 
         if(!$find){
-            return $this->error("订单不存在");
+            return $this->error(Lang::get('order unexist'));
         }
         //只允许更新这两项
         $orders['customTool'] = input("param.customTool");
@@ -77,10 +78,10 @@ class MeterOrder extends Base{
         var_dump($meterEnd);exit();*/
         $edit = $this->orders()->update($orders, $where);
         if($edit < 1){
-            return $this->error("修改订单失败");
+            return $this->error(Lang::get('edit fail'));
         }
 
-        return $this->success('修改成功', 'MeterOrder/index');
+        return $this->success(Lang::get('edit success'), 'MeterOrder/index');
 
     }
 

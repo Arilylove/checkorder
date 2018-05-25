@@ -8,6 +8,7 @@
 namespace app\order\controller;
 
 use app\order\model\Roles;
+use think\Lang;
 
 class Role extends Base{
 
@@ -53,7 +54,7 @@ class Role extends Base{
     public function save(){
         $auth = $this->auth('Role', 'add');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $post = input('post.');
         $roles = array(
@@ -71,9 +72,9 @@ class Role extends Base{
         //var_dump($roles);exit();
         $add = $this->roles()->add($roles, '');
         if(!$add){
-            return $this->error('添加失败');
+            return $this->error(Lang::get('add fail'));
         }
-        return $this->success("添加成功", 'Role/index');
+        return $this->success(Lang::get('add success'), 'Role/index');
 
     }
 
@@ -87,7 +88,7 @@ class Role extends Base{
         $where = array('role_id'=>$id);
         $find = $this->roles()->findById($where);
         if(!$find){
-            return $this->error("角色不存在");
+            return $this->error(Lang::get('unfind role'));
         }
         $field = 'wid,w_name,pid,w_control,w_way,url,create_time,status';
         $where = '';
@@ -107,13 +108,13 @@ class Role extends Base{
     public function eSave(){
         $auth = $this->auth('Role', 'edit');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $id = input('param.role_id');
         $where = array('role_id'=>$id);
         $find = $this->roles()->findById($where);
         if(!$find){
-            return $this->error('角色不存在');
+            return $this->error(Lang::get('unfind role'));
         }
         $post = input('post.');
         $roles = array(
@@ -130,9 +131,9 @@ class Role extends Base{
         //var_dump($roles);exit();
         $update = $this->roles()->update($roles, $where);
         if(!$update){
-            return $this->error('修改失败');
+            return $this->error(Lang::get('edit fail'));
         }
-        return $this->success("修改成功", 'Role/index');
+        return $this->success(Lang::get('edit success'), 'Role/index');
 
     }
     /**
@@ -156,17 +157,17 @@ class Role extends Base{
         //不可删除有用户的角色
         $findOwnRole = $this->admins()->findById($where);
         if($findOwnRole){
-            return $this->error("不可删除存在用户的角色");
+            return $this->error(Lang::get('undel as exist user'));
         }
         $find = $this->roles()->findById($where);
         if(!$find){
-            return $this->error('角色不存在');
+            return $this->error(Lang::get('unfind role'));
         }
         $del = $this->roles()->del($where);
         if(!$del){
-            return $this->error('删除失败');
+            return $this->error(Lang::get('del fail'));
         }
-        return $this->success("删除成功", 'Role/index');
+        return $this->success(Lang::get('del success'), 'Role/index');
     }
 
     public function search(){

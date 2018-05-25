@@ -8,6 +8,7 @@
 namespace app\order\controller;
 
 use app\order\model\Admins;
+use app\order\model\Logs;
 use app\order\model\Meters;
 use app\order\model\MeterTypes;
 use app\order\model\ModelTypes;
@@ -22,6 +23,7 @@ use app\order\model\Manufacturer;
 use app\order\model\Roles;
 use app\order\model\Ways;
 use app\order\model\Depts;
+use think\Lang;
 
 class Base extends Controller{
     public function _initialize(){
@@ -32,7 +34,7 @@ class Base extends Controller{
         //var_dump($a);exit();
         //判断用户是否已经登录
         if ($a) {
-            return $this->error('对不起,您还没有登录!请先登录', 'Login/index');
+            return $this->error(Lang::get('login first,thanks'), 'Login/index');
         }
         $this->assign("username", $username);
         $this->assign("surname", $surname);
@@ -40,6 +42,15 @@ class Base extends Controller{
         //登录成功，将用户的权限操作id传给前端
         $this->assignOwnWays($username);
         return true;
+    }
+
+    public function authVerify(){
+        $controller = request()->controller();
+        $action = request()->action();
+        $auth = $this->auth($controller, $action);
+        if(!$auth){
+            return $this->error(Lang::get('no authority'));
+        }
     }
     /**
      * 1表示有权限，0表示无权限
@@ -54,14 +65,7 @@ class Base extends Controller{
         }
         return 0;
     }
-    public function authVerify(){
-        $controller = request()->controller();
-        $action = request()->action();
-        $auth = $this->auth($controller, $action);
-        if(!$auth){
-            return $this->error("对不起,没有权限");
-        }
-    }
+
     /*{if condition="in_array('Role',$ownways['w_control']) && in_array('add',$ownways['w_way'])"}*/
     /**
      * 根据UID获取该用户所有权限
@@ -96,7 +100,7 @@ class Base extends Controller{
             $ways['w_control'] = array();
             $ways['w_way'] = array();
             $this->assign('ownways', $ways);
-            return $this->error("对不起,没有权限!", 'Login/index');
+            return $this->error(Lang::get('no authority'), 'Login/index');
         }else{
             //var_dump($ways);exit();
             $this->assign('ownways', $ways);
@@ -159,6 +163,10 @@ class Base extends Controller{
         return $depts;
     }
 
+    protected function logs(){
+        $logs = new Logs();
+        return $logs;
+    }
     /**
      * 分页
      * @param $table
@@ -187,7 +195,7 @@ class Base extends Controller{
         $where = array('username'=>$username);
         $admin = Db::table('admin')->where($where)->find();
         if (!$admin){
-            return $this->error('该用户不存在');
+            return $this->error(Lang::get('no user exist'));
         }
         //var_dump($admin['password']);exit();
         $this->assign('adId', $admin['adId']);
@@ -199,24 +207,24 @@ class Base extends Controller{
         $update = $string->encrypt(input('param.update'));
         $confirm = $string->encrypt(input('param.confirm'));
         if($password != $inputPassword){
-            return $this->error('密码输入错误');
+            return $this->error(Lang::get('pass wrong'));
         }
         if ($update == $password){
-            return $this->error('修改密码同原始密码相同');
+            return $this->error(Lang::get('same to old'));
         }
         if ($update == ''){
-            return $this->error('密码不能为空');
+            return $this->error(Lang::get('unallowed as null'));
         }
         if ($update != $confirm){
-            return $this->error('两次输入密码不相同');
+            return $this->error(Lang::get('two not same'));
         }
         $result = Db::table('admin')->where('username', $username)->update(['password'=>$update]);
         //var_dump($result);exit();
         if (!$result){
-            return $this->error('修改失败');
+            return $this->error(Lang::get('edit fail'));
         }
         session('orderuser', null);
-        return $this->success('修改成功,返回登录界面', 'Login/index');
+        return $this->success(Lang::get('edit success'), 'Login/index');
 
     }
 
@@ -346,14 +354,14 @@ class Base extends Controller{
         $startIsNum = is_numeric($startNum);
         $endIsNum = is_numeric($endNum);
         if(($startLen != $endLen) || ($start4 != $end4) || (!$startIsNum) || (!$endIsNum)){
-            return $this->error("表号必须是数字,前四位相同且长度相等");
+            return $this->error(Lang::get('number and four the same'));
         }
         $startFloat = floatval($startNum);
         $endFloat = floatval($endNum);
         $intLength = intval($endFloat-$startFloat);
         //var_dump($intLength);exit();
         if($intLength < 1){
-            return $this->error("结束表号要大于开始表号");
+            return $this->error(Lang::get('end bigger than start'));
         }
 
     }

@@ -8,6 +8,8 @@
 namespace app\order\controller;
 
 use think\Db;
+use think\Lang;
+
 class Order extends Base{
 
     public function index(){
@@ -38,7 +40,7 @@ class Order extends Base{
     public function aOrd(){
         $auth = $this->auth('Order', 'add');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         //国家，客户，基表型号，电子模块类型，制造商，生产负责人，发货状态都是下拉框选择
         $this->assignState();
@@ -56,7 +58,7 @@ class Order extends Base{
     public function addOrd(){
         $auth = $this->auth('Order', 'add');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $orders = input("post.");
         //基本验证
@@ -85,7 +87,7 @@ class Order extends Base{
             $orders['orderCycle'] = $this->countDate($orders['modelStart'], $orders['modelEnd']);
             $orders['assemCycle'] = $this->countDate($orders['assemStart'], $orders['assemEnd']);
             if(($orders['orderCycle'] < 0) || ($orders['assemCycle'] < 0)){
-                return $this->error("结束日期要晚于开始日期");
+                return $this->error(Lang::get('enddate later than start'));
             }
         }else{
             $orders['orderCycle'] = 0;
@@ -95,7 +97,7 @@ class Order extends Base{
 
         $addOrder = $this->orders()->add($orders, '');
         if($addOrder < 1){
-            return $this->error("添加订单失败");
+            return $this->error(Lang::get('add fail'));
         }
         $lastId = $this->orders()->lastSql();
 
@@ -111,7 +113,7 @@ class Order extends Base{
             $meters['oid'] = $lastId;
             $addMeter = $this->meters()->add($meters, '');
         }
-        return $this->success('添加成功', 'Order/index');
+        return $this->success(Lang::get('add success'), 'Order/index');
 
     }
 
@@ -122,7 +124,7 @@ class Order extends Base{
     public function eOrd(){
         $auth = $this->auth('Order', 'edit');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         //国家，客户，基表型号，电子模块类型，制造商，生产负责人，发货状态都是下拉框选择
         $this->assignState();
@@ -145,7 +147,7 @@ class Order extends Base{
     public function editOrd(){
         $auth = $this->auth('Order', 'edit');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $orders = input("post.");
         //订单号存在
@@ -156,7 +158,7 @@ class Order extends Base{
         $meterStart = $find['meterStart'];
         $meterEnd = $find['meterEnd'];
         if(!$find){
-            return $this->error("订单不存在");
+            return $this->error(Lang::get('order unexist'));
         }
         $startLen = strlen($orders['meterStart']);
         $endLen = strlen($orders['meterEnd']);
@@ -194,7 +196,7 @@ class Order extends Base{
                 $findUsed = $this->meters()->findUserd(array('meterNum'=>$orders['meterStart']), $oid);
             }
             if($findUsed){
-                return $this->error("表号已被使用");
+                return $this->error(Lang::get('meternum used'));
             }
         }
 
@@ -203,7 +205,7 @@ class Order extends Base{
             $orders['orderCycle'] = $this->countDate($orders['modelStart'], $orders['modelEnd']);
             $orders['assemCycle'] = $this->countDate($orders['assemStart'], $orders['assemEnd']);
             if(($orders['orderCycle'] < 0) || ($orders['assemCycle'] < 0)){
-                return $this->error("结束日期要晚于开始日期");
+                return $this->error(Lang::get('enddate later than start'));
             }
         }else{
             $orders['orderCycle'] = 0;
@@ -214,7 +216,7 @@ class Order extends Base{
         var_dump($meterEnd);exit();*/
         $edit = $this->orders()->update($orders, $where);
         if($edit < 1){
-            return $this->error("修改订单失败");
+            return $this->error(Lang::get('edit fail'));
         }
         //只有当表号变了的时候需要添加新的表号，删除原来的表号
         if(($meterStart != $orders['meterStart']) || ($meterEnd != $orders['meterEnd'])){
@@ -241,7 +243,7 @@ class Order extends Base{
             }
         }
 
-        return $this->success('修改成功', 'Order/index');
+        return $this->success(Lang::get('edit success'), 'Order/index');
 
     }
 
@@ -263,19 +265,19 @@ class Order extends Base{
     public function delOrd(){
         $auth = $this->auth('Order', 'del');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $oid = input('param.oid');
         $where = array('oid'=>$oid);
         $find = $this->orders()->findById($where);
         if(!$find){
-            return $this->error("订单不存在");
+            return $this->error(Lang::get('order unexist'));
         }
         $del = $this->orders()->del($where);
         if($del < 1){
-            return $this->error("删除订单失败");
+            return $this->error(Lang::get('del fail'));
         }
-        return $this->success('删除成功', 'Order/index');
+        return $this->success(Lang::get('del success'), 'Order/index');
     }
 
     /**
@@ -326,7 +328,7 @@ class Order extends Base{
     public function exportExcel(){
         $auth = $this->auth('Order', 'exportExcel');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         Vendor('phpexcel.PHPExcel');
         Vendor('phpexcel.PHPExcel.IOFactory');
@@ -441,7 +443,7 @@ class Order extends Base{
         ////1.长度10,,11,12,13;2.长度相等；3.前四位相同;4.都是数字；5.如果是13位，只保留前面12位。
         if($startLen > 0){
             if(($startLen < 10) || ($startLen > 13)){
-                return $this->error("表号长度只能是10,11,12,13位");
+                return $this->error(Lang::get('only 10 11 12 13 long'));
             }
             //结束表号是否为空
             if($endLen > 0){
@@ -449,7 +451,7 @@ class Order extends Base{
             }
 
         }else if($endLen > 0){
-            return $this->error("不允许只有结束表号");
+            return $this->error(Lang::get('only start unallowed'));
         }
     }
 

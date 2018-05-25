@@ -7,6 +7,8 @@
  */
 namespace app\order\controller;
 
+use think\Lang;
+
 class Client extends Base{
 
     /*
@@ -18,7 +20,7 @@ class Client extends Base{
     public function cliLi(){
         $auth = $this->auth('Client', 'cliLi');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $where = '';
         $field = 'cid,state,client';
@@ -40,7 +42,7 @@ class Client extends Base{
     public function aCli(){
         $auth = $this->auth('Client', 'aCli');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         //需要从国家列表中获取国家名称
         $states = $this->state()->select('sid,state', '');
@@ -53,7 +55,7 @@ class Client extends Base{
     public function addClient(){
         $auth = $this->auth('Client', 'aCli');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $cid = input("param.cid");
         $state = input('param.state');
@@ -72,9 +74,9 @@ class Client extends Base{
         //var_dump($clients);exit();
         $result = $this->clients()->add($clients);
         if (!$result){
-            return $this->error('添加失败');
+            return $this->error(Lang::get('add fail'));
         }
-        return $this->success('添加成功', 'Client/cliLi');
+        return $this->success(Lang::get('add success'), 'Client/cliLi');
     }
     /*
      * 删除客户
@@ -82,20 +84,20 @@ class Client extends Base{
     public function delClient(){
         $auth = $this->auth('Client', 'delClient');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $cliId = input('param.cid');
         //var_dump($cliId);exit();
         $where = array('cid'=>$cliId);
         $findCliId = $this->clients()->findById($where);
         if (!$findCliId){
-            return $this->error('未找到该客户', 'Client/cliLi');
+            return $this->error(Lang::get('unfind client'), 'Client/cliLi');
         }
         $delete = $this->clients()->del($where);
         if (!$delete){
-            return $this->error('删除失败', 'Client/cliLi');
+            return $this->error(Lang::get('del fail'), 'Client/cliLi');
         }
-        return $this->success('删除成功', 'Client/cliLi');
+        return $this->success(Lang::get('del success'), 'Client/cliLi');
 
     }
 
@@ -117,7 +119,7 @@ class Client extends Base{
     public function eCli(){
         $auth = $this->auth('Client', 'eCli');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         //需要从国家列表中获取国家名称
         $states = $this->state()->select('sid,state', '');
@@ -139,14 +141,14 @@ class Client extends Base{
     public function editClient(){
         $auth = $this->auth('Client', 'eCli');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $cliId = input('param.cid');
         //var_dump($cliId);exit();
         $where = array('cid'=>$cliId);
         $findCliId = $this->clients()->findById($where);
         if (!$findCliId){
-            return $this->error('未找到该客户');
+            return $this->error(Lang::get('unfind client'));
         }
         $state = input('param.state');
         $client = input('param.client');
@@ -164,9 +166,9 @@ class Client extends Base{
         }
         $result = $this->clients()->update($clients, $where);
         if (!$result){
-            return $this->error('修改失败');
+            return $this->error(Lang::get('edit fail'));
         }
-        return $this->success('修改成功', 'Client/cliLi');
+        return $this->success(Lang::get('edit success'), 'Client/cliLi');
     }
 
 

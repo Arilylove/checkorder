@@ -60,3 +60,11 @@ dept_name varchar(100) not null,                  #部门名称
 description varchar(255) not null,
 create_time varchar(100) not null
 );
+
+#日志
+create table user_logs(
+lid int PRIMARY KEY auto_increment,
+uid int not null,
+behavior varchar(100) not null,
+create_time varchar(50) not NULL
+);

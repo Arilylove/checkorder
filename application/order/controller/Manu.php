@@ -7,6 +7,8 @@
  */
 namespace app\order\controller;
 
+use think\Lang;
+
 class Manu extends Base{
 
 
@@ -26,7 +28,7 @@ class Manu extends Base{
     public function aManu(){
         $auth = $this->auth('Manu', 'aManu');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $this->assignState();
         return $this->fetch('manu/add');
@@ -38,7 +40,7 @@ class Manu extends Base{
     public function addManu(){
         $auth = $this->auth('Manu', 'aManu');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $manus = input('post.');
         $validate = $this->validate($manus, 'Manus');
@@ -48,9 +50,9 @@ class Manu extends Base{
         }
         $result = $this->manus()->add($manus, '');
         if($result < 1){
-            return $this->error("添加失败");
+            return $this->error(Lang::get('add fail'));
         }
-        return $this->success("添加成功", 'Manu/index');
+        return $this->success(Lang::get('add success'), 'Manu/index');
     }
 
     /**
@@ -72,7 +74,7 @@ class Manu extends Base{
     public function eManu(){
         $auth = $this->auth('Manu', 'eManu');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $mfId = input('param.mfId');
         $where = array('mfId'=>$mfId);
@@ -88,14 +90,14 @@ class Manu extends Base{
     public function editManu(){
         $auth = $this->auth('Manu', 'eManu');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $mfId = input('param.mfId');
         $field = 'mfId,manufacturer';
         $where = array('mfId'=>$mfId);
         $find = $this->manus()->findById($where);
         if(!$find){
-            return $this->error('未找到该信息');
+            return $this->error(Lang::get('unfind manufacturer'));
         }
         $manus = input('post.');
         $validate = $this->validate($manus, 'Manus');
@@ -105,9 +107,9 @@ class Manu extends Base{
         }
         $result = $this->manus()->update($manus, $where);
         if($result < 1){
-            return $this->error("修改失败");
+            return $this->error(Lang::get('edit fail'));
         }
-        return $this->success("修改成功", 'Manu/index');
+        return $this->success(Lang::get('edit success'), 'Manu/index');
     }
 
     /**
@@ -117,26 +119,26 @@ class Manu extends Base{
     public function dManu(){
         $auth = $this->auth('Manu', 'dManu');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         return $this->fetch("manu/del");
     }
     public function delManu(){
         $auth = $this->auth('Manu', 'dManu');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $mfId = input('param.mfId');
         $where = array('mfId'=>$mfId);
         $find = $this->manus()->findById($where);
         if(!$find){
-            return $this->error('未找到该信息');
+            return $this->error(Lang::get('unfind manufacturer'));
         }
         $result = $this->manus()->del($where);
         if($result < 1){
-            return $this->error("删除失败");
+            return $this->error(Lang::get('del fail'));
         }
-        return $this->success("删除成功", 'Manu/index');
+        return $this->success(Lang::get('del success'), 'Manu/index');
     }
 
     /**

@@ -8,6 +8,8 @@
 namespace app\order\controller;
 
 use think\Db;
+use think\Lang;
+
 class State extends Base {
 
     /**
@@ -17,7 +19,7 @@ class State extends Base {
     public function aSt(){
         $auth = $this->auth('State', 'aSt');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         return $this->fetch('state/add');
     }
@@ -27,7 +29,7 @@ class State extends Base {
     public function addStates(){
         $auth = $this->auth('State', 'aSt');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $states =input('post.');
         $validate = $this->validate($states, 'States');
@@ -36,9 +38,9 @@ class State extends Base {
         }
         $result = $this->state()->add($states);
         if (!$result){
-            return $this->error('添加失败');
+            return $this->error(Lang::get('add fail'));
         }
-        return $this->success('添加成功', 'State/stLi');
+        return $this->success(Lang::get('add success'), 'State/stLi');
     }
     /**
      * 跳转到批量添加页
@@ -46,7 +48,7 @@ class State extends Base {
     public function batchASt(){
         $auth = $this->auth('State', 'aSt');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         return $this->fetch('state/batchadd');
     }
@@ -57,7 +59,7 @@ class State extends Base {
     public function batchAddSt(){
         $auth = $this->auth('State', 'aSt');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $post = input('post.');
         $state = $post['state'];
@@ -83,9 +85,9 @@ class State extends Base {
         $result = $this->state()->insertAll($insertAll);
         //var_dump($result);exit();
         if($result < 1){
-            return $this->error("添加失败");
+            return $this->error(Lang::get('add fail'));
         }
-        return $this->success("添加成功", 'State/stLi');
+        return $this->success(Lang::get('add success'), 'State/stLi');
 
     }
 
@@ -100,7 +102,7 @@ class State extends Base {
     public function stLi(){
         $auth = $this->auth('State', 'stLi');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $where = '';
         $field = 'sid,state';
@@ -130,14 +132,14 @@ class State extends Base {
     public function eSt(){
         $auth = $this->auth('State', 'eSt');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $sid = input('sid/s');
         //var_dump($sid);exit();
         $where = array('sid'=>$sid);
         $find = $this->state()->findById($where);
         if (!$find){
-            return $this->error('未找到该国家信息');
+            return $this->error(Lang::get('unfind state'));
         }
         $field = 'sid,state';
         $where = array('sid'=>$sid);
@@ -153,14 +155,14 @@ class State extends Base {
     public function editStates(){
         $auth = $this->auth('State', 'eSt');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $sid = input('sid/s');
         //var_dump($sid);exit();
         $where = array('sid'=>$sid);
         $find = $this->state()->findById($where);
         if (!$find){
-            return $this->error('未找到该国家信息');
+            return $this->error(Lang::get('unfind state'));
         }
         $state = input('param.state');
         $states = array(
@@ -170,9 +172,9 @@ class State extends Base {
         $result = $this->state()->update($states, $where);
         //var_dump($result);exit();
         if (!$result){
-            return $this->error('修改失败');
+            return $this->error(Lang::get('edit fail'));
         }
-        return $this->success('修改成功', 'State/stLi');
+        return $this->success(Lang::get('edit success'), 'State/stLi');
     }
     /*
      * 删除国家
@@ -180,7 +182,7 @@ class State extends Base {
     public function delStates(){
         $auth = $this->auth('State', 'delStates');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $sid = input('param.sid');
         //var_dump($sid);exit();
@@ -191,13 +193,13 @@ class State extends Base {
         $where = array('sid'=>$sid);
         $find = $this->state()->findById($where);
         if (!$find){
-            return $this->error('未找到该国家');
+            return $this->error(Lang::get('unfind state'));
         }
         $delete = $this->state()->del($where);
         if (!$delete){
-            return $this->error('删除失败');
+            return $this->error(Lang::get('del fail'));
         }
-        return $this->success('删除成功', 'State/stLi');
+        return $this->success(Lang::get('del success'), 'State/stLi');
     }
 
     /**

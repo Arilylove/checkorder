@@ -9,6 +9,7 @@ namespace app\order\controller;
 
 use app\order\crypt\AesCrypt;
 use app\order\model\Admins;
+use think\Lang;
 
 class Admin extends Base{
 
@@ -35,7 +36,7 @@ class Admin extends Base{
         if($status == 3){
             $where = '';
         }else{
-            $where = array('status'=>['>=', $status], 'status'=>['<>', 3]);
+            $where = array('status'=>[['>=', $status], ['<>', 3]]);
         }
         //$where = '';
         $order = 'createTime asc';
@@ -47,21 +48,6 @@ class Admin extends Base{
         return $this->fetch("admin/index");
     }
 
-    public function table(){
-        $field = 'adId,username,surname,password,createTime,status,role_id,de_id';
-        $where = '';
-        $admin = $this->admins()->select($field, $where);
-        foreach ($admin as $key=>$value){
-            if($admin[$key]['status'] == '0'){
-                $admin[$key]['status'] = '管理员';
-            }else{
-                $admin[$key]['status'] = '用户';
-            }
-        }
-        $this->assign('admin', json_encode($admin));
-        //var_dump(json_encode($admin));exit();
-        return $this->fetch("admin/table");
-    }
 
     /**
      * 跳转到添加页
@@ -92,13 +78,13 @@ class Admin extends Base{
         $username = $admin['username'];
         $find = $ad->findById(array('username'=>$username));
         if($find){
-            return $this->error('用户已存在');
+            return $this->error(Lang::get('existed user'));
         }
         $add = $ad->add($admin, $where);
         if (!$add){
-            return $this->error('添加失败');
+            return $this->error(Lang::get('add fail'));
         }
-        return $this->success('添加成功', 'admin/index');
+        return $this->success(Lang::get('add success'), 'admin/index');
     }
 
 
@@ -125,7 +111,7 @@ class Admin extends Base{
     public function editAdmin(){
         $auth = $this->auth('Admin', 'edit');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $ad = $this->admins();
         $time = $_SERVER['REQUEST_TIME'];         //客户端向服务端发送请求的时间
@@ -136,16 +122,16 @@ class Admin extends Base{
         $findUser = $ad->findById($where);
         //var_dump($findUser);exit();
         if (!$findUser){
-            return $this->error('未找到该用户');
+            return $this->error(Lang::get('unfind user'));
         }
         //var_dump($admin);exit();
         $result = $ad->update($admin, $where);
         if (!$result){
-            return $this->error('修改失败');
+            return $this->error(Lang::get('edit fail'));
         }
         //$param = "?page=".$currentPage;
         //var_dump($param);exit();
-        return $this->success('修改成功', 'admin/index');
+        return $this->success(Lang::get('edit success'), 'admin/index');
     }
     /**
      * 删除用户
@@ -153,7 +139,7 @@ class Admin extends Base{
     public function deleteAdmin(){
         $auth = $this->auth('Admin', 'del');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $adId = input('param.adId');
         //var_dump($adId);exit();
@@ -163,17 +149,17 @@ class Admin extends Base{
         $self = session('orderuser');
         //var_dump($self);exit();
         if($self == $user['username']){
-            return $this->error('不能删除自己');
+            return $this->error(Lang::get('del self unallowed'));
         }
         if($user['status'] == 3){
-            return $this->error('超级管理员不可删除');
+            return $this->error(Lang::get('del root unallowed'));
         }
         $delete = $admin->del($where);
         if (!$delete){
-            return $this->error('删除失败');
+            return $this->error(Lang::get('del fail'));
         }
         //弹出确认窗口
-        return $this->success('删除成功', 'admin/index');
+        return $this->success(Lang::get('del success'), 'admin/index');
     }
     /**
      * @return mixed

@@ -8,6 +8,7 @@
 namespace app\order\controller;
 
 use app\order\model\Depts;
+use think\Lang;
 
 class Dept extends Base{
     public function depts(){
@@ -43,7 +44,7 @@ class Dept extends Base{
     public function save(){
         $auth = $this->auth('Dept', 'add');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $post = input('post.');
         $data = array(
@@ -58,9 +59,9 @@ class Dept extends Base{
         }
         $add = $this->depts()->add($data, '');
         if(!$add){
-            return $this->error('添加失败');
+            return $this->error(Lang::get('add fail'));
         }
-        return $this->success("添加成功", 'Dept/index');
+        return $this->success(Lang::get('add success'), 'Dept/index');
 
     }
 
@@ -95,13 +96,13 @@ class Dept extends Base{
     public function eSave(){
         $auth = $this->auth('Dept', 'edit');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $id = input('param.de_id');
         $where = array('de_id'=>$id);
         $find = $this->depts()->findById($where);
         if(!$find){
-            return $this->error('部门不存在');
+            return $this->error(Lang::get('unfind dept'));
         }
         $post = input('post.');
         $data = array(
@@ -115,9 +116,9 @@ class Dept extends Base{
         }
         $update = $this->depts()->update($data, $where);
         if(!$update){
-            return $this->error('修改失败');
+            return $this->error(Lang::get('edit fail'));
         }
-        return $this->success("修改成功", 'Dept/index');
+        return $this->success(Lang::get('edit success'), 'Dept/index');
 
     }
 
@@ -131,19 +132,19 @@ class Dept extends Base{
         $where = array('de_id'=>$id);
         $find = $this->depts()->findById($where);
         if(!$find){
-            return $this->error('部门不存在');
+            return $this->error(Lang::get('unfind dept'));
         }
         //如果该部门下有用户，则不允许删除
         $isExist = $this->admins()->findById(array('de_id'=>$id));
         //var_dump($isExist);exit();
         if($isExist){
-            return $this->error('存在用户,不允许删除');
+            return $this->error(Lang::get('undel as exist user'));
         }
         $del = $this->depts()->del($where);
         if(!$del){
-            return $this->error('删除失败');
+            return $this->error(Lang::get('del fail'));
         }
-        return $this->success("删除成功", 'Dept/index');
+        return $this->success(Lang::get('del success'), 'Dept/index');
     }
 
     public function search(){

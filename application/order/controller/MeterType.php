@@ -7,6 +7,13 @@
  */
 namespace app\order\controller;
 
+use think\Lang;
+
+/**
+ * 基表型号
+ * Class MeterType
+ * @package app\order\controller
+ */
 class MeterType extends Base
 {
     public function index(){
@@ -25,7 +32,7 @@ class MeterType extends Base
     public function aMT(){
         $auth = $this->auth('MeterType', 'aMT');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         return $this->fetch('met/add');
     }
@@ -36,7 +43,7 @@ class MeterType extends Base
     public function addMT(){
         $auth = $this->auth('MeterType', 'aMT');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $meterTypes = input('post.');
         $validate = $this->validate($meterTypes, 'Met');
@@ -54,9 +61,9 @@ class MeterType extends Base
     private function addOne($meterTypes){
         $result = $this->meterTypes()->add($meterTypes, '');
         if($result < 1){
-            return $this->error("添加失败");
+            return $this->error(Lang::get('add fail'));
         }
-        return $this->success("添加成功", 'MeterType/index');
+        return $this->success(Lang::get('add success'), 'MeterType/index');
     }
 
     /**
@@ -65,7 +72,7 @@ class MeterType extends Base
     public function batchAMT(){
         $auth = $this->auth('MeterType', 'aMT');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         return $this->fetch('met/batchadd');
     }
@@ -76,7 +83,7 @@ class MeterType extends Base
     public function batchAddMT(){
         $auth = $this->auth('MeterType', 'aMT');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $post = input('post.');
         $meterType = $post['meterType'];
@@ -93,9 +100,9 @@ class MeterType extends Base
         //2.再批量添加
         $result = $this->meterTypes()->insertAll($insertAll);
         if($result < 1){
-            return $this->error("添加失败");
+            return $this->error(Lang::get('add fail'));
         }
-        return $this->success("添加成功", 'MeterType/index');
+        return $this->success(Lang::get('add success'), 'MeterType/index');
 
     }
 
@@ -119,7 +126,7 @@ class MeterType extends Base
     public function eMT(){
         $auth = $this->auth('MeterType', 'eMT');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $meterId = input('param.meterId');
         $field = 'meterId,meterType';
@@ -135,13 +142,13 @@ class MeterType extends Base
     public function editMT(){
         $auth = $this->auth('MeterType', 'eMT');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $meterId = input('param.meterId');
         $where = array('meterId'=>$meterId);
         $find = $this->meterTypes()->findById($where);
         if(!$find){
-            return $this->error('未找到该信息');
+            return $this->error(Lang::get('unfind metertype'));
         }
         $meterTypes = input('post.');
         $validate = $this->validate($meterTypes, 'Met');
@@ -151,9 +158,9 @@ class MeterType extends Base
         }
         $result = $this->meterTypes()->update($meterTypes, $where);
         if($result < 1){
-            return $this->error("修改失败");
+            return $this->error(Lang::get('edit fail'));
         }
-        return $this->success("修改成功", 'MeterType/index');
+        return $this->success(Lang::get('edit success'), 'MeterType/index');
     }
 
     /**
@@ -163,7 +170,7 @@ class MeterType extends Base
     public function dMT(){
         $auth = $this->auth('MeterType', 'dMT');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         return $this->fetch("met/del");
     }
@@ -174,20 +181,20 @@ class MeterType extends Base
     public function delMT(){
         $auth = $this->auth('MeterType', 'dMT');
         if(!$auth){
-            return $this->error("对不起,没有权限");
+            return $this->error(Lang::get('no authority'));
         }
         $meterId = input('param.meterId');
         //var_dump($meterId);exit();
         $where = array('meterId'=>$meterId);
         $find = $this->meterTypes()->findById($where);
         if(!$find){
-            return $this->error('未找到该信息');
+            return $this->error(Lang::get('unfind metertype'));
         }
         $result = $this->meterTypes()->del($where);
         if($result < 1){
-            return $this->error("删除失败");
+            return $this->error(Lang::get('del fail'));
         }
-        return $this->success("删除成功", 'MeterType/index');
+        return $this->success(Lang::get('del success'), 'MeterType/index');
     }
 
     /**
