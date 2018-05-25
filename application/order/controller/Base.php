@@ -48,7 +48,7 @@ class Base extends Controller{
     }
 
     public function authVerify(){
-        $controller = request()->controller();
+        $controller = ucfirst(request()->controller());
         $action = request()->action();
         $auth = $this->auth($controller, $action);
         if(!$auth){
@@ -75,7 +75,7 @@ class Base extends Controller{
      * @param $uid
      * @return array|int
      */
-    protected function getWaysByUid($username){
+    public function getWaysByUid($username){
         $find = $this->admins()->findById(array('username'=>$username));
         $role_id = $find['role_id'];
         $wid = $this->roles()->findById(array('role_id'=>$role_id));

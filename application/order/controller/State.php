@@ -40,7 +40,7 @@ class State extends Base {
         if (!$result){
             return $this->error(Lang::get('add fail'));
         }
-        return $this->success(Lang::get('add success'), 'State/stLi');
+        return $this->success(Lang::get('add success'), 'State/index');
     }
     /**
      * 跳转到批量添加页
@@ -87,7 +87,7 @@ class State extends Base {
         if($result < 1){
             return $this->error(Lang::get('add fail'));
         }
-        return $this->success(Lang::get('add success'), 'State/stLi');
+        return $this->success(Lang::get('add success'), 'State/index');
 
     }
 
@@ -99,11 +99,8 @@ class State extends Base {
      * @return mixed
      * 国家列表
      */
-    public function stLi(){
-        $auth = $this->auth('State', 'stLi');
-        if(!$auth){
-            return $this->error(Lang::get('no authority'));
-        }
+    public function index(){
+        $this->authVerify();
         $where = '';
         $field = 'sid,state';
         $num = 10;
@@ -174,7 +171,7 @@ class State extends Base {
         if (!$result){
             return $this->error(Lang::get('edit fail'));
         }
-        return $this->success(Lang::get('edit success'), 'State/stLi');
+        return $this->success(Lang::get('edit success'), 'State/index');
     }
     /*
      * 删除国家
@@ -199,7 +196,7 @@ class State extends Base {
         if (!$delete){
             return $this->error(Lang::get('del fail'));
         }
-        return $this->success(Lang::get('del success'), 'State/stLi');
+        return $this->success(Lang::get('del success'), 'State/index');
     }
 
     /**

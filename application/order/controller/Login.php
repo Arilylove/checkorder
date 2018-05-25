@@ -53,15 +53,17 @@ class Login extends Controller {
         session('orderstatus', $hasAdmin['status']);     //保存用户权限，判断是管理员还是用户。
         session('sale_id', $hasAdmin['sale_id']);
 
-        //var_dump($hasAdmin['status']);exit;
-        $url = 'Admin/index';
-        if($hasAdmin['status'] == 1){
-            $auth = $this->base()->auth('Order', 'index');
-            if(!$auth){
-                return $this->error(Lang::get('no authority'));
-            }
-            $url = 'Order/index';
-        }else if($hasAdmin['status'] == 2){
+        //获取用户的权限
+        $ways = $this->base()->getWaysByUid($admin['username']);
+        //1.如果没有权限
+        if($ways == null){
+            return $this->error(Lang::get('no authority'));
+        }
+        //2.有权限，跳转到第一个权限页面
+        $control = ucfirst($ways['w_control']['0']);
+        $url = $control.'/index';
+        //表计组
+        if($hasAdmin['status'] == 2){
             $url = 'MeterOrder/index';
         }
         return $this->success(Lang::get("login success"), $url);

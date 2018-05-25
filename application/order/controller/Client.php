@@ -17,11 +17,8 @@ class Client extends Base{
     public function listClient(){
         return $this->fetch("cli/clients");
     }
-    public function cliLi(){
-        $auth = $this->auth('Client', 'cliLi');
-        if(!$auth){
-            return $this->error(Lang::get('no authority'));
-        }
+    public function index(){
+        $this->authVerify();
         $where = '';
         $field = 'cid,state,client';
         $joinTable = 'state';
@@ -76,7 +73,7 @@ class Client extends Base{
         if (!$result){
             return $this->error(Lang::get('add fail'));
         }
-        return $this->success(Lang::get('add success'), 'Client/cliLi');
+        return $this->success(Lang::get('add success'), 'Client/index');
     }
     /*
      * 删除客户
@@ -91,13 +88,13 @@ class Client extends Base{
         $where = array('cid'=>$cliId);
         $findCliId = $this->clients()->findById($where);
         if (!$findCliId){
-            return $this->error(Lang::get('unfind client'), 'Client/cliLi');
+            return $this->error(Lang::get('unfind client'), 'Client/index');
         }
         $delete = $this->clients()->del($where);
         if (!$delete){
-            return $this->error(Lang::get('del fail'), 'Client/cliLi');
+            return $this->error(Lang::get('del fail'), 'Client/index');
         }
-        return $this->success(Lang::get('del success'), 'Client/cliLi');
+        return $this->success(Lang::get('del success'), 'Client/index');
 
     }
 
@@ -168,7 +165,7 @@ class Client extends Base{
         if (!$result){
             return $this->error(Lang::get('edit fail'));
         }
-        return $this->success(Lang::get('edit success'), 'Client/cliLi');
+        return $this->success(Lang::get('edit success'), 'Client/index');
     }
 
 

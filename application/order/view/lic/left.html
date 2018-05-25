@@ -36,11 +36,11 @@
             or (in_array('Principle',$ownways['w_control'])))"}
             <li><a><i class="fa fa-binoculars"></i> 可配置信息管理 <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
-                    {if condition="in_array('State',$ownways['w_control']) && in_array('stLi',$ownways['w_way'])"}
-                    <li><a href="{:url('State/stLi')}">国家配置</a></li>
+                    {if condition="in_array('State',$ownways['w_control']) && in_array('index',$ownways['w_way'])"}
+                    <li><a href="{:url('State/index')}">国家配置</a></li>
                     {/if}
-                    {if condition="in_array('Client',$ownways['w_control']) && in_array('cliLi',$ownways['w_way'])"}
-                    <li><a href="{:url('Client/cliLi')}">客户配置</a></li>
+                    {if condition="in_array('Client',$ownways['w_control']) && in_array('index',$ownways['w_way'])"}
+                    <li><a href="{:url('Client/index')}">客户配置</a></li>
                     {/if}
                     {if condition="in_array('MeterType',$ownways['w_control']) && in_array('index',$ownways['w_way'])"}
                     <li><a href="{:url('MeterType/index')}">基表型号配置</a></li>
