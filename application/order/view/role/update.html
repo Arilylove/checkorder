@@ -212,8 +212,7 @@
         return +data;
     });*/
 
-    //var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
-    var data = '{$jsonways}'
+    var data = '{$jsonways}';
     data = JSON.parse(data);
     // console.log(data)
     var zNodes = [];
@@ -233,26 +232,6 @@
             }
         }
     }
-
-
-    /*for(var j=0;j<widLen;j++){
-        // console.log(widArr[j],'ssssss')
-
-        for(var i=0;i<data.length;i++){
-            // console.log(data[i],'iiiiiiii')
-            if(data[i].wid == widArr[j]){
-                data[i].checked=true
-            }
-        }
-    }
-    //console.log(data,'iiiiiiii')
-    for(var i=0;i<data.length;i++){
-        if(data[i].pid == '0'){
-            zNodes[i] = {id:data[i].wid, pId:data[i].pid, name:data[i].w_name, isParent:true,checked:data[i].checked}
-        }else{
-            zNodes[i] = {id:data[i].wid, pId:data[i].pid, name:data[i].w_name,checked:data[i].checked}
-        }
-    }*/
 
     $(document).ready(function(){
         $.fn.zTree.init($("#treeDemo"), setting, zNodes);
@@ -288,10 +267,10 @@
             zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name:"new node" + (newCount++)});
             return false;
         });
-    };
+    }
     function removeHoverDom(treeId, treeNode) {
         $("#addBtn_"+treeNode.tId).unbind().remove();
-    };
+    }
 
     function update() {
         var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
