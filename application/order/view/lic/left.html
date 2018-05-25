@@ -11,7 +11,7 @@
         <h3>Order</h3>
         <ul class="nav side-menu">
 
-            {if condition="$status eq '0' OR $status eq '3'"}
+            {if condition="in_array('Admin',$ownways['w_control']) or in_array('Dept',$ownways['w_control']) or in_array('Role',$ownways['w_control'])"}
             <li><a><i class="fa fa-users"></i> 系统管理 <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
                     {if condition="in_array('Admin',$ownways['w_control']) && in_array('index',$ownways['w_way'])"}
@@ -30,7 +30,10 @@
                 </ul>
             </li>
             {/if}
-            {if condition="$status neq '2'"}
+            {if condition="(in_array('State',$ownways['w_control']))
+            or (in_array('Client',$ownways['w_control']) or (in_array('MeterType',$ownways['w_control']))
+            or (in_array('ModelType',$ownways['w_control'])) or (in_array('Manu',$ownways['w_control']))
+            or (in_array('Principle',$ownways['w_control'])))"}
             <li><a><i class="fa fa-binoculars"></i> 可配置信息管理 <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
                     {if condition="in_array('State',$ownways['w_control']) && in_array('stLi',$ownways['w_way'])"}
