@@ -58,6 +58,8 @@ return [
     'unfind metertype'      =>'未找到该基表型号',
     'unfind modeltype'      =>'为找到该电子模块类型',
 
+    //前端显示
+    'users'                 =>'用户',
 
 
 

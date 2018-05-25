@@ -202,6 +202,7 @@
     //console.log(roleJson)
     //获取wid值
     var widString = roleJson.wid;
+    /*去掉最后一个逗号*/
     widString = widString.substr(0, widString.length-1)
     var widArr = widString.split(',');
     var widLen = widArr.length;
@@ -211,7 +212,7 @@
         return +data;
     });*/
 
-    var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+    //var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
     var data = '{$jsonways}'
     data = JSON.parse(data);
     // console.log(data)
@@ -222,25 +223,15 @@
             if(data[i].pid == 0){
                 if(data[i].wid == widArr[j]){
                      data[i].checked = true;
-                    zNodes[i] = {id:data[i].wid, pId:data[i].pid, name:data[i].w_name, isParent:true, checked:true}
-                 }else{
-                     zNodes[i] = {id:data[i].wid, pId:data[i].pid, name:data[i].w_name, isParent:true, checked:data[i].checked}
-                }
-
+                 }
+                 zNodes[i] = {id:data[i].wid, pId:data[i].pid, name:data[i].w_name, isParent:true, checked:data[i].checked}
             }else {    //子节点
                 if(data[i].wid == widArr[j]){
                     data[i].checked = true;
-                    //console.log(data[i].wid)
-                    //console.log(typeof (data[i].wid))
-                    zNodes[i] = {id:data[i].wid, pId:data[i].pid, name:data[i].w_name, checked:true}
-                }else{
-                    zNodes[i] = {id:data[i].wid, pId:data[i].pid, name:data[i].w_name, checked:data[i].checked}
-                    //console.log(data[i].wid)
                 }
-
+                zNodes[i] = {id:data[i].wid, pId:data[i].pid, name:data[i].w_name, checked:data[i].checked}
             }
         }
-
     }
 
 
