@@ -109,11 +109,7 @@ class Dept extends Base{
             'dept_name'=>$post['dept_name'],
             'description'=>$post['description']
         );
-        //基本验证
-        $validate = $this->validate($data, 'Depts');
-        if(true !== $validate){
-            return $this->error(" $validate ");
-        }
+
         $update = $this->depts()->update($data, $where);
         if(!$update){
             return $this->error(Lang::get('edit fail'));

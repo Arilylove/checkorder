@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="__RECORD__/ztree/demo.css" type="text/css">
     <link rel="stylesheet" href="__RECORD__/ztree/metroStyle.css" type="text/css">
     <style type="text/css">
-        div#rMenu {position:absolute; visibility:hidden; top:0; background-color: #555;text-align: left;padding: 2px;}
         div#rMenu ul li{
             margin: 1px 0;
             padding: 0 5px;
@@ -86,16 +85,16 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">备注 <span class="required">*</span>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">备注
                                     </label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <input type="text" name="remark" value="{$role['remark']}" required="required" class="form-control col-md-7 col-xs-12">
+                                        <input type="text" name="remark" value="{$role['remark']}" class="form-control col-md-7 col-xs-12">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">状态 </label>
+                                    <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">状态 <span class="required">*</span></label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <select id="middle-name" class="form-control col-md-7 col-xs-12" name="status">
+                                        <select id="middle-name" class="form-control col-md-7 col-xs-12" name="status" required="required">
                                             {if condition="$role['status'] eq 1"}
                                             <option value="{$role['status']}">正常</option>
                                             <option value="0">禁用</option>
@@ -207,33 +206,10 @@
     var widArr = widString.split(',');
     var widLen = widArr.length;
     /*整数数组*/
-   /* var intWid = [];
+    /*var intWid = [];
     intWid = widArr.map(function(data){
         return +data;
-    });
-    //console.log(intWid);
-    /!*数字按顺序排列*!/
-    //外层控制排序轮次
-    function sortWid(arr) {
-        var len = arr.length;
-        var minIndex, temp;
-        //console.time('选择排序耗时');
-        for (var i = 0; i < len - 1; i++) {
-            minIndex = i;
-            for (var j = i + 1; j < len; j++) {
-                if (arr[j] < arr[minIndex]) { //寻找最小的数
-                    minIndex = j; //将最小数的索引保存
-                }
-            }
-            temp = arr[i];
-            arr[i] = arr[minIndex];
-            arr[minIndex] = temp;
-        }
-        //console.timeEnd('选择排序耗时');
-        return arr;
-    }
-    widArr = sortWid(intWid);*/
-    console.log(widArr)
+    });*/
 
     var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
     var data = '{$jsonways}'

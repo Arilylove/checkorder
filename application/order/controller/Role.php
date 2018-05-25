@@ -123,11 +123,6 @@ class Role extends Base{
             'wid'=>$post['wid'],
             'status'=>$post['status']
         );
-        //基本验证
-        $validate = $this->validate($roles, 'Roles');
-        if(true !== $validate){
-            return $this->error(" $validate ");
-        }
         //var_dump($roles);exit();
         $update = $this->roles()->update($roles, $where);
         if(!$update){

@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="__RECORD__/ztree/demo.css" type="text/css">
     <link rel="stylesheet" href="__RECORD__/ztree/metroStyle.css" type="text/css">
     <style type="text/css">
-      div#rMenu {position:absolute; visibility:hidden; top:0; background-color: #555;text-align: left;padding: 2px;}
       div#rMenu ul li{
         margin: 1px 0;
         padding: 0 5px;
@@ -91,9 +90,9 @@
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">状态 </label>
+                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">状态 <span class="required">*</span></label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <select id="middle-name" class="form-control col-md-7 col-xs-12" name="status">
+                          <select id="middle-name" class="form-control col-md-7 col-xs-12" name="status" required="required">
                             <option value="1" selected>正常</option>
                             <option value="0">禁用</option>
                           </select>
@@ -173,16 +172,6 @@
   <script type="text/javascript" src="__RECORD__/ztree/jquery.ztree.excheck.js"></script>
   <script type="text/javascript" src="__RECORD__/ztree/jquery.ztree.exedit.js"></script>
   <script type="text/javascript">
-      /*$(function() {
-          //查询所有的菜单信息
-          $.ajax({
-              type: 'post',
-              url: 'getorganization.jsp',
-              success: function (result) {
-
-              }
-          })
-      });*/
       var setting = {
           view: {
               selectedMulti: true             /*允许选中多个节点*/
@@ -212,7 +201,6 @@
               zNodes[i] = {id:data[i].wid, pId:data[i].pid, name:data[i].w_name}
           }
       }
-      console.log(zNodes)
 
       $(document).ready(function(){
           $.fn.zTree.init($("#treeDemo"), setting, zNodes);
@@ -221,16 +209,15 @@
 
           var nodes = treeObj.getChangeCheckedNodes()
           //nodes = Json
-          console.log(nodes)
+          //console.log(nodes)
           var tree = '';
           for(var i=0;i<nodes.length;i++){
               var treeNode = nodes[i]
               if(treeNode.checked == true){
                   tree += treeNode.id + ',';
               }
-              console.log((treeNode?treeNode.name:"root") + "checked " +(treeNode.checked?"true":"false"));
+              //console.log((treeNode?treeNode.name:"root") + "checked " +(treeNode.checked?"true":"false"));
           }
-          console.log(tree)
           $("input[name='tree']").val(tree)
       });
 
@@ -281,14 +268,9 @@
               url: '' ,//url
               data: jsonData,
               success: function (result) {
-                  //console.log(result);//打印服务端返回的数据(调试用)
-                  //$("input[name='tree']").val(tree)
-                  //return true;
               }
           });
       }
-
-
       //console.log(setting.treeObj)
   </script>
 </body>

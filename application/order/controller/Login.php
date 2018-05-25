@@ -55,11 +55,11 @@ class Login extends Controller {
         //var_dump($hasAdmin['status']);exit;
         $url = 'Admin/index';
         if($hasAdmin['status'] == 1){
-            $auth = $this->base()->auth('State', 'stLi');
+            $auth = $this->base()->auth('Order', 'index');
             if(!$auth){
                 return $this->error(Lang::get('no authority'));
             }
-            $url = 'State/stLi';
+            $url = 'Order/index';
         }else if($hasAdmin['status'] == 2){
             $url = 'MeterOrder/index';
         }
