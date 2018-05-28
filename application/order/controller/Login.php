@@ -59,6 +59,10 @@ class Login extends Controller {
         if($ways == null){
             return $this->error(Lang::get('no authority'));
         }
+        //登录日志添加
+        $userLog = new UserLog();
+        $userLog->setLog($admin['username'].'登录');
+
         //2.有权限，跳转到第一个权限页面
         $control = ucfirst($ways['w_control']['0']);
         $url = $control.'/index';
