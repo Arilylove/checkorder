@@ -10,6 +10,15 @@
     <link rel="stylesheet" href="__RECORD__/table.css"/>
     <link rel="stylesheet" href="__RECORD__/bootstrap-table.css">
     <link rel="stylesheet" href="__RECORD__/bootstrap-table-fixed-columns.css">
+    <style>
+        .jambo_table >tbody >tr{
+            height: 41px!important;
+        }
+        .fixed-table-body-columns{
+            height: 411px!important;
+            top: 41px!important;
+        }
+    </style>
 </head>
 
 <body class="nav-md">
@@ -66,21 +75,18 @@
                             <div class="x_content">
 
                                 <div class="table-responsive">
-                                    <table id="Table" class="table table-striped jambo_table bulk_action" data-toggle="table">
+                                    <table id="Table" class="table table-striped jambo_table table-bordered table-hover" data-toggle="table">
                                         <thead>
-                                        <tr class="headings">
+                                        <tr>
                                             <th>国家</th>
                                             <th>客户</th>
                                             <th>业务部</th>
-
                                             <th>基表型号</th>
                                             <th>订单数量</th>
                                             <th>电子模块类型</th>
-
                                             <th>模块订单号</th>
                                             <th>模块订单周期(天)</th>
                                             <th>基表组装周期(天)</th>
-
                                             <th>基表订单号</th>
                                             <th>表号</th>
                                             <th>制造商</th>
@@ -90,7 +96,7 @@
                                             <th>生产数据校验</th>
                                             <th>发货状态</th>
                                             <th>备注说明</th>
-                                            <th class="column-title no-link last" style="text-align: center;width:240px;"><span>操作</span>
+                                            <th><span>操作</span>
                                             </th>
 
                                         </tr>
@@ -98,20 +104,16 @@
 
                                         <tbody>
                                         {volist name="orders" id="v"}
-                                        <tr class="even pointer">
-
+                                        <tr>
                                             <td>{$v.state}</td>
                                             <td>{$v.client}</td>
                                             <td>{$v.sale_name}</td>
-
                                             <td>{$v.meterType}</td>
                                             <td>{$v.orderQty}</td>
                                             <td>{$v.modelType}</td>
-
                                             <td>{$v.modelNum}</td>
                                             <td>{$v.orderCycle}</td>
                                             <td>{$v.assemCycle}</td>
-
                                             <td>{$v.orderNum}</td>
                                             <td>{$v.meterStart}~{$v.meterEnd}</td>
                                             <td>{$v.manufacturer}</td>
@@ -229,13 +231,11 @@
         },'json');
     }
     $("#Table").bootstrapTable('destroy').bootstrapTable({
-        //pagination: true,//分页
-        //paginationLoop: true,
-        //striped: true,//是否显示行间隔色
-        //height: $(window.innerHeight)[0] - 240,
+        // height:462,
+        // height: $(window.innerHeight)[0] - 200,
         fixedColumns: true,//固定列
         fixedNumber:2 //固定前两列
-    });
+    })
 
 </script>
 </body>

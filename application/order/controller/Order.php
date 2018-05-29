@@ -313,7 +313,7 @@ class Order extends Base{
         $modelNum = input('param.modelNum');
         $sid = input('param.sid');
         $cid = input('param.cid');
-        $orders = $this->orders()->join($meterNum, $deliveryStatus, $sid, $cid, $orderNum, $modelNum, '');
+        $orders = $this->orders()->join($meterNum, $deliveryStatus, $sid, $cid, $orderNum, $modelNum);
         //var_dump($orders);exit();
         $len = count($orders);
         //存在搜索的结果

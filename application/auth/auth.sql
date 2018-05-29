@@ -66,5 +66,6 @@ create table user_logs(
 lid int PRIMARY KEY auto_increment,
 uid int not null,
 behavior varchar(100) not null,
+user_ip varchar(100) not null,
 create_time varchar(50) not NULL
 );
