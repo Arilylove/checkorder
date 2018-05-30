@@ -7,23 +7,8 @@
  */
 namespace app\receipt\controller;
 
-use app\receipt\crypt\AesCrypt;
-use app\receipt\model\Admins;
-
 class Admin extends Base{
 
-
-    /**
-     * 引用其他类
-     **/
-    public function admin(){
-        $ad = new Admins();
-        return $ad;
-    }
-    public function hex(){
-        $hex = new AesCrypt();
-        return $hex;
-    }
 
     /**
 	*查询修改的信息
@@ -32,7 +17,7 @@ class Admin extends Base{
         $adId = input('param.adId');
         $where = array('adId'=>$adId);
         $field = 'adId,username,surname,password,status,createTime';
-        $data = $this->admin()->select($field, $where);
+        $data = $this->admins()->select($field, $where);
         echo json_encode($data);
     }
 
@@ -43,7 +28,7 @@ class Admin extends Base{
         $field = 'username,surname,password,adId,status,createTime';
         $where = '';
         $order = 'createTime desc';
-        $admin = $this->admin()->selectPage($field, $where, $order);
+        $admin = $this->admins()->selectPage($field, $where, $order);
         $this->page($admin);
         $this->assign('admin', $admin);
         return $this->fetch("admin/index");
@@ -52,7 +37,7 @@ class Admin extends Base{
     public function table(){
         $field = 'adId,username,surname,password,createTime,status';
         $where = '';
-        $admin = $this->admin()->select($field, $where);
+        $admin = $this->admins()->select($field, $where);
         foreach ($admin as $key=>$value){
             if($admin[$key]['status'] == '0'){
                 $admin[$key]['status'] = '管理员';
@@ -78,7 +63,7 @@ class Admin extends Base{
      * */
     public function addAdmin(){
         $hex = $this->hex();
-        $ad = $this->admin();
+        $ad = $this->admins();
         $admin = input('post.');
         //$postPassword = input('param.password');    //获取的默认密码值：123456；
         $admin['password'] = '123456';
@@ -109,7 +94,7 @@ class Admin extends Base{
         $adId = input('param.adId');
         $where = array('adId'=>$adId);
         $field = 'adId,username,surname,password,status,createTime';
-        $data = $this->admin()->select($field, $where);
+        $data = $this->admins()->select($field, $where);
         $this->assign('admin', $data[0]);
         return $this->fetch('admin/update');
     }
@@ -118,7 +103,7 @@ class Admin extends Base{
      * */
     public function editAdmin(){
         
-        $ad = $this->admin();
+        $ad = $this->admins();
         $time = $_SERVER['REQUEST_TIME'];         //客户端向服务端发送请求的时间
         $admin = input('post.');
         $admin['updateTime'] = date('Y-m-d H:i:s', $time);
@@ -143,9 +128,9 @@ class Admin extends Base{
     public function deleteAdmin(){
         $adId = input('param.adId');
         //var_dump($adId);exit();
-        $admin = $this->admin();
+        $admin = $this->admins();
         $where = array('adId'=>$adId);
-        $user = $this->admin()->findById($where);
+        $user = $this->admins()->findById($where);
         $self = session('username');
         //var_dump($self);exit();
         if($self == $user['username']){
@@ -167,7 +152,7 @@ class Admin extends Base{
      */
     public function search(){
         $search = input('param.search');
-        $data = $this->admin()->searchLike($search);
+        $data = $this->admins()->searchLike($search);
         $this->page($data);
         $this->assign('admin', $data);
         return $this->fetch('admin/index');

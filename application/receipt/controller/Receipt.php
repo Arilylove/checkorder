@@ -69,16 +69,17 @@ class Receipt extends Base{
      * @return mixed
      */
     public function add(){
-        return $this->fetch('admin/add');
+        return $this->fetch('ret/add');
     }
 
     /**
-     * 增加用户
+     * 增加
      * */
-    public function addAdmin(){
+    public function addRet(){
         $hex = $this->hex();
         $ad = $this->admin();
         $admin = input('post.');
+        var_dump($admin);exit();
         //$postPassword = input('param.password');    //获取的默认密码值：123456；
         $admin['password'] = '123456';
         $admin['password'] = $hex->encrypt($admin['password']);   //密码用AES加密；

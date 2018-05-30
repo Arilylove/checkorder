@@ -20,22 +20,6 @@ class Admins{
     protected $status;
     protected $admin;
 
-    /**
-     * @return mixed
-     */
-    public function getAdmin()
-    {
-        return $this->admin;
-    }
-
-    /**
-     * @param mixed $admin
-     */
-    public function setAdmin($admin)
-    {
-        $this->admin = $admin;
-    }
-
     public function add($admin, $where){
         $result = Db::table($this->tableName)->where($where)->insert($admin);
         return $result;

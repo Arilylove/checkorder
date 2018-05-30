@@ -7,6 +7,13 @@
  */
 namespace app\receipt\controller;
 
+use app\receipt\model\Admins;
+use app\receipt\model\Clients;
+use app\receipt\model\DataModels;
+use app\receipt\model\Notes;
+use app\receipt\model\ReceiptModels;
+use app\receipt\model\SaleDepts;
+use app\receipt\model\States;
 use think\Controller;
 use think\Db;
 use app\receipt\crypt\AesCrypt;
@@ -25,7 +32,39 @@ class Base extends Controller{
         $this->assign("status", $status);
         return true;
     }*/
+   protected function state(){
+       $state = new States();
+       return $state;
+   }
+   protected function clients(){
+       $client = new Clients();
+       return $client;
+   }
 
+    protected function datas(){
+       $data = new DataModels();
+       return $data;
+    }
+    protected function notes(){
+       $notes = new Notes();
+       return $notes;
+    }
+    protected function sales(){
+       $sales = new SaleDepts();
+       return $sales;
+    }
+    protected function admins(){
+       $admin = new Admins();
+       return $admin;
+    }
+    protected function hex(){
+        $hex = new AesCrypt();
+        return $hex;
+    }
+    protected function receiptModels(){
+       $model = new ReceiptModels();
+       return $model;
+    }
     /**
      * 分页
      * @param $table
@@ -107,88 +146,6 @@ class Base extends Controller{
         $field = 'sid,state';
         $state = $this->state()->select($field, '');
         $this->assign('state', $state);
-    }
-    /**
-     * 制造商option
-     */
-    protected function assignManu(){
-        $field = 'mfId,manufacturer';
-        $manu = $this->manus()->select($field, '');
-        $this->assign('manu', $manu);
-    }
-    /**
-     * 基表型号option
-     */
-    protected function assignMeterType(){
-        $field = 'meterId,meterType';
-        $meterType = $this->meterTypes()->select($field, '');
-        $this->assign('meterType', $meterType);
-    }
-    /**
-     * 电子模块类型option
-     */
-    protected function assignModelType(){
-        $field = 'modelId,modelType';
-        $modelType = $this->modelTypes()->select($field, '');
-        $this->assign('modelType', $modelType);
-    }
-    /**
-     * 生产负责人option
-     */
-    protected function assignPrinc(){
-        $field = 'pid,productPrinciple,dept,position';
-        $principle = $this->principles()->select($field, '');
-        $this->assign('principle', $principle);
-    }
-
-    /**
-     * 表号option
-     */
-    protected function assignMeter(){
-        $field = 'mid,meterNum,oid';
-        $meter = $this->meters()->select($field, '');
-        $this->assign('meters', $meter);
-    }
-
-    protected function assignOrder(){
-        $field = "oid,state,client,meterType,modelType,modelStart,modelEnd,modelNum,meterStart,meterEnd,assemStart,assemEnd,deliveryTime,orderNum,manufacturer,productPrinciple,deliveryStatus,orderCycle,assemCycle";
-        $order = $this->orders()->select($field, '');
-        $this->assign('order', $order);
-    }
-
-    /**
-     * 日期计算-》周期(单位：日)
-     */
-    public function countDate($start, $end){
-        //刚开始格式为2018-05-10
-        $startDate = strtotime($start);
-        $endDate = strtotime($end);
-        $days = round(($endDate-$startDate)/3600/24) ;
-        return $days;
-    }
-
-    /**
-     * 验证表号
-     */
-    public function verifyNum($startNum, $endNum){
-        //1.长度10,,11,12,13;2.长度相等；3.前四位相同;4.都是数字；5.如果是13位，只保留前面12位。
-        $startLen = strlen($startNum);
-        $endLen = strlen($endNum);
-        $start4 = substr($startNum, 0, 4);
-        $end4 = substr($endNum, 0, 4);
-        $startIsNum = is_numeric($startNum);
-        $endIsNum = is_numeric($endNum);
-        if(($startLen != $endLen) || ($start4 != $end4) || (!$startIsNum) || (!$endIsNum)){
-            return $this->error("表号必须是数字,前四位相同且长度相等");
-        }
-        $startFloat = floatval($startNum);
-        $endFloat = floatval($endNum);
-        $intLength = intval($endFloat-$startFloat);
-        //var_dump($intLength);exit();
-        if($intLength < 1){
-            return $this->error("结束表号要大于开始表号");
-        }
-
     }
 
     /**
