@@ -36,10 +36,10 @@ class DataModels{
         $result = Db::table($this->tableName)->field($field)->where($where)->select();
         return $result;
     }
-    public function selectPage($field, $where, $order){
+    public function selectPage($field, $where){
         $num = 10;
         $count = $this->count($where);
-        $admin = Db::table($this->tableName)->field($field)->where($where)->order($order)->paginate($num, $count);
+        $admin = Db::table($this->tableName)->field($field)->where($where)->paginate($num, $count);
         return $admin;
     }
     public function count($where){

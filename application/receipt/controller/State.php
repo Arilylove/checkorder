@@ -16,14 +16,14 @@ class State extends Base {
      * 跳转到添加国家页面
      * @return mixed
      */
-    public function aSt(){
+    public function add(){
 
         return $this->fetch('state/add');
     }
     /*
      * 添加国家
      * */
-    public function addStates(){
+    public function save(){
 
         $states =input('post.');
         $validate = $this->validate($states, 'States');
@@ -39,7 +39,7 @@ class State extends Base {
     /**
      * 跳转到批量添加页
      */
-    public function batchASt(){
+    public function batchadd(){
 
         return $this->fetch('state/batchadd');
     }
@@ -47,7 +47,7 @@ class State extends Base {
     /**
      * 批量添加action
      */
-    public function batchAddSt(){
+    public function batchsave(){
 
         $post = input('post.');
         $state = $post['state'];
@@ -79,9 +79,6 @@ class State extends Base {
 
     }
 
-    public function listS(){
-        return $this->fetch('state/states');
-    }
 
     /**
      * @return mixed
@@ -114,7 +111,7 @@ class State extends Base {
      * 跳转到更新页面
      * @return mixed
      */
-    public function eSt(){
+    public function edit(){
 
         $sid = input('sid/s');
         //var_dump($sid);exit();
@@ -134,7 +131,7 @@ class State extends Base {
     /*
      * 修改国家信息
      * */
-    public function editStates(){
+    public function esave(){
 
         $sid = input('sid/s');
         //var_dump($sid);exit();
@@ -158,14 +155,14 @@ class State extends Base {
     /*
      * 删除国家
      * */
-    public function delStates(){
+    public function del(){
 
         $sid = input('param.sid');
         //var_dump($sid);exit();
         $result = $this->delSta($sid);
         return $result;
     }
-    public function delSta($sid){
+    private function delSta($sid){
         $where = array('sid'=>$sid);
         $find = $this->state()->findById($where);
         if (!$find){

@@ -94,9 +94,8 @@ class Record extends Base{
         //$cidArray = $this->clients()->findById(array('client'=>$client));
         $records['sid'] = $sid;
         $records['cid'] = $cid;
-        //session('username', 'test');
         //记录人是当前登录用户
-        $records['recorder'] = session('username');
+        $records['recorder'] = session('recorduser');
         $records['recordDate'] = date('Y-m-d H:i:s', time());
         unset($records['state']);
         //var_dump($records);exit();
@@ -181,7 +180,7 @@ class Record extends Base{
             return $this->error("该记录不存在");
         }
         //自己只能删除自己创建的记录
-        $username = session('username');
+        $username = session('recorduser');
         $recorder = $find['recorder'];
         if($recorder != $username){
             return $this->error("不能删除其他人创建的记录");

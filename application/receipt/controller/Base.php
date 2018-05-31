@@ -12,6 +12,7 @@ use app\receipt\model\Clients;
 use app\receipt\model\DataModels;
 use app\receipt\model\Notes;
 use app\receipt\model\ReceiptModels;
+use app\receipt\model\Receipts;
 use app\receipt\model\SaleDepts;
 use app\receipt\model\States;
 use think\Controller;
@@ -20,7 +21,7 @@ use app\receipt\crypt\AesCrypt;
 
 class Base extends Controller{
    /* public function _initialize(){
-        $username = session('username');
+        $username = session('receiptuser');
         $status = session('status');
         $a = is_null($username);
         //var_dump($a);exit();
@@ -65,6 +66,10 @@ class Base extends Controller{
        $model = new ReceiptModels();
        return $model;
     }
+    protected function receipts(){
+       $receipts = new Receipts();
+       return $receipts;
+    }
     /**
      * 分页
      * @param $table
@@ -78,64 +83,14 @@ class Base extends Controller{
     }
 
 
-    /*
-      *修改密码
-      * */
-    public function update(){
-        $username = session('username');
-        $this->assign('username', $username);
-        return $this->fetch('lic/upPass');
-    }
-
-    public function updatePassword(){
-        $username = session('username');
-        //$this->assign('username', $username);
-        $where = array('username'=>$username);
-        $admin = Db::table('admin')->where($where)->find();
-        if (!$admin){
-            return $this->error('该用户不存在');
-        }
-        //var_dump($admin['password']);exit();
-        $this->assign('adId', $admin['adId']);
-        $string = new AesCrypt();
-        //解密
-        $password = $admin['password'];
-        //var_dump($password);exit();
-        $inputPassword = $string->encrypt(input('param.password'));
-        $update = $string->encrypt(input('param.update'));
-        $confirm = $string->encrypt(input('param.confirm'));
-        if($password != $inputPassword){
-            return $this->error('密码输入错误');
-        }
-        if ($update == $password){
-            return $this->error('修改密码同原始密码相同');
-        }
-        if ($update == ''){
-            return $this->error('密码不能为空');
-        }
-        if ($update != $confirm){
-            return $this->error('两次输入密码不相同');
-        }
-        $result = Db::table('admin')->where('username', $username)->update(['password'=>$update]);
-        //var_dump($result);exit();
-        if (!$result){
-            return $this->error('修改失败');
-        }
-        session('username', null);
-        return $this->success('修改成功,返回登录界面', 'Login/index');
-
-    }
 
     /**
      * 客户option
      */
     protected function assignClient(){
-        $joinTable = 'state';
-        $param = 'sid';
         $where = '';
-        $field = 'cid,state,client';
-        $client = $this->clients()->joinSelect($joinTable, $param, $where, $field);
-        //如果一个国家下面有好几个客户
+        $field = 'cid,sid,client,address,contacts,phone,email,create_time';
+        $client = $this->clients()->select($field, $where);
         $this->assign('clients', $client);
     }
 
@@ -148,6 +103,43 @@ class Base extends Controller{
         $this->assign('state', $state);
     }
 
+    /**
+     * 业务部门option
+     */
+    protected function assignSale(){
+        $field = 'sale_id,sale_name,remark,create_time,status';
+        $where = '';
+        $data = $this->sales()->select($field, $where);
+        $this->assign('saledepts', $data);
+    }
+
+    /**
+     * 发票模板
+     */
+    protected function assignRetModel(){
+        $field = 'rm_id,model,model_file,create_time';
+        $where = '';
+        $data = $this->receiptModels()->select($field, $where);
+        $this->assign("retmodels", $data);
+    }
+
+    /**
+     * 数据模板
+     */
+    protected function assignDataModel(){
+        $field = 'dm_id,type,specification,unit,img,create_time';
+        $where = '';
+        $data = $this->datas()->select($field, $where);
+        $this->assign("datas", $data);
+    }
+
+    protected function assignJsonNote(){
+        $where = '';
+        $field = 'nid,note,create_time';
+        $data = $this->notes()->select($field, $where);
+        $jsonNote = json_encode($data);
+        $this->assign("jsonNotes", $jsonNote);
+    }
     /**
      * Excel导出
      * @param data 导出数据
@@ -224,4 +216,52 @@ class Base extends Controller{
         $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output');
     }
+    /*
+      *修改密码
+      * */
+    public function update(){
+        $username = session('username');
+        $this->assign('username', $username);
+        return $this->fetch('lic/upPass');
+    }
+
+    public function updatePassword(){
+        $username = session('username');
+        //$this->assign('username', $username);
+        $where = array('username'=>$username);
+        $admin = Db::table('admin')->where($where)->find();
+        if (!$admin){
+            return $this->error('该用户不存在');
+        }
+        //var_dump($admin['password']);exit();
+        $this->assign('adId', $admin['adId']);
+        $string = new AesCrypt();
+        //解密
+        $password = $admin['password'];
+        //var_dump($password);exit();
+        $inputPassword = $string->encrypt(input('param.password'));
+        $update = $string->encrypt(input('param.update'));
+        $confirm = $string->encrypt(input('param.confirm'));
+        if($password != $inputPassword){
+            return $this->error('密码输入错误');
+        }
+        if ($update == $password){
+            return $this->error('修改密码同原始密码相同');
+        }
+        if ($update == ''){
+            return $this->error('密码不能为空');
+        }
+        if ($update != $confirm){
+            return $this->error('两次输入密码不相同');
+        }
+        $result = Db::table('admin')->where('username', $username)->update(['password'=>$update]);
+        //var_dump($result);exit();
+        if (!$result){
+            return $this->error('修改失败');
+        }
+        session('username', null);
+        return $this->success('修改成功,返回登录界面', 'Login/index');
+
+    }
+
 }

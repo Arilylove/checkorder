@@ -10,156 +10,178 @@ namespace app\receipt\controller;
 use think\Db;
 use app\receipt\crypt\AesCrypt;
 use app\receipt\model\Admins;
-class Receipt extends Base{
 
-    /**
-     * 引用其他类
-     **/
-    public function admin(){
-        $ad = new Admins();
-        return $ad;
-    }
-    public function hex(){
-        $hex = new AesCrypt();
-        return $hex;
-    }
+/**
+ * 发票
+ * Class Receipt
+ * @package app\receipt\controller
+ */
+class Receipt extends Base{
 
     /**
      *查询修改的信息
      */
     public function one(){
-        $adId = input('param.adId');
-        $where = array('adId'=>$adId);
-        $field = 'adId,username,surname,password,status,createTime';
-        $data = $this->admin()->select($field, $where);
+        $re_id = input('param.re_id');
+        $where = array('re_id'=>$re_id);
+        $field = 're_id,sid,cid,rm_id,num,uid,data_num,create_time';
+        $data = $this->receipts()->select($field, $where);
         echo json_encode($data);
     }
 
     /**
-     * 用户列表
+     * 列表
      * */
     public function index(){
-        $field = 'username,surname,password,adId,status,createTime';
+        $field = 're_id,sid,cid,rm_id,num,uid,data_num,create_time';
         $where = '';
-        $order = 'createTime desc';
-        $admin = $this->admin()->selectPage($field, $where, $order);
-        $this->page($admin);
-        $this->assign('admin', $admin);
+        $order = 'create_time desc';
+        $data = $this->receipts()->selectPage($field, $where);
+        $data = $this->resetReceipts($data);
+        $this->page($data);
+        $this->assign('receipts', $data);
         return $this->fetch("ret/index");
     }
 
-    public function table(){
-        $field = 'adId,username,surname,password,createTime,status';
-        $where = '';
-        $admin = $this->admin()->select($field, $where);
-        foreach ($admin as $key=>$value){
-            if($admin[$key]['status'] == '0'){
-                $admin[$key]['status'] = '管理员';
-            }else{
-                $admin[$key]['status'] = '用户';
-            }
-        }
-        $this->assign('admin', json_encode($admin));
-        //var_dump(json_encode($admin));exit();
-        return $this->fetch("admin/table");
-    }
 
     /**
      * 跳转到添加页
      * @return mixed
      */
     public function add(){
+        //国家
+        $this->assignState();
+        //客户
+        $this->assignClient();
+        //发票模板
+        $this->assignRetModel();
+        //数据模板
+        $this->assignDataModel();
+        //注意事项
+        $this->assignJsonNote();
         return $this->fetch('ret/add');
     }
 
     /**
      * 增加
      * */
-    public function addRet(){
-        $hex = $this->hex();
-        $ad = $this->admin();
-        $admin = input('post.');
-        var_dump($admin);exit();
-        //$postPassword = input('param.password');    //获取的默认密码值：123456；
-        $admin['password'] = '123456';
-        $admin['password'] = $hex->encrypt($admin['password']);   //密码用AES加密；
-        $time = $_SERVER['REQUEST_TIME'];
-        $admin['createTime'] = date('Y-m-d H:i:s', $time);
-        //var_dump($admin);exit();
-        $where = array();
-        //判断
-        $username = $admin['username'];
-        $find = $ad->findById(array('username'=>$username));
-        if($find){
-            return $this->error('用户已存在');
+    public function save(){
+        $data = input('post.');
+        var_dump($data);exit();
+        /*array(8) { ["rm_id"]=> string(1) "1" ["sid"]=> string(1) "1"
+        ["type"]=> array(1) { [0]=> string(5) "gerfg" }
+        ["specification"]=> array(1) { [0]=> string(138) "LAPIS STS Vending Management System - C/S Version,
+        Microsoft SQL Server Database 2008 WITHOUT CUSTMOZATION MODIFICATION ON SOFTWARE PART" }
+         ["unit"]=> array(1) { [0]=> string(4) "copy" } ["qty"]=> array(1) { [0]=> string(3) "1.0" }
+        ["price"]=> array(1) { [0]=> string(5) "14999" } ["note"]=> string(4) "1,2," }*/
+        $types = $data['type'];
+        //有几项分类数据
+        $typeLen = count($types['type']);
+        //保存到数据库的信息
+        $sid = $data['sid'];
+        $cid = $data['cid'];
+        $findClient = $this->clients()->findById(array('cid'=>$cid));
+        $rm_id = $data['rm_id'];
+        $num = 'LTP'.date('YYmmdd', time()).''.$sale_id;;
+        /*$user = session('receiptuser');
+        $findUser = $this->admins()->findById(array('username'=>$user));
+        $sale_id = $findUser['sale_id'];
+        */
+        $data_num = $typeLen;
+        $create_time = date('Y-m-d H:i:s', time());
+        $sqlData = array(
+            'sid'        =>$sid,
+            'cid'        =>$cid,
+            'rm_id'      =>$rm_id,
+            'num'        =>$num,
+            'uid'        =>'',
+            'data_num'   =>$data_num,
+            'create_time'=>$create_time
+        );
+        //$add = $this->receipts()->add($sqlData, '');
+
+        //发票数据
+        $specification = $data['specification'];
+        $unit = $data['unit'];
+        $qty = $data['unit'];
+        $price = $data['price'];
+
+        //注意事项
+        $note = substr($data['note'],0,strlen($data['note'])-1);
+        $noteArr = explode(",", $note);
+        $notes = $this->getNotes($noteArr);
+
+        //带英文的日期格式
+        $us_time = gmstrftime('%dth %b.,%Y', time());
+        $proforma = $this->proformaData($num, $findClient, $us_time);
+        //数据项数据
+        for ($i=0;$i<$typeLen;$i++){
+
         }
-        $add = $ad->add($admin, $where);
+
+
+
+        //导出发票
+        $add = $this->receipts()->add($data, '');
         if (!$add){
             return $this->error('添加失败');
         }
-        return $this->success('添加成功', 'admin/index');
+        return $this->success('添加成功', 'Receipt/index');
     }
 
-
     /**
-     * 跳转到编辑页
-     * @return mixed
+     * 发票抬头：客户信息
+     * @param $sale_id
+     * @param $findClient
+     * @param $create_time
      */
-    public function edit(){
-        $adId = input('param.adId');
-        $where = array('adId'=>$adId);
-        $field = 'adId,username,surname,password,status,createTime';
-        $data = $this->admin()->select($field, $where);
-        $this->assign('admin', $data[0]);
-        return $this->fetch('admin/update');
+    private function proformaData($num, $findClient, $create_time){
+        $proforma['no'] = 'No.:'.$num;
+        $proforma['to'] = $findClient['client'];
+        $proforma['contact'] = '';
+        if($findClient['address'] != ''){
+            $proforma['contact'] .= $findClient['address']." ";
+        }
+        if($findClient['contacts'] != ''){
+            $proforma['contact'] .= $findClient['contacts']." ";
+        }
+        if($findClient['phone'] != ''){
+            $proforma['contact'] .= $findClient['phone'];
+        }
+        $proforma['email'] = $findClient['email'];
+        $proforma['date'] = "DATE:".$create_time;
     }
-    /**
-     * 用户信息编辑
-     * */
-    public function editAdmin(){
+    /*
+     * 由note的nid获取note描述
+     */
+    private function getNotes($notes){
+        $newNotes = array();
+        $len = count($notes);
+        for($i=0;$i<$len;$i++){
+            $nid = $notes[$i];
+            $find = $this->notes()->findById(array('nid'=>$nid));
+            $newNotes[$i] = $find['note'];
+        }
+        return $newNotes;
+    }
 
-        $ad = $this->admin();
-        $time = $_SERVER['REQUEST_TIME'];         //客户端向服务端发送请求的时间
-        $admin = input('post.');
-        $admin['updateTime'] = date('Y-m-d H:i:s', $time);
-        //var_dump($admin);exit();
-        $where = array('username'=>$admin['username']);
-        $findUser = $ad->findById($where);
-        //var_dump($findUser);exit();
-        if (!$findUser){
-            return $this->error('未找到该用户');
-        }
-        $result = $ad->update($admin, $where);
-        if (!$result){
-            return $this->error('修改失败');
-        }
-        //$param = "?page=".$currentPage;
-        //var_dump($param);exit();
-        return $this->success('修改成功', 'admin/index');
-    }
+
     /**
-     * 删除用户
+     * 删除
      * */
-    public function deleteAdmin(){
-        $adId = input('param.adId');
-        //var_dump($adId);exit();
-        $admin = $this->admin();
-        $where = array('adId'=>$adId);
-        $user = $this->admin()->findById($where);
-        $self = session('username');
-        //var_dump($self);exit();
-        if($self == $user['username']){
-            return $this->error('不能删除自己');
-        }
-        if($user['username'] == 'administrator'){
-            return $this->error('超级管理员不可删除');
-        }
-        $delete = $admin->del($where);
+    public function del(){
+        $re_id = input('param.re_id');
+        //var_dump($re_id);exit();
+        $where = array('re_id'=>$re_id);
+        $user = $this->receipts()->findById($where);
+        //$self = session('username');
+
+        $delete = $this->receipts()->del($where);
         if (!$delete){
             return $this->error('删除失败');
         }
         //弹出确认窗口
-        return $this->success('删除成功', 'admin/index');
+        return $this->success('删除成功', 'Receipt/index');
     }
     /**
      * @return mixed
@@ -167,10 +189,12 @@ class Receipt extends Base{
      */
     public function search(){
         $search = input('param.search');
-        $data = $this->admin()->searchLike($search);
+        $where = array();
+        $field = 're_id,sid,cid,rm_id,num,uid,data_num,create_time';
+        $data = $this->receipts()->selectPage($field, $where);
         $this->page($data);
-        $this->assign('admin', $data);
-        return $this->fetch('admin/index');
+        $this->assign('receipts', $data);
+        return $this->fetch('ret/index');
 
     }
 
@@ -237,4 +261,44 @@ class Receipt extends Base{
         return $new;
     }
 
+    /**
+     * 重组（二维数组）
+     * @param $receipts
+     */
+    private function resetReceipts($receipts){
+        $len = count($receipts);
+        if($len >= 1){
+            for($i=0;$i<$len;$i++){
+                $receipts[$i] = $this->resetReceipt($receipts[$i]);
+            }
+        }
+        return $receipts;
+    }
+    /**
+     * 重组（一维数组）
+     * @param $receipt
+     */
+    private function resetReceipt($receipt){
+        $len = count($receipt);
+        if($len >= 1){
+            $sid = $receipt['sid'];
+            $cid = $receipt['cid'];
+            $uid = $receipt['uid'];
+            $rm_id = $receipt['rm_id'];
+            $findState = $this->state()->findById(array('sid'=>$sid));
+            $findClient = $this->clients()->findById(array('cid'=>$cid));
+            $findUser = $this->admins()->findById(array('uid'=>$uid));
+            //$findRetModel = $this->receiptModels()->findById(array('rm_id'=>$rm_id));
+            $receipt['state'] = $findState['state'];
+            $receipt['client'] = $findClient['client'];
+            $receipt['surname'] = $findUser['surname'];
+
+        }else{
+            $receipt['state'] = '';
+            $receipt['client'] = '';
+            $receipt['surname'] = '';
+        }
+        return $receipt;
+
+    }
 }

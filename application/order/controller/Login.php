@@ -47,6 +47,13 @@ class Login extends Controller {
         if ($admin['password'] != $hasAdmin['password']){
             return $this->error(Lang::get('pass wrong'));
         }
+        $code = input("post.code");
+        //var_dump($username);exit;
+        $verify = new Verify();
+        $check = $verify->check($code);
+        if (!$check){
+            return $this->error('验证码错误');
+        }
         //var_dump($hasAdmin);exit();
         session('orderuser', $admin['username']);
         session('surname', $hasAdmin['surname']);
@@ -60,8 +67,8 @@ class Login extends Controller {
             return $this->error(Lang::get('no authority'));
         }
         //登录日志添加
-        $userLog = new UserLog();
-        $userLog->setLog($admin['username'].'登录');
+       /* $userLog = new UserLog();
+        $userLog->setLog($admin['username'].'登录');*/
 
         //2.有权限，跳转到第一个权限页面
         $control = ucfirst($ways['w_control']['0']);
@@ -70,7 +77,7 @@ class Login extends Controller {
         if($hasAdmin['status'] == 2){
             $url = 'MeterOrder/index';
         }
-        return $this->success(Lang::get("login success"), $url);
+        return $this->redirect($url);
 
 
     }
@@ -90,7 +97,7 @@ class Login extends Controller {
             session('orderuser', null);
             session('surname', null);
             session('orderstatus', null);
-            return $this->fetch('login/index');
+            return $this->redirect('Login/index');
         }
         return false;
     }

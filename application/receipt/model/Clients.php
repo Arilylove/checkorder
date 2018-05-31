@@ -40,8 +40,8 @@ class Clients{
         $count = Db::table($this->tableName)->where($where)->count();
         return $count;
     }
-    public function selectPage($tableName2, $param, $field, $where, $num, $count){
-        $client = Db::table($this->tableName)->join($tableName2, $this->tableName.'.'.$param.'='.$tableName2.'.'.$param)
+    public function selectPage($field, $where, $num, $count){
+        $client = Db::table($this->tableName)
             ->field($field)->where($where)->paginate($num, $count, ['query' => request()->param()]);
         return $client;
     }

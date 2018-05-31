@@ -7,6 +7,7 @@
  */
 namespace app\receipt\controller;
 
+use think\Lang;
 class Admin extends Base{
 
 
@@ -14,9 +15,9 @@ class Admin extends Base{
 	*查询修改的信息
 	*/
     public function one(){
-        $adId = input('param.adId');
-        $where = array('adId'=>$adId);
-        $field = 'adId,username,surname,password,status,createTime';
+        $uid = input('param.uid');
+        $where = array('uid'=>$uid);
+        $field = 'uid,username,surname,password,status,create_time,sale_id';
         $data = $this->admins()->select($field, $where);
         echo json_encode($data);
     }
@@ -25,29 +26,14 @@ class Admin extends Base{
      * 用户列表
      * */
     public function index(){
-        $field = 'username,surname,password,adId,status,createTime';
+        $field = 'username,surname,password,uid,status,create_time,sale_id';
         $where = '';
-        $order = 'createTime desc';
+        $order = 'create_time desc';
         $admin = $this->admins()->selectPage($field, $where, $order);
+        $admin = $this->resetAdmins($admin);
         $this->page($admin);
         $this->assign('admin', $admin);
         return $this->fetch("admin/index");
-    }
-
-    public function table(){
-        $field = 'adId,username,surname,password,createTime,status';
-        $where = '';
-        $admin = $this->admins()->select($field, $where);
-        foreach ($admin as $key=>$value){
-            if($admin[$key]['status'] == '0'){
-                $admin[$key]['status'] = '管理员';
-            }else{
-                $admin[$key]['status'] = '用户';
-            }
-        }
-        $this->assign('admin', json_encode($admin));
-        //var_dump(json_encode($admin));exit();
-        return $this->fetch("admin/table");
     }
 
     /**
@@ -55,13 +41,14 @@ class Admin extends Base{
      * @return mixed
      */
     public function add(){
+        $this->assignSale();
         return $this->fetch('admin/add');
     }
     
     /**
      * 增加用户
      * */
-    public function addAdmin(){
+    public function save(){
         $hex = $this->hex();
         $ad = $this->admins();
         $admin = input('post.');
@@ -69,20 +56,20 @@ class Admin extends Base{
         $admin['password'] = '123456';
         $admin['password'] = $hex->encrypt($admin['password']);   //密码用AES加密；
         $time = $_SERVER['REQUEST_TIME'];
-        $admin['createTime'] = date('Y-m-d H:i:s', $time);
+        $admin['create_time'] = date('Y-m-d H:i:s', $time);
         //var_dump($admin);exit();
         $where = array();
         //判断
         $username = $admin['username'];
         $find = $ad->findById(array('username'=>$username));
         if($find){
-            return $this->error('用户已存在');
+            return $this->error(Lang::get('existed user'));
         }
         $add = $ad->add($admin, $where);
         if (!$add){
-            return $this->error('添加失败');
+            return $this->error(Lang::get('add fail'));
         }
-        return $this->success('添加成功', 'admin/index');
+        return $this->success(Lang::get('add success'), 'admin/index');
     }
 
 
@@ -91,60 +78,61 @@ class Admin extends Base{
      * @return mixed
      */
     public function edit(){
-        $adId = input('param.adId');
-        $where = array('adId'=>$adId);
-        $field = 'adId,username,surname,password,status,createTime';
-        $data = $this->admins()->select($field, $where);
-        $this->assign('admin', $data[0]);
+        $uid = input('param.uid');
+        $where = array('uid'=>$uid);
+        //$field = 'uid,username,surname,password,status,create_time,sale_id';
+        $data = $this->admins()->findById($where);
+        $data = $this->resetAdmin($data);
+        $this->assign('admin', $data);
+        $this->assignSale();
         return $this->fetch('admin/update');
     }
     /**
      * 用户信息编辑
      * */
-    public function editAdmin(){
-        
+    public function esave(){
         $ad = $this->admins();
         $time = $_SERVER['REQUEST_TIME'];         //客户端向服务端发送请求的时间
         $admin = input('post.');
-        $admin['updateTime'] = date('Y-m-d H:i:s', $time);
+        $admin['update_time'] = date('Y-m-d H:i:s', $time);
         //var_dump($admin);exit();
         $where = array('username'=>$admin['username']);
         $findUser = $ad->findById($where);
         //var_dump($findUser);exit();
         if (!$findUser){
-            return $this->error('未找到该用户');
+            return $this->error(Lang::get('unfind user'));
         }
         $result = $ad->update($admin, $where);
         if (!$result){
-            return $this->error('修改失败');
+            return $this->error(Lang::get('edit fail'));
         }
         //$param = "?page=".$currentPage;
         //var_dump($param);exit();
-        return $this->success('修改成功', 'admin/index');
+        return $this->success(Lang::get('edit success'), 'admin/index');
     }
     /**
      * 删除用户
      * */
-    public function deleteAdmin(){
-        $adId = input('param.adId');
-        //var_dump($adId);exit();
+    public function del(){
+        $uid = input('param.uid');
+        //var_dump($uid);exit();
         $admin = $this->admins();
-        $where = array('adId'=>$adId);
+        $where = array('uid'=>$uid);
         $user = $this->admins()->findById($where);
         $self = session('username');
         //var_dump($self);exit();
         if($self == $user['username']){
-            return $this->error('不能删除自己');
+            return $this->error(Lang::get('del self unallowed'));
         }
         if($user['username'] == 'administrator'){
-            return $this->error('超级管理员不可删除');
+            return $this->error(Lang::get('del root unallowed'));
         }
         $delete = $admin->del($where);
         if (!$delete){
-            return $this->error('删除失败');
+            return $this->error(Lang::get('del fail'));
         }
         //弹出确认窗口
-        return $this->success('删除成功', 'admin/index');
+        return $this->success(Lang::get('del success'), 'admin/index');
     }
     /**
      * @return mixed
@@ -159,4 +147,59 @@ class Admin extends Base{
 
     }
 
+    /**
+     * 重组admin数据(二维数组)
+     */
+    private function resetAdmins($admins){
+        $len = count($admins);
+        if($len >= 1){
+            for($i=0;$i<$len;$i++){
+                $admins[$i] = $this->resetAdmin($admins[$i]);
+            }
+        }
+        return $admins;
+    }
+    /**
+     * 重组admin数据(一维数组)
+     */
+    private function resetAdmin($admin){
+        $len = count($admin);
+        if($len >= 1){
+            $status = $admin['status'];
+            $is_status = $this->resetStatus($status);
+            $admin['is_status'] = $is_status;
+            $sale_id = $admin['sale_id'];
+            $findSaleDepts = $this->sales()->findById(array('sale_id'=>$sale_id));
+            $admin['sale_name'] = $findSaleDepts['sale_name'];
+
+        }else{
+            $admin['is_status'] = '';
+            $admin['sale_name'] = '';
+        }
+        return $admin;
+    }
+
+    /**
+     * 用户状态值
+     * @param $status
+     * @return string
+     */
+    private function resetStatus($status){
+        $is_status = '';
+        switch ($status){
+            case 0:
+                $is_status = '管理员';
+                break;
+            case 1:
+                $is_status = '用户';
+                break;
+            case 2:
+                $is_status = '表计组';
+                break;
+            default:
+                break;
+
+        }
+        return $is_status;
+    }
 }

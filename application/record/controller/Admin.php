@@ -147,7 +147,7 @@ class Admin extends Base{
         $admin = $this->admin();
         $where = array('adId'=>$adId);
         $user = $this->admin()->findById($where);
-        $self = session('username');
+        $self = session('recorduser');
         //var_dump($self);exit();
         if($self == $user['username']){
             return $this->error('不能删除自己');

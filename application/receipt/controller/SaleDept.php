@@ -7,6 +7,12 @@
  */
 namespace app\receipt\controller;
 
+use think\Lang;
+/**
+ * 业务部门
+ * Class SaleDept
+ * @package app\receipt\controller
+ */
 class SaleDept extends Base{
 
     /**
@@ -16,7 +22,8 @@ class SaleDept extends Base{
     public function index(){
         $field = 'sale_id,sale_name,remark,create_time,status';
         $where = '';
-        $data = $this->sales()->selectPage($field, $where);
+        $count = $this->sales()->count($where);
+        $data = $this->sales()->selectPage($where, $count);
         $this->page($data);
         $this->assign('saledepts', $data);
         return $this->fetch('sale/index');
@@ -33,18 +40,8 @@ class SaleDept extends Base{
      * 添加action
      */
     public function save(){
-        $post = input('post.');
-        $data = array(
-            'sale_name'=>$post['dept_name'],
-            'remark'=>$post['description'],
-            'create_time'=>date('Y-m-d H:i:s', time()),
-            'status'=>$post['status']
-        );
-        //基本验证
-        /*$validate = $this->validate($data, 'SalesDepts');
-        if(true !== $validate){
-            return $this->error(" $validate ");
-        }*/
+        $data = input('post.');
+        $data['create_time'] = date('Y-m-d H:i:s', time());
         $add = $this->sales()->add($data, '');
         if(!$add){
             return $this->error(Lang::get('add fail'));
@@ -90,8 +87,7 @@ class SaleDept extends Base{
         $post = input('post.');
         $data = array(
             'sale_name'=>$post['sale_name'],
-            'remark'=>$post['remark'],
-            'status'=>$post['status']
+            'remark'=>$post['remark']
         );
 
         $update = $this->sales()->update($data, $where);

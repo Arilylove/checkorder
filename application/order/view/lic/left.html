@@ -34,7 +34,7 @@
             or (in_array('Client',$ownways['w_control']) or (in_array('MeterType',$ownways['w_control']))
             or (in_array('ModelType',$ownways['w_control'])) or (in_array('Manu',$ownways['w_control']))
             or (in_array('Principle',$ownways['w_control'])))"}
-            <li><a><i class="fa fa-binoculars"></i> 可配置信息管理 <span class="fa fa-chevron-down"></span></a>
+            <li><a><i class="fa fa-cogs"></i> 可配置信息管理 <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
                     {if condition="in_array('State',$ownways['w_control']) && in_array('index',$ownways['w_way'])"}
                     <li><a href="{:url('State/index')}">国家配置</a></li>
@@ -58,7 +58,7 @@
             </li>
             {/if}
             {if condition="in_array('Order',$ownways['w_control']) && in_array('index',$ownways['w_way']) && $status neq '2'"}
-            <li><a><i class="fa fa-key"></i> 订单管理 <span class="fa fa-chevron-down"></span></a>
+            <li><a><i class="fa fa-money"></i> 订单管理 <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
                     <li><a href="{:url('Order/index')}">订单列表</a></li>
                 </ul>
@@ -66,7 +66,7 @@
             {/if}
             <!--表计组-->
             {if condition="$status eq '2'"}
-            <li><a><i class="fa fa-key"></i> 订单管理 <span class="fa fa-chevron-down"></span></a>
+            <li><a><i class="fa fa-money"></i> 订单管理 <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
                     <li><a href="{:url('MeterOrder/index')}">订单列表</a></li>
                 </ul>

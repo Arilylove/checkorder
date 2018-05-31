@@ -50,13 +50,13 @@
                         </div>
                         <div class="x_content">
                             <br />
-                            <form id="demo-form2" method="post" action="{:url('Admin/editAdmin')}" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
+                            <form id="demo-form2" method="post" action="{:url('Admin/esave')}" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
                                 <input type="hidden" name="password" value="123456"/>
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">用户编号 <span class="required">*</span>
                                     </label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <input type="text" id="first-name" name="adId" required="required" readonly class="form-control col-md-7 col-xs-12" value="{$admin['adId']}">
+                                        <input type="text" id="first-name" name="uid" required="required" readonly class="form-control col-md-7 col-xs-12" value="{$admin['uid']}">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -76,14 +76,21 @@
                                 <div class="form-group">
                                     <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">用户类型 </label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <select id="middle-name" class="form-control col-md-7 col-xs-12" name="status" value="{$admin['status']}">
-                                            {if condition="$admin['status'] eq 0"}
-                                            <option value="{$admin['status']}">管理员</option>
-                                            <option value="1">用户</option>
-                                            {else/}
-                                            <option value="{$admin['status']}">用户</option>
+                                        <select id="middle-name" class="form-control col-md-7 col-xs-12" name="status">
+                                            <option value="{$admin['status']}">{$admin['is_status']}</option>
                                             <option value="0">管理员</option>
-                                            {/if}
+                                            <option value="1">用户</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">业务部门 </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <select class="form-control col-md-7 col-xs-12" name="status">
+                                            <option value="{$admin['sale_id']}">{$admin['sale_name']}</option>
+                                            {volist name="saledepts" id="v"}
+                                            <option value="{$v['sale_id']}">{$v.sale_name}</option>
+                                            {/volist}
                                         </select>
                                     </div>
                                 </div>

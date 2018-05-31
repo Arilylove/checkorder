@@ -24,3 +24,4 @@ header('Access-Control-Allow-Headers:x-requested-with,content-type');// 响应�
 
 //加载语言包
 \think\Lang::load(APP_PATH.'order/lang/zh-cn.php');
+\think\Lang::load(APP_PATH.'receipt/lang/zh-cn.php');

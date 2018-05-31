@@ -19,7 +19,7 @@
         }
         ul.ztree {
             margin-top: 10px;
-            width:240px;
+            width: 500px;
             height:360px;
             overflow: auto;
             border:0 solid #000000;
@@ -33,16 +33,7 @@
         a:hover{
             background-color:white;
         }
-        /*.buttonFinish{
-            float: left;
-            left: 200px;
-        }
-        .buttonPrevious{
-            float: left;
-        }
-        .buttonNext{
-            float: left;
-        }*/
+
     </style>
 </head>
 <body class="nav-md">
@@ -87,7 +78,7 @@
                                 <div class="clearfix"></div>
                             </div>
                             <div class="x_content">
-                                <form method="post" onsubmit="add()" action="{:url('Receipt/addRet')}" data-parsley-validate enctype="multipart/form-data">
+                                <form method="post" onsubmit="receipt()" action="{:url('Receipt/save')}" data-parsley-validate enctype="multipart/form-data">
                                     <!-- Smart Wizard -->
                                     <div id="wizard" class="form_wizard wizard_horizontal">
                                         <ul class="wizard_steps">
@@ -124,8 +115,10 @@
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">发票模板<span class="required">*</span>
                                                 </label>
                                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                                    <select class="form-control col-md-7 col-sm-7 col-xs-12" name="model">
-                                                        <option value=""></option>
+                                                    <select class="form-control col-md-7 col-sm-7 col-xs-12" name="rm_id">
+                                                        {volist name="retmodels" id="v"}
+                                                        <option value="{$v['rm_id']}">{$v.model}</option>
+                                                        {/volist}
                                                     </select>
                                                 </div>
                                             </div>
@@ -143,8 +136,10 @@
 
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">国家</label>
                                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                                    <select class="form-control col-md-7 col-xs-12" name="sid" id="">
-                                                        <option value=""></option>
+                                                    <select class="form-control col-md-7 col-xs-12" name="sid">
+                                                        {volist name="state" id="v"}
+                                                        <option value="{$v['sid']}">{$v.state}</option>
+                                                        {/volist}
                                                     </select>
                                                 </div>
                                             </div>
@@ -155,7 +150,9 @@
                                                 </label>
                                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                                     <select class="form-control col-md-7 col-xs-12" name="cid" required="required">
-                                                        <option value="test"></option>
+                                                        {volist name="clients" id="v"}
+                                                        <option value="{$v['cid']}">{$v.client}</option>
+                                                        {/volist}
                                                     </select>
                                                 </div>
 
@@ -163,63 +160,60 @@
                                             <br>
                                         </div>
                                         <div id="step-2" class="form-horizontal form-label-left">
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">数据分类 <span class="required">*</span>
-                                                </label>
-                                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                                    <input type="text" name="type[]" required="required" class="form-control col-md-7 col-xs-12">
+                                            <div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" style="text-align: left!important;">数据分类 <span class="required">*</span>
+                                                    </label>
+                                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" style="text-align: left!important;">SPECIFICATION<span class="required">*</span>
+                                                    </label>
+                                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" style="text-align: left!important;">Unit<span class="required">*</span></label>
+                                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" style="text-align: left!important;">Item picture
+                                                    </label>
+                                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" style="text-align: left!important;">Qty<span class="required">*</span></label>
+                                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" style="text-align: left!important;">Unit price<span class="required">*</span>
+                                                    </label>
+
                                                 </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-2 col-sm-2 col-xs-12">
+                                                        <input type="text" name="type[]" required="required" class="form-control col-md-7 col-xs-12">
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-2 col-xs-12">
+                                                        <input type="text" name="specification[]" required="required" class="form-control col-md-7 col-xs-12">
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-2 col-xs-12">
+                                                        <input type="text" name="unit[]" required="required" class="form-control col-md-7 col-xs-12">
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-2 col-xs-12">
+                                                        <img name="img[]" class="form-control col-md-7 col-xs-12">
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-2 col-xs-12">
+                                                        <input type="text" name="qty[]" required="required" class="form-control col-md-7 col-xs-12">
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-2 col-xs-12">
+                                                        <input type="text" name="price[]" required="required" class="date-picker form-control col-md-7 col-xs-12">
+                                                    </div>
+                                                </div>
+                                                <!--<button type="button" class="delHi" style="margin-left: 10px;">删除新分类</button>-->
                                             </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">SPECIFICATION<span class="required">*</span>
-                                                </label>
-                                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                                    <input type="text" name="specification[]" required="required" class="form-control col-md-7 col-xs-12">
+                                            <div id="receipt"></div>
+                                            <br>
+                                            <div class="form-group" style="margin-left: 10px;">
+                                                <div>
+                                                    <button type="button" id="add">添加新分类</button>
                                                 </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Unit<span class="required">*</span></label>
-                                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                                    <input type="text" name="unit[]" required="required" class="form-control col-md-7 col-xs-12">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Item picture
-                                                </label>
-                                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                                    <img name="img[]" class="form-control col-md-7 col-xs-12">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Qty<span class="required">*</span></label>
-                                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                                    <input type="text" name="qty[]" required="required" class="form-control col-md-7 col-xs-12">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Unit price<span class="required">*</span>
-                                                </label>
-                                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                                    <input type="text" name="price[]" required="required" class="date-picker form-control col-md-7 col-xs-12">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Amount(USD)<span class="required">*</span>
-                                                </label>
-                                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                                    <input type="text" name="amount[]" required="required" class="date-picker form-control col-md-7 col-xs-12">
-                                                </div>
+
                                             </div>
                                             <br>
                                         </div>
                                         <div id="step-3" class="form-horizontal form-label-left">
                                             <div class="form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">note <span class="required">*</span>
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" style="font-size: 18px;">note <span class="required">*</span>
                                                 </label>
-                                                <div class="control-label col-md-6 col-sm-6 col-xs-6">
+                                                <div class="control-label col-md-6 col-sm-6 col-xs-12">
                                                     <div class="zTreeDemoBackground left form-group">
                                                         <ul id="treeDemo" class="ztree"></ul>
-                                                        <input type="hidden" name="note" value="">
+                                                        <input type="hidden" name="note" value="" required="required">
                                                     </div>
                                                 </div>
                                             </div>
@@ -262,7 +256,48 @@
 <script type="text/javascript" src="__RECORD__/ztree/jquery.ztree.exedit.js"></script>
 <script>
 
-
+    $('#add').click(function(){
+        $('<div><div class="form-group">'+
+           '<label class="control-label col-md-2 col-sm-2 col-xs-12" style="text-align: left!important;">数据分类 <span class="required">*</span>'+
+           '</label>'+
+           '<label class="control-label col-md-2 col-sm-2 col-xs-12" style="text-align: left!important;">SPECIFICATION<span class="required">*</span>'+
+           '</label>'+
+           '<label class="control-label col-md-2 col-sm-2 col-xs-12" style="text-align: left!important;">Unit<span class="required">*</span></label>'+
+           '<label class="control-label col-md-2 col-sm-2 col-xs-12" style="text-align: left!important;">Item picture'+
+           '</label>'+
+            '<label class="control-label col-md-2 col-sm-2 col-xs-12" style="text-align: left!important;">Qty<span class="required">*</span></label>'+
+             '<label class="control-label col-md-2 col-sm-2 col-xs-12" style="text-align: left!important;">Unit price<span class="required">*</span>'+
+            '</label>'+
+            '</div>'+
+             '<div class="form-group">'+
+             '<div class="col-md-2 col-sm-2 col-xs-12">'+
+             '<input type="text" name="type[]" required="required" class="form-control col-md-7 col-xs-12">'+
+            ' </div>'+
+             '<div class="col-md-2 col-sm-2 col-xs-12">'+
+              '<input type="text" name="specification[]" required="required" class="form-control col-md-7 col-xs-12">'+
+              '</div>'+
+              '<div class="col-md-2 col-sm-2 col-xs-12">'+
+              ' <input type="text" name="unit[]" required="required" class="form-control col-md-7 col-xs-12">'+
+              ' </div>'+
+               '<div class="col-md-2 col-sm-2 col-xs-12">'+
+               '<img name="img[]" class="form-control col-md-7 col-xs-12">'+
+               '</div>'+
+               '<div class="col-md-2 col-sm-2 col-xs-12">'+
+              ' <input type="text" name="qty[]" required="required" class="form-control col-md-7 col-xs-12">'+
+               ' </div>'+
+                '<div class="col-md-2 col-sm-2 col-xs-12">'+
+               ' <input type="text" name="price[]" required="required" class="date-picker form-control col-md-7 col-xs-12">'+
+               ' </div>'+
+                ' </div>'+
+                 ' <button type="button" class="delHi" style="margin-left: 10px;">删除新分类</button>'+
+                '</div></div>').appendTo('#receipt')
+    });
+    $(function(){
+        $('.x_content').delegate(".delHi","click",function(){
+            //alert(123);
+            $(this).parent('div').remove();
+        })
+    });
     /*ztree*/
     var setting = {
         view: {
@@ -284,8 +319,8 @@
     setting.check.chkboxType = { "Y" : "s", "N" : "s" };
 
 
-    var data = ''
-    //data = JSON.parse(data);
+    var data = '{$jsonNotes}';
+    data = JSON.parse(data);
     var zNodes = [];
     for(var i=0;i<data.length;i++){
         zNodes[i] = {id:data[i].nid, pId:0, name:data[i].note}
@@ -301,7 +336,7 @@
         //console.log(nodes)
         var tree = '';
         for(var i=0;i<nodes.length;i++){
-            var treeNode = nodes[i]
+            var treeNode = nodes[i];
             if(treeNode.checked == true){
                 tree += treeNode.id + ',';
             }
@@ -328,7 +363,7 @@
         $("#addBtn_"+treeNode.tId).unbind().remove();
     }
 
-    function add() {
+    function receipt(){
         var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
         var nodes = treeObj.getCheckedNodes();
         //console.log(nodes,'nodesnodesnodesnodes')
@@ -549,7 +584,10 @@
                     }
                 }
             }
-            $this.elmStepContainer.height(_step($this, selStep).outerHeight());
+
+            /*去除了stepContainer的行内样式style*/
+            //$this.elmStepContainer.height(_step($this, selStep).outerHeight());
+
             var prevCurStepIdx = $this.curStepIdx;
             $this.curStepIdx =  stepIdx;
             if ($this.options.transitionEffect == 'slide'){
@@ -758,7 +796,6 @@
 
         _init(this);
     };
-
 
 
     (function($){

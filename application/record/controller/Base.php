@@ -19,7 +19,7 @@ use app\record\model\Clients;
 
 class Base extends Controller{
     public function _initialize(){
-        $username = session('username');
+        $username = session('recorduser');
         $status = session('status');
         $a = is_null($username);
         //var_dump($a);exit();
@@ -71,13 +71,13 @@ class Base extends Controller{
       *修改密码
       * */
     public function update(){
-        $username = session('username');
+        $username = session('recorduser');
         $this->assign('username', $username);
         return $this->fetch('lic/upPass');
     }
 
     public function updatePassword(){
-        $username = session('username');
+        $username = session('recorduser');
         //$this->assign('username', $username);
         $where = array('username'=>$username);
         $admin = Db::table('admin')->where($where)->find();

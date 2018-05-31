@@ -38,7 +38,7 @@ class Login extends Controller{
             return $this->error('密码错误');
         }
         //var_dump($admin['username']);exit();
-        session('username', $admin['username']);
+        session('receiptuser', $admin['username']);
         session('status', $hasAdmin['status']); //保存用户权限，判断是管理员还是用户。
         //var_dump($hasAdmin['status']);exit;
         if ($hasAdmin['status'] == 0){
@@ -60,7 +60,7 @@ class Login extends Controller{
 
     public function out(){
         if (true){
-            session('username', null);
+            session('receiptuser', null);
             session('surname', null);
             return $this->fetch('login/index');
         }
