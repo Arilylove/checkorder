@@ -121,9 +121,9 @@ class ReceiptModel extends Base{
         if(($type != 'xls') && ($type != 'xlsx')){
             return $this->error(Lang::get('upload excel file'));
         }
-        $path = $info->getPath();
+        $date = date('Ymd', time());
         $fileName = $info->getFilename();
-        return $path.DS.$fileName;
+        return $date.DS.$fileName;
     }
 
 

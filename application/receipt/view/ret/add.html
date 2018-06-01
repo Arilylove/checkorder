@@ -162,51 +162,60 @@
                                         <div id="step-2" class="form-horizontal form-label-left">
                                             <div>
                                                 <div class="form-group">
-                                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" style="text-align: left!important;">数据分类 <span class="required">*</span>
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">数据分类 <span class="required">*</span>
                                                     </label>
-                                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" style="text-align: left!important;">SPECIFICATION<span class="required">*</span>
-                                                    </label>
-                                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" style="text-align: left!important;">Unit<span class="required">*</span></label>
-                                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" style="text-align: left!important;">Item picture
-                                                    </label>
-                                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" style="text-align: left!important;">Qty<span class="required">*</span></label>
-                                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" style="text-align: left!important;">Unit price<span class="required">*</span>
-                                                    </label>
+                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                        <input type="text" name="type[]" required="required" class="form-control col-md-7 col-xs-12">
+                                                    </div>
 
                                                 </div>
                                                 <div class="form-group">
-                                                    <div class="col-md-2 col-sm-2 col-xs-12">
-                                                        <input type="text" name="type[]" required="required" class="form-control col-md-7 col-xs-12">
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">SPECIFICATION<span class="required">*</span>
+                                                    </label>
+                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                        <textarea rows="1" type="text" name="specification[]" required="required" class="form-control col-md-7 col-xs-12"></textarea>
                                                     </div>
-                                                    <div class="col-md-2 col-sm-2 col-xs-12">
-                                                        <input type="text" name="specification[]" required="required" class="form-control col-md-7 col-xs-12">
-                                                    </div>
-                                                    <div class="col-md-2 col-sm-2 col-xs-12">
+
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Unit<span class="required">*</span></label>
+                                                    <div class="col-md-6 col-sm-6 col-xs-12">
                                                         <input type="text" name="unit[]" required="required" class="form-control col-md-7 col-xs-12">
                                                     </div>
-                                                    <div class="col-md-2 col-sm-2 col-xs-12">
-                                                        <!--<img name="img[]" class="form-control col-md-7 col-xs-12">-->
-                                                        <input type="file" name="img[]">
-                                                    </div>
-                                                    <div class="col-md-2 col-sm-2 col-xs-12">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Qty<span class="required">*</span></label>
+                                                    <div class="col-md-6 col-sm-6 col-xs-12">
                                                         <input type="text" name="qty[]" required="required" class="form-control col-md-7 col-xs-12">
                                                     </div>
-                                                    <div class="col-md-2 col-sm-2 col-xs-12">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Unit price<span class="required">*</span>
+                                                    </label>
+                                                    <div class="col-md-6 col-sm-6 col-xs-12">
                                                         <input type="text" name="price[]" required="required" class="date-picker form-control col-md-7 col-xs-12">
                                                     </div>
                                                 </div>
-                                                <button type="button" class="delHi" style="margin-left: 10px;">删除分类</button>
-                                                <button type="button" id="typeadd">添加该分类数据</button>
-                                                <div class="form-group"></div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Item picture
+                                                    </label>
+                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                        <img name="img[]" class="form-control col-md-7 col-xs-12">
+                                                        <input type="file" name="img[]">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="control-label col-md-3 col-sm-3 col-xs-12">
+                                                        <button type="button" class="delHi" style="margin-left: 10px;">删除分类</button>
+                                                    </div>
+                                                    <div class="col-md-6 col-sm-6 col-xs-12" style="margin-top: 8px;">
+                                                        <button type="button" id="add">添加分类</button>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div id="receipt"></div>
                                             <br>
-                                            <div class="form-group" style="margin-left: 10px;">
-                                                <div>
-                                                    <button type="button" id="add">添加新分类</button>
-                                                </div>
 
-                                            </div>
                                             <br>
                                         </div>
                                         <div id="step-3" class="form-horizontal form-label-left">
@@ -261,74 +270,55 @@
 
     $('#add').click(function(){
         $('<div>'+
-         '<div class="form-group">'+
             '<div class="form-group">'+
-            '<label class="control-label col-md-2 col-sm-2 col-xs-12" style="text-align: left!important;">数据分类 <span class="required">*</span>'+
+            '<label class="control-label col-md-3 col-sm-3 col-xs-12">数据分类 <span class="required">*</span>'+
             '</label>'+
-            '<label class="control-label col-md-2 col-sm-2 col-xs-12" style="text-align: left!important;">SPECIFICATION<span class="required">*</span>'+
-           '</label>'+
-            '<label class="control-label col-md-2 col-sm-2 col-xs-12" style="text-align: left!important;">Unit<span class="required">*</span></label>'+
-            '<label class="control-label col-md-2 col-sm-2 col-xs-12" style="text-align: left!important;">Item picture'+
-            '</label>'+
-            '<label class="control-label col-md-2 col-sm-2 col-xs-12" style="text-align: left!important;">Qty<span class="required">*</span></label>'+
-            '<label class="control-label col-md-2 col-sm-2 col-xs-12" style="text-align: left!important;">Unit price<span class="required">*</span>'+
-            '</label>'+
+            '<div class="col-md-6 col-sm-6 col-xs-12">'+
+            '<input type="text" name="type[]" required="required" class="form-control col-md-7 col-xs-12">'+
             '</div>'+
-         '<div class="col-md-2 col-sm-2 col-xs-12">'+
-         '<input type="text" name="type[]" required="required" class="form-control col-md-7 col-xs-12">'+
-        ' </div>'+
-         '<div class="col-md-2 col-sm-2 col-xs-12">'+
-          '<input type="text" name="specification[]" required="required" class="form-control col-md-7 col-xs-12">'+
-          '</div>'+
-          '<div class="col-md-2 col-sm-2 col-xs-12">'+
-          ' <input type="text" name="unit[]" required="required" class="form-control col-md-7 col-xs-12">'+
-          ' </div>'+
-           '<div class="col-md-2 col-sm-2 col-xs-12">'+
-           '<img name="img[]" class="form-control col-md-7 col-xs-12">'+
-           '</div>'+
-           '<div class="col-md-2 col-sm-2 col-xs-12">'+
-          ' <input type="text" name="qty[]" required="required" class="form-control col-md-7 col-xs-12">'+
-           ' </div>'+
-            '<div class="col-md-2 col-sm-2 col-xs-12">'+
-           ' <input type="text" name="price[]" required="required" class="date-picker form-control col-md-7 col-xs-12">'+
-           ' </div>'+
-            ' </div>'+
-             ' <button type="button" class="delHi" style="margin-left: 10px;">删除新分类</button>'+
-             '<button type="button" class="typeadd">添加该分类数据</button>'+
-            '</div></div>').appendTo('#receipt')
+            '</div>'+
+            '<div class="form-group">'+
+            '<label class="control-label col-md-3 col-sm-3 col-xs-12">SPECIFICATION<span class="required">*</span>'+
+            '</label>'+
+            '<div class="col-md-6 col-sm-6 col-xs-12">'+
+            '<textarea rows="1" type="text" name="specification[]" required="required" class="form-control col-md-7 col-xs-12"></textarea>'+
+            '</div>'+
+            '</div>'+
+            '<div class="form-group">'+
+            '<label class="control-label col-md-3 col-sm-3 col-xs-12">Unit<span class="required">*</span></label>'+
+            '<div class="col-md-6 col-sm-6 col-xs-12">'+
+            '<input type="text" name="unit[]" required="required" class="form-control col-md-7 col-xs-12">'+
+            '</div>'+
+            '</div>'+
+            '<div class="form-group">'+
+            '<label class="control-label col-md-3 col-sm-3 col-xs-12">Qty<span class="required">*</span></label>'+
+            '<div class="col-md-6 col-sm-6 col-xs-12">'+
+            '<input type="text" name="qty[]" required="required" class="form-control col-md-7 col-xs-12">'+
+            '</div>'+
+            '</div>'+
+            '<div class="form-group">'+
+            '<label class="control-label col-md-3 col-sm-3 col-xs-12">Unit price<span class="required">*</span>'+
+            '</label>'+
+            '<div class="col-md-6 col-sm-6 col-xs-12">'+
+            '<input type="text" name="price[]" required="required" class="date-picker form-control col-md-7 col-xs-12">'+
+            '</div>'+
+            '</div>'+
+            '<div class="form-group">'+
+            '<label class="control-label col-md-3 col-sm-3 col-xs-12">Item picture'+
+            '</label>'+
+            '<div class="col-md-6 col-sm-6 col-xs-12">'+
+            '<input type="file" name="img[]">'+
+            '</div>'+
+            '</div>'+
+            '<button type="button" class="delHi" style="margin-left: 14%;">删除分类</button>'+
+            '</div>').appendTo('#receipt')
     });
     $(function(){
         $('.x_content').delegate(".delHi","click",function(){
             //alert(123);
             $(this).parent('div').remove();
-        })
+        });
     });
-
-    $('#typeadd').click(function(){
-        $('<div>'+
-            '<div class="form-group">'+
-            '<div class="col-md-2 col-sm-2 col-xs-12">'+
-            ' </div>'+
-            '<div class="col-md-2 col-sm-2 col-xs-12">'+
-            '<input type="text" name="specification[]" required="required" class="form-control col-md-7 col-xs-12">'+
-            '</div>'+
-            '<div class="col-md-2 col-sm-2 col-xs-12">'+
-            ' <input type="text" name="unit[]" required="required" class="form-control col-md-7 col-xs-12">'+
-            ' </div>'+
-            '<div class="col-md-2 col-sm-2 col-xs-12">'+
-            '<img name="img[]" class="form-control col-md-7 col-xs-12">'+
-            '</div>'+
-            '<div class="col-md-2 col-sm-2 col-xs-12">'+
-            ' <input type="text" name="qty[]" required="required" class="form-control col-md-7 col-xs-12">'+
-            ' </div>'+
-            '<div class="col-md-2 col-sm-2 col-xs-12">'+
-            ' <input type="text" name="price[]" required="required" class="date-picker form-control col-md-7 col-xs-12">'+
-            ' </div>'+
-            ' </div>'+
-            ' <button type="button" class="delHi" style="margin-left: 174.6px;">删除新数据</button>'+
-            '</div></div>').appendTo('#receipt')
-    });
-
 
     /*ztree*/
     var setting = {

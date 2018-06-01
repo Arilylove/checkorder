@@ -70,6 +70,10 @@ class Base extends Controller{
        $receipts = new Receipts();
        return $receipts;
     }
+    protected function excel(){
+       $excel = new Excel();
+       return $excel;
+    }
     /**
      * 分页
      * @param $table
