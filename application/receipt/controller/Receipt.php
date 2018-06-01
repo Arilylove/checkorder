@@ -67,27 +67,39 @@ class Receipt extends Base{
      * */
     public function save(){
         $data = input('post.');
-        var_dump($data);exit();
+        //var_dump($data);exit();
         /*array(8) { ["rm_id"]=> string(1) "1" ["sid"]=> string(1) "1"
         ["type"]=> array(1) { [0]=> string(5) "gerfg" }
         ["specification"]=> array(1) { [0]=> string(138) "LAPIS STS Vending Management System - C/S Version,
         Microsoft SQL Server Database 2008 WITHOUT CUSTMOZATION MODIFICATION ON SOFTWARE PART" }
          ["unit"]=> array(1) { [0]=> string(4) "copy" } ["qty"]=> array(1) { [0]=> string(3) "1.0" }
         ["price"]=> array(1) { [0]=> string(5) "14999" } ["note"]=> string(4) "1,2," }*/
+        /*$user = session('receiptuser');
+        $findUser = $this->admins()->findById(array('username'=>$user));
+        $sale_id = $findUser['sale_id'];
+        */
+        //3.发票数据项数据--三维数组(type作为外key)
         $types = $data['type'];
         //有几条数据
-        $typeLen = count($types);
+        //$typeLen = count($types);
+        $specification = $data['specification'];
+        $unit = $data['unit'];
+        $qty = $data['qty'];
+        $price = $data['price'];
+        $receiptDatas = $this->getReceiptData($data);
+
+        $sale_id = '';
         //1.保存到数据库的信息
         $sid = $data['sid'];
         $cid = $data['cid'];
         $findClient = $this->clients()->findById(array('cid'=>$cid));
         $rm_id = $data['rm_id'];
-        $num = 'LTP'.date('YYmmdd', time()).''.$sale_id;;
-        /*$user = session('receiptuser');
-        $findUser = $this->admins()->findById(array('username'=>$user));
-        $sale_id = $findUser['sale_id'];
-        */
-        $data_num = $typeLen;   //暂时的
+        //需要先获取今天这个sale_id的用户导出了几张发票了，然后相应的进行加减
+        $uid = '';
+        $asciiNum = $this->getAscii($uid);
+        $num = 'LTP'.date('YYmmdd', time()).$asciiNum.$sale_id;;
+        //几个数据分类
+        $data_num = count($receiptDatas);   //暂时的
         $create_time = date('Y-m-d H:i:s', time());
         $sqlData = array(
             'sid'        =>$sid,
@@ -103,20 +115,16 @@ class Receipt extends Base{
         //带英文的日期格式
         $us_time = gmstrftime('%dth %b.,%Y', time());
         //2.发票抬头数据--一维数组
-        $proforma = $this->proformaData($num, $findClient, $us_time);
-        //3.发票数据项数据--三维数组(type作为外key)
-        $specification = $data['specification'];
-        $unit = $data['unit'];
-        $qty = $data['qty'];
-        $price = $data['price'];
-        $receiptDatas = $this->getReceiptData($data);
+        $profomaData = $this->proformaData($num, $findClient, $us_time);
 
         //4.注意事项--一维数组
         $note = substr($data['note'],0,strlen($data['note'])-1);
         $noteArr = explode(",", $note);
         $notes = $this->getNotes($noteArr);
 
-        //导出发票
+        //5.导出发票
+        $fileName = $num;
+
 
     }
     //导出测试
@@ -135,7 +143,9 @@ class Receipt extends Base{
             '2'=>'Delivery Time: 8  weeks after Down Payment',
             '3'=>'The communication mode between LAISON STS water meter and CIU is RF wireless '
         );
-        $fileName = 'LTP180601A4';
+        $a = 66;
+        $asciiNum = chr($a);
+        $fileName = 'LTP180601'.$asciiNum.'1';
         $excel = new Excel();
         return $excel->exportReceipt($receiptModel, $profomaData, $receiptData, $notes, $fileName);
     }
@@ -144,7 +154,7 @@ class Receipt extends Base{
      * 重组数据项，将type相同的放在同一项
      * @return mixed
      */
-    public function getReceiptData(){
+    public function getReceiptData($data){
         $data = array(
             'type'=>array('11','12','12','13','11','12'),
             'specification'=>array('s0','s1','s2','s3','s4','s5'),
@@ -192,13 +202,24 @@ class Receipt extends Base{
                 $temp[$k][] = $value;
             }
         }
-        /*foreach ($temp as $type=>$v){
-            $eachType[] = $type;
-            $datas[] = $v;
-        }*/
-        //var_dump($temp);exit();
         return $temp;
 
+    }
+
+    /**
+     * 计算ascii排序
+     * @param $uid
+     * @return string
+     */
+    private function getAscii($uid){
+        //$field = 're_id,sid,cid,rm_id,num,uid,data_num,create_time';
+        $date = date('Y-m-d', time());
+        $whereTime = array('create_time',['between',[$date, $date]]);
+        $count = $this->receipts()->countByTime(array('uid'=>$uid), $whereTime);
+        $a = 65;
+        $a += $count;
+        $ascii = chr($a);
+        return $ascii;
     }
     /**
      * 发票抬头：客户信息
