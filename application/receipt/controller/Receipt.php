@@ -7,6 +7,7 @@
  */
 namespace app\receipt\controller;
 
+use app\receipt\img\DrawImg;
 use think\Db;
 use app\receipt\crypt\AesCrypt;
 use app\receipt\model\Admins;
@@ -67,7 +68,7 @@ class Receipt extends Base{
      * */
     public function save(){
         $data = input('post.');
-        //var_dump($data);exit();
+        var_dump($data);exit();
         /*array(8) { ["rm_id"]=> string(1) "1" ["sid"]=> string(1) "1"
         ["type"]=> array(1) { [0]=> string(5) "gerfg" }
         ["specification"]=> array(1) { [0]=> string(138) "LAPIS STS Vending Management System - C/S Version,
@@ -129,6 +130,8 @@ class Receipt extends Base{
     }
     //导出测试
     public function exportTest(){
+
+        //return DrawImg::setImg();
         $receiptModel = '';
         $profomaData = array(
             'to'=>'SAFE WATER NETWORK',
@@ -159,6 +162,7 @@ class Receipt extends Base{
             'type'=>array('11','12','12','13','11','12'),
             'specification'=>array('s0','s1','s2','s3','s4','s5'),
             'unit'=>array('u0','u1','u2','u3','u4','u5'),
+            'img'=>array('20180604/38aca19a4866d3dd37735bc9ffd1a295.jpg','','','','',''),
             'qty'=>array('10','11','12','13','14','15'),
             'price'=>array('20','21','22','23','24','25')
         );
@@ -168,6 +172,7 @@ class Receipt extends Base{
         $typeLen = count($types);
         $specification = $data['specification'];
         $unit = $data['unit'];
+        $img = $data['img'];
         $qty = $data['qty'];
         $price = $data['price'];
         $receiptData = array([]);
@@ -175,6 +180,7 @@ class Receipt extends Base{
             $receiptData[$i]['type'] = $types[$i];
             $receiptData[$i]['specification'] = $specification[$i];
             $receiptData[$i]['unit'] = $unit[$i];
+            $receiptData[$i]['img'] = $img[$i];
             $receiptData[$i]['qty'] = $qty[$i];
             $receiptData[$i]['price'] = $price[$i];
         }
@@ -191,6 +197,7 @@ class Receipt extends Base{
                 'type'=>$receiptData[$j]['type'],
                 'specification'=>$receiptData[$j]['specification'],
                 'unit'=>$receiptData[$j]['unit'],
+                'img'=>$receiptData[$j]['img'],
                 'qty'=>$receiptData[$j]['qty'],
                 'price'=>$receiptData[$j]['price']
             );

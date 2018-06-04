@@ -88,10 +88,10 @@
                           <td>{$v.type}</td>
                           <td>{$v.specification}</td>
                           <td>{$v.unit}</td>
-                          <td>{$v.img}</td>
+                          <td><img src="__MODEL__/{$v.img}" alt="" height="60" width="100"></td>
                           <td>{$v.create_time}</td>
                           <td style="text-align: center;">
-                            <a href="{:url('Datas/edit',['uid'=>$v['dm_id']])}" class="glyphicon glyphicon-edit" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
+                            <a href="{:url('Datas/edit',['dm_id'=>$v['dm_id']])}" class="glyphicon glyphicon-edit" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
                             <a href="javascript:void (0);" class="glyphicon glyphicon-remove class-del" onclick=confirmDel("{$v['dm_id']}") style="color: red;font-size: 18px;"></a>
                           </td>
                         </tr>

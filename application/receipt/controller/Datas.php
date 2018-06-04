@@ -142,9 +142,10 @@ class Datas extends Base{
             if(($type != 'png') && ($type != 'jpg') && ($type != 'jpeg') && ($type != 'gif')){
                 return $this->error(Lang::get('upload img file'));
             }
-            $path = $info->getPath();
+            //$path = $info->getPath();
+            $date = date('Ymd', time());
             $fileName = $info->getFilename();
-            return $path.DS.$fileName;
+            return $date.DS.$fileName;
         }
         return '';
     }

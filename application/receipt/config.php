@@ -14,6 +14,7 @@ return[
         '__FONTS' =>'/static/admin/fonts',
         '__UPLOAD__'=>'/upload',
         '__VENDOR__'=>'/static/admin/vendors',
-        '__RECORD__'=>'/static/admin/record'
+        '__RECORD__'=>'/static/admin/record',
+        '__MODEL__'=>'/datamodel'
     ),
 ];

@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>修改用户</title>
+    <title>修改数据模板</title>
 
 </head>
 
@@ -45,7 +45,7 @@
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="x_panel">
                         <div class="x_title">
-                            <h2>修改用户信息</h2>
+                            <h2>修改数据模板</h2>
                             <div class="clearfix"></div>
                         </div>
                         <div class="x_content">
@@ -83,8 +83,8 @@
                                     <label class="control-label col-md-4 col-sm-4 col-xs-12">Item picture
                                     </label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <input type="text" value="{$data['img']}">
-                                        <input type="file" name="img" value="{$data['img']}" class="form-control col-md-7 col-xs-12">
+                                        <input type="checkbox"><img type="text" src="__MODEL__/{$data['img']}" height="80" width="200"/>
+                                        <input type="file" name="img" value="{$data['img']}" class="form-control col-md-7 col-xs-12" multiple="multiple">
                                     </div>
                                 </div>
 

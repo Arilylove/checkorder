@@ -11,20 +11,28 @@ use think\Controller;
 use think\Db;
 class Excel extends Controller{
 
-    public function setImg(){
-        $objDrawing = new PHPExcel_Worksheet_Drawing();
+    /**
+     * 图片设置
+     * @param $img
+     * @return \PHPExcel_Worksheet_Drawing
+     * @throws \PHPExcel_Exception
+     */
+    public function setImg($img){
+        $objDrawing = new \PHPExcel_Worksheet_Drawing();
         $objDrawing->setName('Photo');
         $objDrawing->setDescription('Photo');
-        $objDrawing->setPath("./1.jpg");
-        $objDrawing->setHeight(375);
-        $objDrawing->setWidth(270);
-        $objDrawing->setCoordinates('L2');
+        $objDrawing->setPath($img);
+        $objDrawing->setHeight(120);
+        $objDrawing->setWidth(120);
+        $objDrawing->setOffsetX(16);
+        $objDrawing->setOffsetY(16);
+        return $objDrawing;
+        /*$objDrawing->setCoordinates('L2');
         //$objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
 
         //其次是居中
-
         $objPHPExcel->getActiveSheet()->getStyle('A1:K55')//改行表示A1-K55的单元格都居中
-        ->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        ->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);*/
     }
     /**
      * 有图片模板导出excel
@@ -70,13 +78,16 @@ class Excel extends Controller{
         $rowIndex = 13;
         //a.总共有几项数据
         $dataNum = count($receiptData);
-        if($dataNum < 4){
-            $long = 4-$dataNum;
+        if($dataNum < 7){
+            $long = 7-$dataNum;
             //删除多余的单元格项
-            $phpexcel->getActiveSheet()->removeRow(19-($long-1)*2, $long*2);
+            $phpexcel->getActiveSheet()->removeRow(25-($long-1)*2, $long*2);
 
         }
-        //$phpexcel->getActiveSheet()->removeRow(19,2);
+        /*if($dataNum > 2){
+            $long = $dataNum-2;
+            $phpexcel->getSheet()->insertNewRowBefore(17, $long*2);
+        }*/
 
         //b.先将每项type保存
         foreach ($receiptData as $type=>$v){
@@ -94,16 +105,28 @@ class Excel extends Controller{
             $index = 1;
             //type值
             $phpexcel->getActiveSheet()->setCellValue('A'.$rowIndex, $eachType[$len]);
-            //$phpexcel->getActiveSheet()->getComment( 'A'.$rowIndex)->getFillColor()->setRGB('333333' );      //设置背景色
+            //设置填充的样式和背景色
+            $phpexcel->getActiveSheet()->getStyle( 'A'.$rowIndex)->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID);
+            $phpexcel->getActiveSheet()->getStyle( 'A'.$rowIndex)->getFill()->getStartColor()->setARGB('80808080');        //设置背景色
             //合并单元格
             $phpexcel->getActiveSheet()->mergeCells('A'.$rowIndex.':G'.$rowIndex);
+            $phpexcel->getActiveSheet()->getRowDimension($rowIndex)->setRowHeight(24);
             $rowIndex += 1;
             //设置type行背景色
             foreach ($newReceiptData[$len] as $k=>$value){
                 $phpexcel->getActiveSheet()->setCellValue('A'.$rowIndex, $index);
                 $phpexcel->getActiveSheet()->setCellValue('B'.$rowIndex, $value['specification']);
                 $phpexcel->getActiveSheet()->setCellValue('C'.$rowIndex, $value['unit']);
-                $phpexcel->getActiveSheet()->setCellValue('D'.$rowIndex, '');
+                //一张图片
+                if($value['img']){
+                    $path = ROOT_PATH.DS.'public'.DS.'datamodel'.DS.$value['img'];
+                    $img = $this->setImg($path);
+                    $img->setCoordinates('D'.$rowIndex);
+                    $img->setWorksheet($phpexcel->getActiveSheet());
+                }else{
+                    $phpexcel->getActiveSheet()->setCellValue('D'.$rowIndex, '/');
+                }
+
                 $phpexcel->getActiveSheet()->setCellValue('E'.$rowIndex, $value['qty']);
 
                 //设置数值格式
@@ -120,17 +143,23 @@ class Excel extends Controller{
                 $phpexcel->getActiveSheet()->setCellValue('G'.$rowIndex, '=E'.$rowIndex.'*'.'F'.$rowIndex);
                 $sum += $value['qty']*$value['price'];
                 //设置行高
-                $phpexcel->getActiveSheet()->getRowDimension($rowIndex)->setRowHeight(44);
+                //如果有图片，行高设置大一些
+                if($value['img']){
+                    $phpexcel->getActiveSheet()->getRowDimension($rowIndex)->setRowHeight(70);
+                }else{
+                    $phpexcel->getActiveSheet()->getRowDimension($rowIndex)->setRowHeight(44);
+                }
+                //居中
+                $phpexcel->getActiveSheet()->getStyle('B'.$rowIndex)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
                 $rowIndex++;
                 $index++;
-                //var_dump($sum);echo "<br/>";
             }
         }
         //var_dump($sum);exit();
         //4.设置total值
         $sum = number_format($sum, 2, '.','');
         //如果有删除的项，需要拆分单元格
-        if($dataNum < 4){
+        if($dataNum < 7){
             $phpexcel->getActiveSheet()->unmergeCells('A'.$rowIndex.':G'.$rowIndex);
         }
         //$phpexcel->getActiveSheet()->setCellValue('B'.$rowIndex, 'Total');
@@ -143,6 +172,10 @@ class Excel extends Controller{
         //5.note数据
         $rowIndex += 2;
         $noteLen = count($notes);
+        //如果没有12条，删除多余的
+        if($noteLen < 12){
+            $phpexcel->getActiveSheet()->removeRow($rowIndex+$noteLen, 12-$noteLen);
+        }
         for($j=0;$j<$noteLen;$j++){
             $phpexcel->getActiveSheet()->setCellValue('A'.$rowIndex, ($j+1).'.'.$notes[$j]);
             $rowIndex++;
@@ -152,6 +185,7 @@ class Excel extends Controller{
         //$date = str_replace("/","_",$date);
         $outputFileName = $fileName."-发票.xlsx";
         ob_end_clean();//清除缓冲区,避免乱码
+        //$objWriter = new \PHPExcel_Writer_Excel2007($phpexcel, 'Excel2007');
         $objWriter = new \PHPExcel_Writer_Excel2007($phpexcel, 'Excel2007');
         header("Content-Type: application/force-download");
         header("Content-Type: application/octet-stream");
@@ -163,7 +197,10 @@ class Excel extends Controller{
         header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
         header("Pragma: no-cache");
         $objWriter->save('php://output');
+        //同时保存到本地
+        //$objWriter->save ( ROOT_PATH.DS.'public'.DS.'receipt'.DS.$outputFileName);
     }
+
 
     /**
      * 导出excel封装--无图片版本
