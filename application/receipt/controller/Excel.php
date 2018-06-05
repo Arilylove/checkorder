@@ -9,7 +9,7 @@ namespace app\receipt\controller;
 
 use think\Controller;
 use think\Db;
-class Excel extends Controller{
+class Excel extends Base {
 
     /**
      * 图片设置
@@ -29,6 +29,53 @@ class Excel extends Controller{
         return $objDrawing;
 
     }
+
+    /**
+     * 香港公司
+     * @throws \PHPExcel_Reader_Exception
+     */
+   public function forHongkong($profomaData, $receiptData, $notes, $fileName){
+       Vendor('phpexcel.PHPExcel');
+       Vendor('phpexcel.PHPExcel.IOFactory');
+       Vendor('phpexcel.PHPExcel.Reader.Excel5');
+       Vendor('phpexcel.PHPExcel.Writer.Excel2007');
+       //1.导入发票模板
+       $temPath = ROOT_PATH.'public'.DS."model".DS."model1.xls";
+       //var_dump($temPath);exit();
+       //检查文件路径
+       if(!file_exists($temPath)){
+           return $this->error('模板不存在');
+       }
+       //加载模板
+       $phpCreate =  \PHPExcel_IOFactory::createReader("Excel5");
+       //var_dump($phpCreate);exit();
+       $phpexcel = $phpCreate->load($temPath);
+       return $this->exportReceipt($phpexcel, $profomaData, $receiptData, $notes, $fileName);
+   }
+
+    /**
+     * laison
+     * @throws \PHPExcel_Reader_Exception
+     */
+   public function forLaison($profomaData, $receiptData, $notes, $fileName){
+       Vendor('phpexcel.PHPExcel');
+       Vendor('phpexcel.PHPExcel.IOFactory');
+       Vendor('phpexcel.PHPExcel.Reader.Excel5');
+       Vendor('phpexcel.PHPExcel.Writer.Excel2007');
+       //1.导入发票模板
+       //$temPath = ROOT_PATH.'public'.DS."model".DS.$receiptModel;
+       $temPath = ROOT_PATH.'public'.DS."model".DS."model1.xls";
+       //var_dump($temPath);exit();
+       //检查文件路径
+       if(!file_exists($temPath)){
+           return $this->error('模板不存在');
+       }
+       //加载模板
+       $phpCreate =  \PHPExcel_IOFactory::createReader("Excel5");
+       //var_dump($phpCreate);exit();
+       $phpexcel = $phpCreate->load($temPath);
+       return $this->exportReceipt($phpexcel, $profomaData, $receiptData, $notes, $fileName);
+   }
     /**
      * 有图片模板导出excel
      * * @param $receiptModel 发票模板
@@ -40,31 +87,7 @@ class Excel extends Controller{
      * @throws \PHPExcel_Reader_Exception
      * @throws \PHPExcel_Writer_Exception
      */
-    public function exportReceipt($receiptModel, $profomaData, $receiptData, $notes, $fileName){
-
-        /*var_dump($profomaData);echo '<hr/>';
-        var_dump($receiptData);echo '<hr/>';
-        var_dump($notes);echo '<hr/>';
-        var_dump($fileName);echo '<hr/>';
-        exit();*/
-        $date = date('Ymd-His', time());
-        Vendor('phpexcel.PHPExcel');
-        Vendor('phpexcel.PHPExcel.IOFactory');
-        Vendor('phpexcel.PHPExcel.Reader.Excel5');
-        Vendor('phpexcel.PHPExcel.Writer.Excel2007');
-        //1.导入发票模板
-        //$temPath = ROOT_PATH.'public'.DS."model".DS.$receiptModel;
-        $temPath = ROOT_PATH.'public'.DS."model".DS."model1.xls";
-        //var_dump($temPath);exit();
-        //检查文件路径
-        if(!file_exists($temPath)){
-            return $this->error('模板不存在');
-        }
-        //加载模板
-        $phpCreate =  \PHPExcel_IOFactory::createReader("Excel5");
-        //var_dump($phpCreate);exit();
-        $phpexcel = $phpCreate->load($temPath);
-        //var_dump($phpCreate);exit();
+    public function exportReceipt($phpexcel, $profomaData, $receiptData, $notes, $fileName){
         //2.发票抬头
         $phpexcel->getActiveSheet()->setCellValue('B9', $profomaData['to']);
         $phpexcel->getActiveSheet()->setCellValue('B10', $profomaData['contact']);
@@ -94,6 +117,7 @@ class Excel extends Controller{
             $eachType[] = $type;
             $newReceiptData[] = $v;
         }
+        //var_dump($newReceiptData);exit();
         $sum = 0;   //计算数据总和
         for($len=0;$len<$dataNum;$len++){
             $eachTypeLen = count($newReceiptData[$len]);
@@ -104,7 +128,10 @@ class Excel extends Controller{
             //数据编号
             $index = 1;
             //type值
-            $phpexcel->getActiveSheet()->setCellValue('A'.$rowIndex, $eachType[$len]);
+            $typeId = $eachType[$len];
+            $findType = $this->datas()->findById(array('dm_id'=>$typeId));
+            $type = $findType['type'];
+            $phpexcel->getActiveSheet()->setCellValue('A'.$rowIndex, $type);
             //设置填充的样式和背景色
             $phpexcel->getActiveSheet()->getStyle( 'A'.$rowIndex)->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID);
             $phpexcel->getActiveSheet()->getStyle( 'A'.$rowIndex)->getFill()->getStartColor()->setARGB('80808080');        //设置背景色
@@ -119,7 +146,7 @@ class Excel extends Controller{
                 $phpexcel->getActiveSheet()->setCellValue('C'.$rowIndex, $value['unit']);
                 //一张图片
                 if($value['img']){
-                    $path = ROOT_PATH.DS.'public'.DS.'datamodel'.DS.$value['img'];
+                    $path = ROOT_PATH.'public'.DS.'datamodel'.DS.$value['img'];
                     $img = $this->setImg($path);
                     $img->setCoordinates('D'.$rowIndex);
                     $img->setWorksheet($phpexcel->getActiveSheet());

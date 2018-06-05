@@ -35,6 +35,8 @@ class Receipt extends Base{
         $data = $this->receipts()->selectPage($field, $where);
         $data = $this->resetReceipts($data);
         $this->page($data);
+        $this->assignClient();
+        $this->assignState();
         $this->assign('receipts', $data);
         return $this->fetch("ret/index");
     }
@@ -68,7 +70,7 @@ class Receipt extends Base{
         //有几条数据
         $typeLen = count($types);
         //图片处理
-        $path = ROOT_PATH.DS.'public'.DS.'datamodel';
+        $path = ROOT_PATH.'public'.DS.'datamodel';
         $file = $this->getImgFile($path);
         //$data['img'] = $this->setFile($file, $typeLen);
         //a.如果有的数据项没有图片
@@ -84,8 +86,6 @@ class Receipt extends Base{
         $qty = $data['qty'];
         $price = $data['price'];
         $receiptDatas = $this->getReceiptData($data);
-
-        $sale_id = '';
         //1.保存到数据库的信息
         $sid = $data['sid'];
         $cid = $data['cid'];
@@ -93,7 +93,10 @@ class Receipt extends Base{
         //固定发票模板
         //$rm_id = $data['rm_id'];
         //需要先获取今天这个sale_id的用户导出了几张发票了，然后相应的进行加减
-        $uid = '';
+        $user = session('receiptuser');
+        $findUser = $this->admins()->findById(array('username'=>$user));
+        $uid = $findUser['uid'];
+        $sale_id = $findUser['sale_id'];
         $asciiNum = $this->getAscii($uid);
         $num = 'LTP'.date('ymd', time()).$asciiNum.$sale_id;;
         //几个数据分类
@@ -121,40 +124,11 @@ class Receipt extends Base{
 
         //5.导出发票
         $fileName = $num;
-        return $this->excel()->exportReceipt('', $profomaData, $receiptDatas, $notes, $fileName);
+        if($data['laison'] == 1){
+            return $this->excel()->forLaison($profomaData, $receiptDatas, $notes, $fileName);
+        }
+        return $this->excel()->forHongkong($profomaData, $receiptDatas, $notes, $fileName);
 
-    }
-    //导出测试
-    public function exportTest(){
-
-        //return DrawImg::setImg();
-        $receiptModel = '';
-        $profomaData = array(
-            'to'=>'SAFE WATER NETWORK',
-            'contact'=>'13 Tanbu Street, Adjacent French School, Shiashie, Accra, Ghana',
-            'no'=>'No.: LTP170112A',
-            'date'=>'DATE: Jan. 01, 2018'
-        );
-        $data = array(
-            'type'=>array('11','12','12','13','11','12'),
-            'specification'=>array('s0','s1','s2','s3','s4','s5'),
-            'unit'=>array('u0','u1','u2','u3','u4','u5'),
-            'img'=>array('20180604/38aca19a4866d3dd37735bc9ffd1a295.jpg','','','','',''),
-            'qty'=>array('10','11','12','13','14','15'),
-            'price'=>array('20','21','22','23','24','25')
-        );
-        $receiptData = $this->getReceiptData($data);
-        $notes = array(
-            '0'=>'Trade Term: C&F Accra Airport',
-            '1'=>'Payment Terms: 50% Down Payment By T/T, 50% Balance Payment by T/T before shipment',
-            '2'=>'Delivery Time: 8  weeks after Down Payment',
-            '3'=>'The communication mode between LAISON STS water meter and CIU is RF wireless '
-        );
-        $a = 66;
-        $asciiNum = chr($a);
-        $fileName = 'LTP180601'.$asciiNum.'1';
-        $excel = new Excel();
-        return $excel->exportReceipt($receiptModel, $profomaData, $receiptData, $notes, $fileName);
     }
 
     /**
@@ -205,6 +179,17 @@ class Receipt extends Base{
         }
         return $temp;
 
+    }
+
+    /**
+     * 由数据分类id获取数据分类名
+     * @param $typeId
+     */
+    private function getTypeValue($typeId){
+        $where = array('dm_id'=>$typeId);
+        $findType = $this->datas()->findById($where);
+        $type = $findType['type'];
+        return $type;
     }
 
     /**
@@ -259,6 +244,9 @@ class Receipt extends Base{
         return $newNotes;
     }
 
+    /**
+     * 下载发票
+     */
     public function upload(){
         $re_id = input('param.re_id');
         $find = $this->receipts()->findById(array('re_id'=>$re_id));
@@ -291,7 +279,7 @@ class Receipt extends Base{
             echo $file_con;
         }
         fclose($fp);
-}
+    }
 
     /**
      * 删除
@@ -302,7 +290,6 @@ class Receipt extends Base{
         $where = array('re_id'=>$re_id);
         $user = $this->receipts()->findById($where);
         //$self = session('username');
-
         $delete = $this->receipts()->del($where);
         if (!$delete){
             return $this->error('删除失败');
@@ -316,13 +303,49 @@ class Receipt extends Base{
      */
     public function search(){
         $search = input('param.search');
-        $where = array();
+        $sid = input('param.sid');
+        $cid = input('param.cid');
         $field = 're_id,sid,cid,rm_id,num,uid,data_num,create_time';
-        $data = $this->receipts()->selectPage($field, $where);
+        $data = $this->receipts()->search($search, $cid, $sid);
+        $data = $this->resetReceipts($data);
         $this->page($data);
+        $this->assignClient();
+        $this->assignState();
         $this->assign('receipts', $data);
         return $this->fetch('ret/index');
 
+    }
+
+    //导出测试
+    private function exportTest(){
+
+        //return DrawImg::setImg();
+        $receiptModel = '';
+        $profomaData = array(
+            'to'=>'SAFE WATER NETWORK',
+            'contact'=>'13 Tanbu Street, Adjacent French School, Shiashie, Accra, Ghana',
+            'no'=>'No.: LTP170112A',
+            'date'=>'DATE: Jan. 01, 2018'
+        );
+        $data = array(
+            'type'=>array('11','12','12','13','11','12'),
+            'specification'=>array('s0','s1','s2','s3','s4','s5'),
+            'unit'=>array('u0','u1','u2','u3','u4','u5'),
+            'img'=>array('20180604/38aca19a4866d3dd37735bc9ffd1a295.jpg','','','','',''),
+            'qty'=>array('10','11','12','13','14','15'),
+            'price'=>array('20','21','22','23','24','25')
+        );
+        $receiptData = $this->getReceiptData($data);
+        $notes = array(
+            '0'=>'Trade Term: C&F Accra Airport',
+            '1'=>'Payment Terms: 50% Down Payment By T/T, 50% Balance Payment by T/T before shipment',
+            '2'=>'Delivery Time: 8  weeks after Down Payment',
+            '3'=>'The communication mode between LAISON STS water meter and CIU is RF wireless '
+        );
+        $a = 66;
+        $asciiNum = chr($a);
+        $fileName = 'LTP180601'.$asciiNum.'1';
+        return $this->excel()->exportReceipt($receiptModel, $profomaData, $receiptData, $notes, $fileName);
     }
 
     /**

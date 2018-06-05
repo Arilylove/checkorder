@@ -35,7 +35,7 @@ class Receipts{
     public function selectPage($field, $where){
         $num = 10;
         $count = $this->count($where);
-        $admin = Db::table($this->tableName)->field($field)->where($where)->paginate($num, $count);
+        $admin = Db::table($this->tableName)->field($field)->where($where)->paginate($num, $count, ['query' => request()->param()]);
         return $admin;
     }
     public function count($where){
@@ -44,6 +44,30 @@ class Receipts{
     }
     public function countByTime($where, $whereTime){
         $result = Db::table($this->tableName)->where($where)->whereTime('create_time','today')->count();
+        return $result;
+    }
+
+    /**
+     * 根据条件搜索
+     * @param $search
+     * @param $cid
+     * @param $sid
+     * @return \think\paginator\Collection
+     */
+    public function search($search, $cid, $sid){
+        $where = array();
+        $num = 10;
+        if($search != ''){
+            $where['num'] = ['like', "%$search%"];
+        }
+        if($cid != ''){
+            $where['cid'] = $cid;
+        }
+        if($sid != ''){
+            $where['sid'] = $sid;
+        }
+        $count = Db::table($this->tableName)->where($where)->count();
+        $result = Db::table($this->tableName)->where($where)->paginate($num, $count, ['query' => request()->param()]);
         return $result;
     }
 

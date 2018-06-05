@@ -43,7 +43,7 @@ class Admins{
     public function selectPage($field, $where, $order){
         $num = 10;
         $count = $this->count($where);
-        $admin = Db::table($this->tableName)->field($field)->where($where)->order($order)->paginate($num, $count);
+        $admin = Db::table($this->tableName)->field($field)->where($where)->order($order)->paginate($num, $count, ['query' => request()->param()]);
         return $admin;
     }
     public function count($where){
@@ -61,7 +61,7 @@ class Admins{
         $count = Db::table($this->tableName)
             ->where('adId',  'like', "%$search%")->whereOr('username', 'like', "%$search%")->whereOr('surname', 'like', "%$search%")->count();
         $username = Db::table($this->tableName)
-            ->where('adId',  'like', "%$search%")->whereOr('username', 'like', "%$search%")->whereOr('surname', 'like', "%$search%")->paginate(10, $count);
+            ->where('adId',  'like', "%$search%")->whereOr('username', 'like', "%$search%")->whereOr('surname', 'like', "%$search%")->paginate(10, $count, ['query' => request()->param()]);
         return $username;
     }
 

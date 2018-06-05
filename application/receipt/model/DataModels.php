@@ -39,7 +39,7 @@ class DataModels{
     public function selectPage($field, $where){
         $num = 10;
         $count = $this->count($where);
-        $admin = Db::table($this->tableName)->field($field)->where($where)->paginate($num, $count);
+        $admin = Db::table($this->tableName)->field($field)->where($where)->paginate($num, $count, ['query' => request()->param()]);
         return $admin;
     }
     public function count($where){

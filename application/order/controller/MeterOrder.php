@@ -22,7 +22,7 @@ class MeterOrder extends Base{
 
         $this->assignState();
         $this->assignClient();
-
+        $this->assignManu();
         //var_dump($order);exit();
         $this->assign('orders', $order);
         return $this->fetch("mord/index");
@@ -94,10 +94,11 @@ class MeterOrder extends Base{
         $meterNum = input('param.meterNum');
         $sid = input('param.sid');
         $cid = input('param.cid');
+        $mfId = input('param.mfId');
         //var_dump($search);exit();
         $pid = $this->getPid();
         $where = array('pid'=>$pid);
-        $orders = $this->orders()->newJoin($meterNum, $deliveryStatus, $sid, $cid, $where);
+        $orders = $this->orders()->newJoin($meterNum, $deliveryStatus, $sid, $cid, $where, $mfId);
         //var_dump($orders);exit();
         $len = count($orders);
         //存在搜索的结果
@@ -106,6 +107,7 @@ class MeterOrder extends Base{
         }
         $this->assignState();
         $this->assignClient();
+        $this->assignManu();
         $this->page($orders);
         //var_dump($orders);exit();
         $this->assign('orders', $orders);

@@ -20,7 +20,7 @@ use think\Db;
 use app\receipt\crypt\AesCrypt;
 
 class Base extends Controller{
-   /* public function _initialize(){
+    public function _initialize(){
         $username = session('receiptuser');
         $status = session('status');
         $a = is_null($username);
@@ -32,7 +32,7 @@ class Base extends Controller{
         $this->assign("username", $username);
         $this->assign("status", $status);
         return true;
-    }*/
+    }
    protected function state(){
        $state = new States();
        return $state;
@@ -195,17 +195,22 @@ class Base extends Controller{
      */
     public function doFileImg($file, $type){
         foreach ($type as $key=>$value){
-            $temp[] = $key;
+            $temp1[] = $key;
         }
         foreach ($file as $k=>$v){
-            for($i=0;$i<count($temp);$i++){
-                if($k != $temp[$i]){
-                    $temp2[] = $temp[$i];
-                    $file[$temp[$i]] = '';
-                }
-            }
-
+            $temp2[] = $k;
         }
+        //1.比较两个数组，取出不同的值
+        $temp = array_diff($temp1, $temp2);
+        foreach ($temp as $val){
+            $file[$val] = '';
+        }
+        foreach ($file as $k=>$v){
+            $sortK[$k] = $k;
+        }
+        array_multisort($sortK, SORT_NUMERIC, $file);
+        //2.对file进行排序
+
         /*var_dump($temp);echo '<hr/>';
         var_dump($temp2);echo '<hr/>';
         var_dump($file);exit();*/

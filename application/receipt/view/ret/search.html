@@ -1,0 +1,44 @@
+            <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="__RECORD__/search.css"/>
+</head>
+<body>
+<form method="post" action="{:url('Receipt/search')}" style="float: right;">
+    <div>
+        <div class="col-md-2 col-sm-2 col-xs-12 col-lg-2"></div>
+        <div class="col-md-3 col-sm-3 col-xs-12 col-lg-3">
+            <label style="width:80px;">客户&nbsp;&nbsp;</label>
+            <select name="cid" class="bordrad" style="width:172px;" value="">
+                <option value=""></option>
+                {volist name="clients" id="v"}
+                <option value="{$v.cid}">{$v.client}</option>
+                {/volist}
+            </select>
+        </div>
+        <div class="col-md-3 col-sm-3 col-xs-12 col-lg-3">
+            <label style="width:80px;">国家</label>
+            <select class="bordrad" name="sid" style="width:172px;">
+                <option value=""></option>
+                {volist name="state" id="v"}
+                <option value="{$v.sid}">{$v.state}</option>
+                {/volist}
+            </select>
+        </div>
+        <div class="col-md-3 col-sm-3 col-xs-12 col-lg-3">
+            <div style="margin-top: 23px;">
+                <input type="text" name="search"  placeholder="请输入.." autocomplete="off" class="bordrad"/>
+            </div>
+        </div>
+        <div class="col-md-1 col-sm-1 col-xs-12 col-lg-1">
+            <div style="margin-top: 23px;float: right;">
+                <button type="submit" class="add-btn" class="col-md-4 col-sm-4 col-xs-3" style="border-radius:5px;">搜索</button>
+            </div>
+        </div>
+
+    </div>
+</form>
+</body>
+</html>

@@ -316,7 +316,7 @@ class Order extends Base{
         $cid = input('param.cid');
         $mfId = input('param.mfId');
         $orders = $this->orders()->join($meterNum, $deliveryStatus, $sid, $cid, $orderNum, $modelNum, $mfId);
-        //var_dump($orders);exit();
+        var_dump($orders);exit();
         $len = count($orders);
         //存在搜索的结果
         if($len >= 1){

@@ -4,11 +4,24 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="__RECORD__/search.css"/>
+    <style>
+        @media screen and (min-width:1448px){
+            .forsear{
+                margin-top: 19px;
+            }
+
+        }
+        @media screen and (max-width:1448px) and (min-width:768px){
+            .forsear{
+                margin-top: 39px;
+            }
+        }
+    </style>
 </head>
 <body>
 <form method="post" action="{:url('MeterOrder/search')}">
     <div>
-        <div class="col-md-4 col-sm-4 col-xs-12 col-lg-4"></div>
+        <div class="col-md-3 col-sm-3 col-xs-12 col-lg-3"></div>
         <div class="col-md-3 col-sm-3 col-xs-12 col-lg-3">
             <div>
                 <label style="width:80px;">表号&nbsp;&nbsp;</label>
@@ -47,12 +60,19 @@
             </div>
 
         </div>
-        <div class="col-md-2 col-sm-2 col-xs-12 col-lg-2">
+        <div class="col-md-3 col-sm-3 col-xs-12 col-lg-3">
             <div>
-                <label></label>
+                <label style="width:80px;">制造商</label>
+                <select class="bordrad" name="mfId" style="width:172px;">
+                    <option value=""></option>
+                    {volist name="manu" id="v"}
+                    <option value="{$v.mfId}">{$v.manufacturer}</option>
+                    {/volist}
+                </select>
             </div>
             <div>
-                <button type="submit" class="add-btn" style="border-radius:5px;">搜索</button>
+                <label for=""></label>
+                <button type="submit" class="add-btn forsear" style="border-radius:5px;">搜索</button>
             </div>
 
         </div>
