@@ -7,11 +7,6 @@
  */
 namespace app\receipt\controller;
 
-use app\receipt\img\DrawImg;
-use think\Db;
-use app\receipt\crypt\AesCrypt;
-use app\receipt\model\Admins;
-
 /**
  * 发票
  * Class Receipt
@@ -64,25 +59,26 @@ class Receipt extends Base{
     }
 
     /**
-     * 增加
+     * 增加发票
      * */
     public function save(){
         $data = input('post.');
-        var_dump($data);exit();
-        /*array(8) { ["rm_id"]=> string(1) "1" ["sid"]=> string(1) "1"
-        ["type"]=> array(1) { [0]=> string(5) "gerfg" }
-        ["specification"]=> array(1) { [0]=> string(138) "LAPIS STS Vending Management System - C/S Version,
-        Microsoft SQL Server Database 2008 WITHOUT CUSTMOZATION MODIFICATION ON SOFTWARE PART" }
-         ["unit"]=> array(1) { [0]=> string(4) "copy" } ["qty"]=> array(1) { [0]=> string(3) "1.0" }
-        ["price"]=> array(1) { [0]=> string(5) "14999" } ["note"]=> string(4) "1,2," }*/
-        /*$user = session('receiptuser');
-        $findUser = $this->admins()->findById(array('username'=>$user));
-        $sale_id = $findUser['sale_id'];
-        */
         //3.发票数据项数据--三维数组(type作为外key)
         $types = $data['type'];
         //有几条数据
-        //$typeLen = count($types);
+        $typeLen = count($types);
+        //图片处理
+        $path = ROOT_PATH.DS.'public'.DS.'datamodel';
+        $file = $this->getImgFile($path);
+        //$data['img'] = $this->setFile($file, $typeLen);
+        //a.如果有的数据项没有图片
+        if(count($file) < $typeLen){
+            $data['img'] = $this->doFileImg($file, $types);
+        }else{
+            $data['img'] = $file;
+        }
+        //var_dump($data['img']);exit();
+
         $specification = $data['specification'];
         $unit = $data['unit'];
         $qty = $data['qty'];
@@ -94,24 +90,24 @@ class Receipt extends Base{
         $sid = $data['sid'];
         $cid = $data['cid'];
         $findClient = $this->clients()->findById(array('cid'=>$cid));
-        $rm_id = $data['rm_id'];
+        //固定发票模板
+        //$rm_id = $data['rm_id'];
         //需要先获取今天这个sale_id的用户导出了几张发票了，然后相应的进行加减
         $uid = '';
         $asciiNum = $this->getAscii($uid);
-        $num = 'LTP'.date('YYmmdd', time()).$asciiNum.$sale_id;;
+        $num = 'LTP'.date('ymd', time()).$asciiNum.$sale_id;;
         //几个数据分类
         $data_num = count($receiptDatas);   //暂时的
         $create_time = date('Y-m-d H:i:s', time());
         $sqlData = array(
             'sid'        =>$sid,
             'cid'        =>$cid,
-            'rm_id'      =>$rm_id,
             'num'        =>$num,
             'uid'        =>'',
             'data_num'   =>$data_num,
             'create_time'=>$create_time
         );
-        //$add = $this->receipts()->add($sqlData, '');
+        $add = $this->receipts()->add($sqlData, '');
 
         //带英文的日期格式
         $us_time = gmstrftime('%dth %b.,%Y', time());
@@ -125,7 +121,7 @@ class Receipt extends Base{
 
         //5.导出发票
         $fileName = $num;
-
+        return $this->excel()->exportReceipt('', $profomaData, $receiptDatas, $notes, $fileName);
 
     }
     //导出测试
@@ -139,7 +135,15 @@ class Receipt extends Base{
             'no'=>'No.: LTP170112A',
             'date'=>'DATE: Jan. 01, 2018'
         );
-        $receiptData = $this->getReceiptData();
+        $data = array(
+            'type'=>array('11','12','12','13','11','12'),
+            'specification'=>array('s0','s1','s2','s3','s4','s5'),
+            'unit'=>array('u0','u1','u2','u3','u4','u5'),
+            'img'=>array('20180604/38aca19a4866d3dd37735bc9ffd1a295.jpg','','','','',''),
+            'qty'=>array('10','11','12','13','14','15'),
+            'price'=>array('20','21','22','23','24','25')
+        );
+        $receiptData = $this->getReceiptData($data);
         $notes = array(
             '0'=>'Trade Term: C&F Accra Airport',
             '1'=>'Payment Terms: 50% Down Payment By T/T, 50% Balance Payment by T/T before shipment',
@@ -158,14 +162,6 @@ class Receipt extends Base{
      * @return mixed
      */
     public function getReceiptData($data){
-        $data = array(
-            'type'=>array('11','12','12','13','11','12'),
-            'specification'=>array('s0','s1','s2','s3','s4','s5'),
-            'unit'=>array('u0','u1','u2','u3','u4','u5'),
-            'img'=>array('20180604/38aca19a4866d3dd37735bc9ffd1a295.jpg','','','','',''),
-            'qty'=>array('10','11','12','13','14','15'),
-            'price'=>array('20','21','22','23','24','25')
-        );
         //注：都是一维数组
         $types = $data['type'];
         //有几条数据
@@ -202,8 +198,6 @@ class Receipt extends Base{
                 'price'=>$receiptData[$j]['price']
             );
         }
-        /*var_dump($receiptDatas);
-        exit();*/
         foreach($receiptDatas as $k=>$v){
             foreach ($v as $value){
                 $temp[$k][] = $value;
@@ -221,7 +215,7 @@ class Receipt extends Base{
     private function getAscii($uid){
         //$field = 're_id,sid,cid,rm_id,num,uid,data_num,create_time';
         $date = date('Y-m-d', time());
-        $whereTime = array('create_time',['between',[$date, $date]]);
+        $whereTime ="'create_time','today'";
         $count = $this->receipts()->countByTime(array('uid'=>$uid), $whereTime);
         $a = 65;
         $a += $count;
@@ -249,6 +243,7 @@ class Receipt extends Base{
         }
         $proforma['email'] = $findClient['email'];
         $proforma['date'] = "DATE:".$create_time;
+        return $proforma;
     }
     /*
      * 由note的nid获取note描述
@@ -264,6 +259,39 @@ class Receipt extends Base{
         return $newNotes;
     }
 
+    public function upload(){
+        $re_id = input('param.re_id');
+        $find = $this->receipts()->findById(array('re_id'=>$re_id));
+        $fileName = $find['num'].'.xlsx';
+        //$fileName_path = ROOT_PATH.DS.'public'.DS.'receipt'.DS.$fileName;
+        return $this->downdetails($fileName);
+    }
+    private function downdetails($fileName){
+        header("Content-type:text/html;charset=utf-8");
+        $file_path = ROOT_PATH.DS.'public'.DS.'receipt'.DS.$fileName;
+        //首先要判断给定的文件存在与否
+        if(!file_exists($file_path)){
+
+            return $this->error("没有该文件");
+        }
+
+        $fp=fopen($file_path,"r");
+        $file_size = filesize($file_path);
+        //下载文件需要用到的头
+        Header("Content-type: application/octet-stream");
+        Header("Accept-Ranges: bytes");
+        Header("Accept-Length:".$file_size);
+        Header("Content-Disposition: attachment; filename=".$fileName);
+        $buffer=1024;
+        $file_count=0;
+        //向浏览器返回数据
+        while(!feof($fp) && $file_count<$file_size){
+            $file_con=fread($fp,$buffer);
+            $file_count+=$buffer;
+            echo $file_con;
+        }
+        fclose($fp);
+}
 
     /**
      * 删除

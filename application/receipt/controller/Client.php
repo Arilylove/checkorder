@@ -41,6 +41,7 @@ class Client extends Base{
      * */
     public function save(){
         $clients = input('post.');
+        //var_dump($clients);exit();
         //基本验证
         $validate = $this->validate($clients, 'Clients');
         //var_dump($validate);exit();

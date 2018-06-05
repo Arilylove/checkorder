@@ -34,6 +34,9 @@
             background-color:white;
         }
 
+        .hid{
+            display: none;
+        }
     </style>
 </head>
 <body class="nav-md">
@@ -211,13 +214,15 @@
                                                 <div class="form-group">
                                                     <div class="control-label col-md-3 col-sm-3 col-xs-12">
                                                         <button type="button" class="delHi">删除分类</button>
+                                                        <button type="button" onclick="foradd()">确定</button>
                                                     </div>
+
                                                 </div>
                                             </div>
                                             <div id="receipt"></div>
                                             <div class="form-group">
                                                 <div class="control-label col-md-3 col-sm-3 col-xs-12">
-                                                    <button type="button" id="add">添加分类</button>
+                                                    <button type="button" id="add" class="hid" onclick="hidadd()">添加分类</button>
                                                 </div>
                                             </div>
 
@@ -283,7 +288,7 @@
             <label class="control-label col-md-3 col-sm-3 col-xs-12">数据分类 <span class="required">*</span>
             </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-            <select class="form-control col-md-7 col-xs-12" name="type[${vaid}]" onchange=setData(this.options[this.options.selectedIndex].value,vaid)>
+            <select class="form-control col-md-7 col-xs-12" name="type[]" onchange=setData(this.options[this.options.selectedIndex].value,vaid)>
             <option value=""></option>
              {volist name="datas" id="v"}
              <option value="{$v[\'dm_id\']}" onchange=setData("{$v[\'dm_id\']}")>{$v.type}</option>
@@ -327,6 +332,7 @@
             <div class="form-group">
                 <div class="control-label col-md-3 col-sm-3 col-xs-12">
                     <button type="button" class="delHi">删除分类</button>
+                    <button type="button" onclick="foradd()">确定</button>
                 </div>
             </div>
 
@@ -341,6 +347,12 @@
         });
 
     });
+    function foradd() {
+        $('#add').removeClass('hid');
+    }
+    function hidadd() {
+        $('#add').addClass('hid');
+    }
     /*设置数据分类数据*/
     function setData(dm_id,vaid) {
 

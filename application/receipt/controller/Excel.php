@@ -22,17 +22,12 @@ class Excel extends Controller{
         $objDrawing->setName('Photo');
         $objDrawing->setDescription('Photo');
         $objDrawing->setPath($img);
-        $objDrawing->setHeight(120);
-        $objDrawing->setWidth(120);
-        $objDrawing->setOffsetX(16);
-        $objDrawing->setOffsetY(16);
+        $objDrawing->setHeight(60);
+        $objDrawing->setWidth(80);
+        $objDrawing->setOffsetX(10);
+        $objDrawing->setOffsetY(6);
         return $objDrawing;
-        /*$objDrawing->setCoordinates('L2');
-        //$objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
 
-        //其次是居中
-        $objPHPExcel->getActiveSheet()->getStyle('A1:K55')//改行表示A1-K55的单元格都居中
-        ->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);*/
     }
     /**
      * 有图片模板导出excel
@@ -47,6 +42,11 @@ class Excel extends Controller{
      */
     public function exportReceipt($receiptModel, $profomaData, $receiptData, $notes, $fileName){
 
+        /*var_dump($profomaData);echo '<hr/>';
+        var_dump($receiptData);echo '<hr/>';
+        var_dump($notes);echo '<hr/>';
+        var_dump($fileName);echo '<hr/>';
+        exit();*/
         $date = date('Ymd-His', time());
         Vendor('phpexcel.PHPExcel');
         Vendor('phpexcel.PHPExcel.IOFactory');
@@ -145,9 +145,9 @@ class Excel extends Controller{
                 //设置行高
                 //如果有图片，行高设置大一些
                 if($value['img']){
-                    $phpexcel->getActiveSheet()->getRowDimension($rowIndex)->setRowHeight(70);
+                    $phpexcel->getActiveSheet()->getRowDimension($rowIndex)->setRowHeight(88);
                 }else{
-                    $phpexcel->getActiveSheet()->getRowDimension($rowIndex)->setRowHeight(44);
+                    $phpexcel->getActiveSheet()->getRowDimension($rowIndex)->setRowHeight(60);
                 }
                 //居中
                 $phpexcel->getActiveSheet()->getStyle('B'.$rowIndex)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
@@ -183,7 +183,7 @@ class Excel extends Controller{
 
         //导出属性设置
         //$date = str_replace("/","_",$date);
-        $outputFileName = $fileName."-发票.xlsx";
+        $outputFileName = $fileName.".xlsx";
         ob_end_clean();//清除缓冲区,避免乱码
         //$objWriter = new \PHPExcel_Writer_Excel2007($phpexcel, 'Excel2007');
         $objWriter = new \PHPExcel_Writer_Excel2007($phpexcel, 'Excel2007');
@@ -196,9 +196,10 @@ class Excel extends Controller{
         header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
         header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
         header("Pragma: no-cache");
-        $objWriter->save('php://output');
         //同时保存到本地
-        //$objWriter->save ( ROOT_PATH.DS.'public'.DS.'receipt'.DS.$outputFileName);
+        $objWriter->save(ROOT_PATH.DS.'public'.DS.'receipt'.DS.$outputFileName);
+        $objWriter->save('php://output');
+
     }
 
 

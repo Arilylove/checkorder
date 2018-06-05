@@ -144,6 +144,74 @@ class Base extends Controller{
         $jsonNote = json_encode($data);
         $this->assign("jsonNotes", $jsonNote);
     }
+
+    /**
+     * @param $path
+     * @return string|void
+     */
+    public function getImgFile($path){
+        $file = request()->file('img');
+        //上传了文件
+        //var_dump(count($file));exit();
+        //$fileName ;
+        if($file){
+            $len = count($file);
+            foreach ($file as $key=>$value){
+                $fileName[$key] = $this->oneFile($value, $path);
+            }
+            return $fileName;
+        }
+        return array();
+    }
+
+    /**
+     * 返回一个图像文件名
+     * @param $file
+     * @param $path
+     * @return string|void
+     */
+    private function oneFile($file, $path){
+        if($file){
+            $info = $file->move($path);
+            $type = $info->getExtension();           //文件类型
+            //var_dump($type);exit;
+            if(($type != 'png') && ($type != 'jpg') && ($type != 'jpeg') && ($type != 'gif')){
+                return $this->error(Lang::get('upload img file'));
+            }
+            //$path = $info->getPath();
+            $date = date('Ymd', time());
+            $fileName = $info->getFilename();
+            return $date.DS.$fileName;
+        }
+        return '';
+
+    }
+
+    /**
+     * 处理缺少图片的数据项
+     * @param $file
+     * @param $type
+     * @return mixed
+     */
+    public function doFileImg($file, $type){
+        foreach ($type as $key=>$value){
+            $temp[] = $key;
+        }
+        foreach ($file as $k=>$v){
+            for($i=0;$i<count($temp);$i++){
+                if($k != $temp[$i]){
+                    $temp2[] = $temp[$i];
+                    $file[$temp[$i]] = '';
+                }
+            }
+
+        }
+        /*var_dump($temp);echo '<hr/>';
+        var_dump($temp2);echo '<hr/>';
+        var_dump($file);exit();*/
+        return $file;
+
+    }
     /**
      * Excel导出
      * @param data 导出数据

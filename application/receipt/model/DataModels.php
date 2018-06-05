@@ -46,4 +46,8 @@ class DataModels{
         $count = Db::table($this->tableName)->where($where)->count();
         return $count;
     }
+    public function insertAll($data, $where){
+        $result = Db::table($this->tableName)->where($where)->insertAll($data);
+        return $result;
+    }
 }

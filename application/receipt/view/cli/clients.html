@@ -64,12 +64,12 @@
                                     <table class="table table-striped jambo_table bulk_action">
                                         <thead>
                                         <tr class="headings">
-                                            <th>
-                                                <input type="checkbox" id="check-all" class="flat">
-                                            </th>
                                             <th>客户编号</th>
                                             <th>国家</th>
                                             <th>客户</th>
+                                            <th>联系地址</th>
+                                            <th>联系人</th>
+                                            <th>邮箱</th>
                                             <th class="column-title no-link last" style="text-align: center;"><span class="nobr">操作</span>
                                             </th>
 
@@ -79,12 +79,12 @@
                                         <tbody>
                                         {volist name="clients" id="v"}
                                         <tr class="even pointer">
-                                            <td class="a-center ">
-                                                <input type="checkbox" class="flat" name="table_records">
-                                            </td>
                                             <td>{$v.cid}</td>
                                             <td>{$v.state}</td>
                                             <td>{$v.client}</td>
+                                            <td>{$v.address}</td>
+                                            <td>{$v.contacts}</td>
+                                            <td>{$v.email}</td>
                                             <td style="text-align: center;">
 
                                                 <a href="{:url('Client/edit',['cid'=>$v['cid']])}" title="修改" class="glyphicon glyphicon-edit" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;

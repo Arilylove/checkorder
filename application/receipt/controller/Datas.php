@@ -37,7 +37,9 @@ class Datas extends Base{
 
     public function save(){
         $data = input('post.');
-        $data['img'] = $this->getImgFile();
+        //不要图片
+        /*$path = ROOT_PATH.DS.'public'.DS.'datamodel';
+        $data['img'] = $this->getImgFile($path);*/
         $data['create_time'] = date('Y-m-d H:i:s', time());
         //基本验证
         $validate = $this->validate($data, 'DataModels');
@@ -90,7 +92,8 @@ class Datas extends Base{
         $id = input('param.dm_id');
         $where = array('dm_id'=>$id);
         $data = input('post.');
-        $data['img'] = $this->getImgFile();
+        $path = ROOT_PATH.DS.'public'.DS.'datamodel';
+        $data['img'] = $this->getImgFile($path);
         $edit = $this->datas()->update($data, $where);
         if(!$edit){
             return $this->error(Lang::get('edit fail'));
@@ -125,29 +128,6 @@ class Datas extends Base{
         $this->page($data);
         $this->assign("datas", $data);
         return $this->fetch('data/index');
-    }
-
-    /**
-     * @param $path
-     * @return string|void
-     */
-    public function getImgFile(){
-        $file = request()->file('img');
-        //上传了文件
-        //var_dump($file);exit();
-        if($file){
-            $info = $file->move(ROOT_PATH.'public'.DS.'datamodel');
-            $type = $info->getExtension();           //文件类型
-            //var_dump($type);exit;
-            if(($type != 'png') && ($type != 'jpg') && ($type != 'jpeg') && ($type != 'gif')){
-                return $this->error(Lang::get('upload img file'));
-            }
-            //$path = $info->getPath();
-            $date = date('Ymd', time());
-            $fileName = $info->getFilename();
-            return $date.DS.$fileName;
-        }
-        return '';
     }
 
 
