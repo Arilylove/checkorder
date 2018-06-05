@@ -33,6 +33,7 @@ class Order extends Base{
 
         $this->assignState();
         $this->assignClient();
+        $this->assignManu();
 
         //var_dump($order);exit();
         $this->assign('orders', $order);
@@ -313,7 +314,8 @@ class Order extends Base{
         $modelNum = input('param.modelNum');
         $sid = input('param.sid');
         $cid = input('param.cid');
-        $orders = $this->orders()->join($meterNum, $deliveryStatus, $sid, $cid, $orderNum, $modelNum);
+        $mfId = input('param.mfId');
+        $orders = $this->orders()->join($meterNum, $deliveryStatus, $sid, $cid, $orderNum, $modelNum, $mfId);
         //var_dump($orders);exit();
         $len = count($orders);
         //存在搜索的结果
@@ -322,6 +324,7 @@ class Order extends Base{
         }
         $this->assignState();
         $this->assignClient();
+        $this->assignManu();
         $this->page($orders);
         //var_dump($orders);exit();
         $this->assign('orders', $orders);

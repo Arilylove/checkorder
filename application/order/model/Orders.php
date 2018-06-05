@@ -129,7 +129,7 @@ class Orders{
      * @param $count
      * @return \think\paginator\Collection
      */
-    public function join($meterNum, $deliveryStatus, $sid, $cid, $orderNum, $modelNum){
+    public function join($meterNum, $deliveryStatus, $sid, $cid, $orderNum, $modelNum, $mfId){
         $num = 10;
         $where = array();
         //需要多层判断（如果为空则不执行）
@@ -151,6 +151,9 @@ class Orders{
         }
         if($modelNum != ''){
             $where['$modelNum'] = ['like', "%$modelNum%"];
+        }
+        if($mfId != ''){
+            $where['mfId'] = $mfId;
         }
         $count = Db::table($this->tableName)->where($where)->count();
         $orders = Db::table($this->tableName)->where($where)->paginate($num, $count, ['query'=>request()->param()]);
