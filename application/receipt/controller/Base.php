@@ -297,13 +297,13 @@ class Base extends Controller{
       *修改密码
       * */
     public function update(){
-        $username = session('username');
+        $username = session('receiptuser');
         $this->assign('username', $username);
         return $this->fetch('lic/upPass');
     }
 
     public function updatePassword(){
-        $username = session('username');
+        $username = session('receiptuser');
         //$this->assign('username', $username);
         $where = array('username'=>$username);
         $admin = Db::table('admin')->where($where)->find();
@@ -311,7 +311,7 @@ class Base extends Controller{
             return $this->error('该用户不存在');
         }
         //var_dump($admin['password']);exit();
-        $this->assign('adId', $admin['adId']);
+        $this->assign('uid', $admin['uid']);
         $string = new AesCrypt();
         //解密
         $password = $admin['password'];
@@ -336,7 +336,7 @@ class Base extends Controller{
         if (!$result){
             return $this->error('修改失败');
         }
-        session('username', null);
+        session('receiptuser', null);
         return $this->success('修改成功,返回登录界面', 'Login/index');
 
     }

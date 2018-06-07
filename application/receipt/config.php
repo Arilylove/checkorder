@@ -10,11 +10,11 @@ return[
     'view_replace_str' => array(
         '__CSS__'    => '/static/admin/css',
         '__JS__'     => '/static/admin/js',
-        '__IMG__'  => '/static/admin/img',
-        '__FONTS' =>'/static/admin/fonts',
-        '__UPLOAD__'=>'/upload',
-        '__VENDOR__'=>'/static/admin/vendors',
-        '__RECORD__'=>'/static/admin/record',
-        '__MODEL__'=>'/datamodel'
+        '__IMG__'    => '/static/admin/img',
+        '__FONTS'    =>'/static/admin/fonts',
+        '__UPLOAD__' =>'/upload',
+        '__VENDOR__' =>'/static/admin/vendors',
+        '__RECORD__' =>'/static/admin/record',
+        '__MODEL__'  =>'/datamodel'
     ),
 ];

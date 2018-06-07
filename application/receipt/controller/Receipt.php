@@ -7,6 +7,7 @@
  */
 namespace app\receipt\controller;
 
+use think\Db;
 /**
  * 发票
  * Class Receipt
@@ -98,7 +99,7 @@ class Receipt extends Base{
         $uid = $findUser['uid'];
         $sale_id = $findUser['sale_id'];
         $asciiNum = $this->getAscii($uid);
-        $num = 'LTP'.date('ymd', time()).$asciiNum.$sale_id;;
+        $num = 'LTP'.date('ymd', time()).$asciiNum.$sale_id;
         //几个数据分类
         $data_num = count($receiptDatas);   //暂时的
         $create_time = date('Y-m-d H:i:s', time());
@@ -106,7 +107,7 @@ class Receipt extends Base{
             'sid'        =>$sid,
             'cid'        =>$cid,
             'num'        =>$num,
-            'uid'        =>'',
+            'uid'        =>$uid,
             'data_num'   =>$data_num,
             'create_time'=>$create_time
         );
@@ -201,7 +202,7 @@ class Receipt extends Base{
         //$field = 're_id,sid,cid,rm_id,num,uid,data_num,create_time';
         $date = date('Y-m-d', time());
         $whereTime ="'create_time','today'";
-        $count = $this->receipts()->countByTime(array('uid'=>$uid), $whereTime);
+        $count = $this->receipts()->countByTime(array('uid'=>$uid));
         $a = 65;
         $a += $count;
         $ascii = chr($a);
@@ -254,12 +255,16 @@ class Receipt extends Base{
         //$fileName_path = ROOT_PATH.DS.'public'.DS.'receipt'.DS.$fileName;
         return $this->downdetails($fileName);
     }
+
+    /**
+     * 获取本地文件
+     * @param $fileName
+     */
     private function downdetails($fileName){
         header("Content-type:text/html;charset=utf-8");
         $file_path = ROOT_PATH.DS.'public'.DS.'receipt'.DS.$fileName;
         //首先要判断给定的文件存在与否
         if(!file_exists($file_path)){
-
             return $this->error("没有该文件");
         }
 
@@ -270,12 +275,12 @@ class Receipt extends Base{
         Header("Accept-Ranges: bytes");
         Header("Accept-Length:".$file_size);
         Header("Content-Disposition: attachment; filename=".$fileName);
-        $buffer=1024;
-        $file_count=0;
+        $buffer = 1024;
+        $file_count = 0;
         //向浏览器返回数据
         while(!feof($fp) && $file_count<$file_size){
-            $file_con=fread($fp,$buffer);
-            $file_count+=$buffer;
+            $file_con = fread($fp,$buffer);
+            $file_count += $buffer;
             echo $file_con;
         }
         fclose($fp);

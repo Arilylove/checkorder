@@ -42,8 +42,8 @@ class Receipts{
         $count = Db::table($this->tableName)->where($where)->count();
         return $count;
     }
-    public function countByTime($where, $whereTime){
-        $result = Db::table($this->tableName)->where($where)->whereTime('create_time','today')->count();
+    public function countByTime($where){
+        $result = Db::table($this->tableName)->where($where)->whereTime('create_time','d')->count();
         return $result;
     }
 
