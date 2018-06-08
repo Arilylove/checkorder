@@ -8,6 +8,8 @@
 namespace app\receipt\controller;
 
 use think\Db;
+use think\Lang;
+
 /**
  * 发票
  * Class Receipt
@@ -73,9 +75,11 @@ class Receipt extends Base{
         //图片处理
         $path = ROOT_PATH.'public'.DS.'datamodel';
         $file = $this->getImgFile($path);
-        //$data['img'] = $this->setFile($file, $typeLen);
+        if(!$file){
+            $data['img'] = array();
+        }
         //a.如果有的数据项没有图片
-        if(count($file) < $typeLen){
+        else if($file && (count($file) < $typeLen)){
             $data['img'] = $this->doFileImg($file, $types);
         }else{
             $data['img'] = $file;
@@ -111,7 +115,6 @@ class Receipt extends Base{
             'data_num'   =>$data_num,
             'create_time'=>$create_time
         );
-        $add = $this->receipts()->add($sqlData, '');
 
         //带英文的日期格式
         $us_time = gmstrftime('%dth %b.,%Y', time());
@@ -125,8 +128,19 @@ class Receipt extends Base{
 
         //5.导出发票
         $fileName = $num;
+        //空数据提醒
+        foreach ($receiptDatas as $v){
+            foreach ($v as $value){
+                if($value['type'] == ''){
+                    return $this->error(Lang::get('type can not null'));
+                }
+            }
+        }
+        //保存到数据库
+        $add = $this->receipts()->add($sqlData, '');
         if($data['laison'] == 1){
-            return $this->excel()->forLaison($profomaData, $receiptDatas, $notes, $fileName);
+            $this->excel()->forLaison($profomaData, $receiptDatas, $notes, $fileName);
+            return $this->redirect("Receipt/index");
         }
         return $this->excel()->forHongkong($profomaData, $receiptDatas, $notes, $fileName);
 
@@ -151,7 +165,12 @@ class Receipt extends Base{
             $receiptData[$i]['type'] = $types[$i];
             $receiptData[$i]['specification'] = $specification[$i];
             $receiptData[$i]['unit'] = $unit[$i];
-            $receiptData[$i]['img'] = $img[$i];
+            if(!$img){
+                $receiptData[$i]['img'] = '';
+            }else{
+                $receiptData[$i]['img'] = $img[$i];
+            }
+
             $receiptData[$i]['qty'] = $qty[$i];
             $receiptData[$i]['price'] = $price[$i];
         }
@@ -265,7 +284,7 @@ class Receipt extends Base{
         $file_path = ROOT_PATH.DS.'public'.DS.'receipt'.DS.$fileName;
         //首先要判断给定的文件存在与否
         if(!file_exists($file_path)){
-            return $this->error("没有该文件");
+            return $this->error(Lang::get('file not exist'));
         }
 
         $fp=fopen($file_path,"r");
@@ -297,10 +316,10 @@ class Receipt extends Base{
         //$self = session('username');
         $delete = $this->receipts()->del($where);
         if (!$delete){
-            return $this->error('删除失败');
+            return $this->error(Lang::get('del fail'));
         }
         //弹出确认窗口
-        return $this->success('删除成功', 'Receipt/index');
+        return $this->success(Lang::get('del success'), 'Receipt/index');
     }
     /**
      * @return mixed

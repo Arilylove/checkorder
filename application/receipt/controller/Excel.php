@@ -9,6 +9,8 @@ namespace app\receipt\controller;
 
 use think\Controller;
 use think\Db;
+use think\Lang;
+
 class Excel extends Base {
 
     /**
@@ -44,7 +46,7 @@ class Excel extends Base {
        //var_dump($temPath);exit();
        //检查文件路径
        if(!file_exists($temPath)){
-           return $this->error('模板不存在');
+           return $this->error(Lang::get('model not exist'));
        }
        //加载模板
        $phpCreate =  \PHPExcel_IOFactory::createReader("Excel5");
@@ -68,7 +70,7 @@ class Excel extends Base {
        //var_dump($temPath);exit();
        //检查文件路径
        if(!file_exists($temPath)){
-           return $this->error('模板不存在');
+           return $this->error(Lang::get('model not exist'));
        }
        //加载模板
        $phpCreate =  \PHPExcel_IOFactory::createReader("Excel5");

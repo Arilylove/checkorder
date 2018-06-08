@@ -45,6 +45,9 @@ return [
     'upload file please'       =>'请上传文件',
     'upload excel file'        =>'请上传excel文件',
     'upload img file'          =>'请上传图片文件',
+    'type can not null'        =>'数据分类不能为空',
+    'file not exist'           =>'文件不存在',
+    'model not exist'          =>'模板不存在',
 
     //已存在错误提示
     'existed user'             =>'用户已存在',
