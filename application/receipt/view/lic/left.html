@@ -10,13 +10,13 @@
     <div class="menu_section">
         <h3>General</h3>
         <ul class="nav side-menu">
-            {if condition="$status eq 0"}
+            {if condition="$receipt_status eq 0"}
             <li><a><i class="fa fa-users"></i> 用户管理 <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
                     <li><a href="{:url('Admin/index')}">用户列表</a></li>
                 </ul>
             </li>
-            {elseif condition="$status eq 1"}
+            {elseif condition="$receipt_status eq 1"}
             <li><a><i class="fa fa-cogs"></i> 配置信息管理 <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
                     <li><a href="{:url('State/index')}">国家</a></li>

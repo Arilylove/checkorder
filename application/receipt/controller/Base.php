@@ -18,19 +18,22 @@ use app\receipt\model\States;
 use think\Controller;
 use think\Db;
 use app\receipt\crypt\AesCrypt;
+use think\Lang;
 
 class Base extends Controller{
     public function _initialize(){
         $username = session('receiptuser');
-        $status = session('status');
+        $status = session('receipt_status');
+        $surname = session('receipt_surname');
         $a = is_null($username);
         //var_dump($a);exit();
         //判断用户是否已经登录
         if ($a) {
-            return $this->error('对不起,您还没有登录!请先登录', 'Login/index');
+            return $this->error(Lang::get('login first,thanks'), 'Login/index');
         }
         $this->assign("username", $username);
-        $this->assign("status", $status);
+        $this->assign("receipt_status", $status);
+        $this->assign('receipt_surname', $surname);
         return true;
     }
    protected function state(){
@@ -233,7 +236,7 @@ class Base extends Controller{
         $where = array('username'=>$username);
         $admin = Db::table('admin')->where($where)->find();
         if (!$admin){
-            return $this->error('该用户不存在');
+            return $this->error(Lang::get('no user exist'));
         }
         //var_dump($admin['password']);exit();
         $this->assign('uid', $admin['uid']);
@@ -245,24 +248,24 @@ class Base extends Controller{
         $update = $string->encrypt(input('param.update'));
         $confirm = $string->encrypt(input('param.confirm'));
         if($password != $inputPassword){
-            return $this->error('密码输入错误');
+            return $this->error(Lang::get('pass wrong'));
         }
         if ($update == $password){
-            return $this->error('修改密码同原始密码相同');
+            return $this->error(Lang::get('same to old'));
         }
         if ($update == ''){
-            return $this->error('密码不能为空');
+            return $this->error(Lang::get('unallowed as null'));
         }
         if ($update != $confirm){
-            return $this->error('两次输入密码不相同');
+            return $this->error(Lang::get('two not same'));
         }
         $result = Db::table('admin')->where('username', $username)->update(['password'=>$update]);
         //var_dump($result);exit();
         if (!$result){
-            return $this->error('修改失败');
+            return $this->error(Lang::get('edit fail'));
         }
         session('receiptuser', null);
-        return $this->success('修改成功,返回登录界面', 'Login/index');
+        return $this->success(Lang::get('edit success'), 'Login/index');
 
     }
 

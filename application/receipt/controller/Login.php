@@ -6,6 +6,7 @@ use think\Controller;
 use think\Db;
 use org\Verify;
 use app\receipt\crypt\AesCrypt;
+use think\Lang;
 
 /*
 *登录控制器
@@ -31,27 +32,28 @@ class Login extends Controller{
         $hasAdmin = Db::table('admin')->where('username', $admin['username'])->find();
         //var_dump($hasAdmin['password']);exit();
         if (empty($hasAdmin)){
-            return $this->error('用户不存在');
+            return $this->error(Lang::get('no user exist'));
         }
 
         if ($admin['password'] != $hasAdmin['password']){
-            return $this->error('密码错误');
+            return $this->error(Lang::get('pass wrong'));
         }
         $code = input("post.code");
         //var_dump($username);exit;
         $verify = new Verify();
         $check = $verify->check($code);
         if (!$check){
-            return $this->error('验证码错误');
+            return $this->error(Lang::get('verify code wrong'));
         }
         //var_dump($admin['username']);exit();
         session('receiptuser', $admin['username']);
-        session('status', $hasAdmin['status']); //保存用户权限，判断是管理员还是用户。
+        session('receipt_status', $hasAdmin['status']); //保存用户权限，判断是管理员还是用户。
+        session('receipt_surname', $hasAdmin['surname']);
         //var_dump($hasAdmin['status']);exit;
         if ($hasAdmin['status'] == 0){
-            return $this->success('登录成功', 'Admin/index');
+            return $this->redirect('Admin/index');
         }
-        return $this->success('登录成功', 'State/index');
+        return $this->redirect('State/index');
 
     }
     //验证码

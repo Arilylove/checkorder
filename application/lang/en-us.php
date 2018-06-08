@@ -5,13 +5,13 @@
  * Date: 2018/5/28
  * Time: 17:30
  */
-namespace app\receipt\lang;
+namespace app\lang;
 
 
 /**
  * 语言包配置
  * Class Langs
- * @package app\order\lang
+ * @package app\lang
  */
 return [
     //登录提示

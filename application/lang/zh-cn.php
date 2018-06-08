@@ -12,7 +12,7 @@ use think\Lang;
 /**
  * 语言包配置
  * Class Langs
- * @package app\order\lang
+ * @package app\lang
  */
 return [
     //登录提示
@@ -48,6 +48,7 @@ return [
     'type can not null'        =>'数据分类不能为空',
     'file not exist'           =>'文件不存在',
     'model not exist'          =>'模板不存在',
+    'verify code wrong'        =>'验证码不正确',
 
     //已存在错误提示
     'existed user'             =>'用户已存在',
