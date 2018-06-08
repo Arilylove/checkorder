@@ -136,6 +136,7 @@ class Receipt extends Base{
                 }
             }
         }
+        //var_dump($notes);exit();
         //保存到数据库
         $add = $this->receipts()->add($sqlData, '');
         if($data['laison'] == 1){

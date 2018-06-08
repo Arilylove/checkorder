@@ -145,7 +145,7 @@ class Base extends Controller{
         $field = 'nid,note,create_time';
         $data = $this->notes()->select($field, $where);
         $jsonNote = json_encode($data);
-        $this->assign("jsonNotes", $jsonNote);
+        $this->assign("jsonnotes", $jsonNote);
     }
 
     /**

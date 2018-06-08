@@ -38,6 +38,8 @@ class Note extends Base{
     public function save(){
         $data = input('post.');
         $data['create_time'] = date('Y-m-d H:i:s', time());
+        //去除尾部空格
+        $data['note'] = trim($data['note'], " ");
         $result = $this->notes()->add($data, '');
         if(!$result){
             return $this->error(Lang::get('add fail'));
@@ -59,7 +61,8 @@ class Note extends Base{
         $len = count($note['note']);
         $notes = array([]);
         for($i=0;$i<$len;$i++){
-            $notes[$i]['note'] = $note['note'][$i];
+            //去除尾部空格
+            $notes[$i]['note'] = trim($note['note'][$i], " ");
             $notes[$i]['create_time'] = date('Y-m-d H:i:s', time());
         }
         $batchadd = $this->notes()->insertAll($notes, '');
@@ -83,6 +86,8 @@ class Note extends Base{
         $id = input('param.nid');
         $where = array('nid'=>$id);
         $data = input('post.');
+        //去除尾部空格
+        $data['note'] = trim($data['note'], " ");
         $edit = $this->notes()->update($data, $where);
         if(!$edit){
             return $this->error(Lang::get('edit fail'));

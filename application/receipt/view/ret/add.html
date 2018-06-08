@@ -283,6 +283,115 @@
 <script type="text/javascript" src="__RECORD__/ztree/jquery.ztree.exedit.js"></script>
 <script>
 
+    var setting = {
+        view: {
+            selectedMulti: true
+        },
+        check: {
+            enable: true,
+            autoCheckTrigger: true
+        },
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        edit: {
+            enable: false
+        }
+    };
+    setting.check.chkboxType = { "Y" : "s", "N" : "s" };
+
+
+    var data = '{$jsonnotes}'
+
+    data = JSON.parse(data)
+    var zNodes = []
+    var all = '全选';
+    zNodes[0] = {id:0, pId:0, name:all, open:true, isParent:true}
+    for(var i=1;i<data.length;i++){
+        zNodes[i] = {id:data[i].nid, pId:0, name:data[i].note}
+    }
+
+    $(document).ready(function(){
+        $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+        var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+
+        var nodes = treeObj.getChangeCheckedNodes()
+        //nodes = Json
+        //console.log(nodes)
+        var tree = '';
+        for(var i=1;i<nodes.length;i++){
+            var treeNode = nodes[i];
+            if(treeNode.checked == true){
+                tree += treeNode.id + ',';
+            }
+            //console.log((treeNode?treeNode.name:"root") + "checked " +(treeNode.checked?"true":"false"));
+        }
+        $("input[name='note']").val(tree)
+    });
+
+    var newCount = 1;
+    function addHoverDom(treeId, treeNode) {
+        var sObj = $("#" + treeNode.tId + "_span");
+        if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
+        /*var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+            + "' title='add node' onfocus='this.blur();'></span>";
+        sObj.after(addStr);*/
+        var btn = $("#addBtn_"+treeNode.tId);
+        if (btn) btn.bind("click", function(){
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+            zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name:"new node" + (newCount++)});
+            return false;
+        });
+    }
+    function removeHoverDom(treeId, treeNode) {
+        $("#addBtn_"+treeNode.tId).unbind().remove();
+    }
+
+    function receipt(){
+        var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+        var nodes = treeObj.getCheckedNodes();
+        //console.log(nodes,'nodesnodesnodesnodes')
+
+        var tree = '';
+        for(var i=1;i<nodes.length;i++){
+            var treeNode = nodes[i]
+            if(treeNode.checked == true){
+                tree += treeNode.id + ',';
+            }
+            //console.log((treeNode?treeNode.name:"root") + "checked " +(treeNode.checked?"true":"false"));
+        }
+        //console.log(tree)
+        $("input[name='note']").val(tree)
+        //获取所有输入的信息值
+        var model = $("select[name='laison']").val();
+        var sid = $("select[name='sid']").val();
+        var cid = $("select[name='cid']").val();
+        var type = $("select[name='type']").val();
+        var specification = $("select[name='specification']").val();
+        var unit = $("select[name='unit']").val();
+        var img = $("select[name='img']").val();
+        var qty = $("select[name='qty']").val();
+        var price = $("select[name='price']").val();
+        var amount = $("select[name='amount']").val();
+        var jsonData = {'laison':model,'sid':sid,'cid':cid,'type':type
+            ,'specification':specification,'unit':unit,'img':img,'qty':qty,'price':price,'amount':amount,'note':tree};
+        //console.log(jsonData)
+        //alert(jsonData)
+        $.ajax({
+            //几个参数需要注意一下
+            type: "POST",//方法类型
+            dataType: "json",//预期服务器返回的数据类型
+            url: "" ,//url
+            data: jsonData,
+            success: function (result) {
+                /*console.log(jsonData)
+                return true;*/
+            }
+        });
+    }
+
     var vaid = 0;
 
     $('#add').click(function(){
@@ -359,7 +468,7 @@
     function hidadd() {
         $('#add').addClass('hid');
     }
-    /*设置数据分类数据*/
+    // 设置数据分类数据
     function setData(dm_id,vaid) {
 
         $.post("{:url('Datas/one')}",{dm_id:dm_id},function(data){
@@ -369,115 +478,6 @@
 
             }
         },'json');
-    }
-
-    /*ztree*/
-    var setting = {
-        view: {
-            selectedMulti: true             /*允许选中多个节点*/
-        },
-        check: {
-            enable: true,
-            autoCheckTrigger: true
-        },
-        data: {
-            simpleData: {
-                enable: true
-            }
-        },
-        edit: {
-            enable: false
-        }
-    };
-    setting.check.chkboxType = { "Y" : "s", "N" : "s" };
-
-
-    var data = '{$jsonNotes}';
-    data = JSON.parse(data);
-    var zNodes = [];
-    for(var i=0;i<data.length;i++){
-        zNodes[i] = {id:data[i].nid, pId:0, name:data[i].note}
-    }
-
-    $(document).ready(function(){
-        $.fn.zTree.init($("#treeDemo"), setting, zNodes);
-        /*添加的*/
-        var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
-
-        var nodes = treeObj.getChangeCheckedNodes()
-        //nodes = Json
-        //console.log(nodes)
-        var tree = '';
-        for(var i=0;i<nodes.length;i++){
-            var treeNode = nodes[i];
-            if(treeNode.checked == true){
-                tree += treeNode.id + ',';
-            }
-            //console.log((treeNode?treeNode.name:"root") + "checked " +(treeNode.checked?"true":"false"));
-        }
-        $("input[name='tree']").val(tree)
-    });
-
-    var newCount = 1;
-    function addHoverDom(treeId, treeNode) {
-        var sObj = $("#" + treeNode.tId + "_span");
-        if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
-        /*var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
-            + "' title='add node' onfocus='this.blur();'></span>";
-        sObj.after(addStr);*/
-        var btn = $("#addBtn_"+treeNode.tId);
-        if (btn) btn.bind("click", function(){
-            var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-            zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name:"new node" + (newCount++)});
-            return false;
-        });
-    }
-    function removeHoverDom(treeId, treeNode) {
-        $("#addBtn_"+treeNode.tId).unbind().remove();
-    }
-
-    function receipt(){
-        var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
-        var nodes = treeObj.getCheckedNodes();
-        //console.log(nodes,'nodesnodesnodesnodes')
-
-        var tree = '';
-        for(var i=0;i<nodes.length;i++){
-            var treeNode = nodes[i]
-            if(treeNode.checked == true){
-                tree += treeNode.id + ',';
-            }
-            //console.log((treeNode?treeNode.name:"root") + "checked " +(treeNode.checked?"true":"false"));
-        }
-        //console.log(tree)
-        $("input[name='note']").val(tree)
-        //获取所有输入的信息值
-        var model = $("select[name='model']").val();
-        var newModel = $("input[name='new-model']").val();
-        var sid = $("select[name='sid']").val();
-        var cid = $("select[name='cid']").val();
-        var type = $("select[name='type']").val();
-        var specification = $("select[name='specification']").val();
-        var unit = $("select[name='unit']").val();
-        var img = $("select[name='img']").val();
-        var qty = $("select[name='qty']").val();
-        var price = $("select[name='price']").val();
-        var amount = $("select[name='amount']").val();
-        var jsonData = {'model':model,'new-model':newModel,'sid':sid,'cid':cid,'type':type
-            ,'specification':specification,'unit':unit,'img':img,'qty':qty,'price':price,'amount':amount,'note':tree};
-        //console.log(jsonData)
-        //alert(jsonData)
-        $.ajax({
-            //几个参数需要注意一下
-            type: "POST",//方法类型
-            dataType: "json",//预期服务器返回的数据类型
-            url: "{:url('Receipt/addRet')}" ,//url
-            data: jsonData,
-            success: function (result) {
-                console.log(jsonData)
-                return true;
-            }
-        });
     }
 
     /*wizard*/
