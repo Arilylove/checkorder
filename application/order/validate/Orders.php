@@ -12,11 +12,10 @@ use think\Validate;
 class Orders extends Validate{
 
     protected $rule=array(
-        'orderQty'=>'require|number',
+        'orderQty'=>'require',
     );
     protected $message=array(
-        'orderQty.require'=>'订单数量不能为空',
-        'orderQty.number'=>'订单数量为整数'
+        'orderQty.require'=>'订单数量不能为空'
     );
 
 }
