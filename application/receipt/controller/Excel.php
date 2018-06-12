@@ -53,6 +53,7 @@ class Excel extends Base {
        //var_dump($phpCreate);exit();
        $phpexcel = $phpCreate->load($temPath);
        return $this->exportReceipt($phpexcel, $profomaData, $receiptData, $notes, $fileName);
+
    }
 
     /**
@@ -226,7 +227,7 @@ class Excel extends Base {
         header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
         header("Pragma: no-cache");
         //同时保存到本地
-        $objWriter->save(ROOT_PATH.DS.'public'.DS.'receipt'.DS.$outputFileName);
+        $objWriter->save(ROOT_PATH.'public'.DS.'receipt'.DS.$outputFileName);
         $objWriter->save('php://output');
 
     }

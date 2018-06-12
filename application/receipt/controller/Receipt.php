@@ -138,13 +138,27 @@ class Receipt extends Base{
         }
         //var_dump($notes);exit();
         //保存到数据库
-        $add = $this->receipts()->add($sqlData, '');
+        //$add = $this->receipts()->add($sqlData, '');
         if($data['laison'] == 1){
             $this->excel()->forLaison($profomaData, $receiptDatas, $notes, $fileName);
-            return $this->redirect("Receipt/index");
+        }else{
+            $this->excel()->forHongkong($profomaData, $receiptDatas, $notes, $fileName);
         }
-        return $this->excel()->forHongkong($profomaData, $receiptDatas, $notes, $fileName);
 
+        return $this->redirect("Receipt/index");
+
+
+    }
+
+    /**
+     * 下载发票
+     */
+    public function upload(){
+        $re_id = input('param.re_id');
+        $find = $this->receipts()->findById(array('re_id'=>$re_id));
+        $fileName = $find['num'].'.xlsx';
+        //$fileName_path = ROOT_PATH.DS.'public'.DS.'receipt'.DS.$fileName;
+        return $this->downdetails($fileName);
     }
 
     /**
@@ -265,16 +279,6 @@ class Receipt extends Base{
         return $newNotes;
     }
 
-    /**
-     * 下载发票
-     */
-    public function upload(){
-        $re_id = input('param.re_id');
-        $find = $this->receipts()->findById(array('re_id'=>$re_id));
-        $fileName = $find['num'].'.xlsx';
-        //$fileName_path = ROOT_PATH.DS.'public'.DS.'receipt'.DS.$fileName;
-        return $this->downdetails($fileName);
-    }
 
     /**
      * 获取本地文件
@@ -282,7 +286,7 @@ class Receipt extends Base{
      */
     private function downdetails($fileName){
         header("Content-type:text/html;charset=utf-8");
-        $file_path = ROOT_PATH.DS.'public'.DS.'receipt'.DS.$fileName;
+        $file_path = ROOT_PATH.'public'.DS.'receipt'.DS.$fileName;
         //首先要判断给定的文件存在与否
         if(!file_exists($file_path)){
             return $this->error(Lang::get('file not exist'));
