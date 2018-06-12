@@ -16,7 +16,7 @@ use think\Lang;
 class Datas extends Base{
 
     public function index(){
-        $field = 'dm_id,type,specification,unit,img,create_time';
+        $field = 'dm_id,type,specification,unit,img,price,create_time';
         $where = '';
         $data = $this->datas()->selectPage($field, $where);
         $this->page($data);
@@ -27,7 +27,7 @@ class Datas extends Base{
     public function one(){
         $id = input('param.dm_id');
         $where = array('dm_id'=>$id);
-        $field = 'dm_id,type,specification,unit,img,create_time';
+        $field = 'dm_id,type,specification,unit,img,create_time,price';
         $data = $this->datas()->select($field, $where);
         echo json_encode($data);
     }
@@ -122,7 +122,7 @@ class Datas extends Base{
      */
     public function search(){
         $search = input('param.search');
-        $field = 'dm_id,type,specification,unit,img,create_time';
+        $field = 'dm_id,type,specification,unit,img,price,create_time';
         $where = array('note'=>['like', "%$search%"]);
         $data = $this->datas()->selectPage($field, $where);
         $this->page($data);

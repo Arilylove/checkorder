@@ -71,7 +71,7 @@
                           <th class="column-title">数据分类</th>
                           <th class="column-title">SPECIFICATION</th>
                           <th class="column-title">Unit</th>
-                          <!--<th class="column-title">Item picture</th>-->
+                          <th class="column-title">price</th>
                           <th class="column-title">创建日期</th>
                           <th class="column-title no-link last" style="text-align: center;"><span class="nobr">操作</span>
                           </th>
@@ -88,7 +88,7 @@
                           <td>{$v.type}</td>
                           <td>{$v.specification}</td>
                           <td>{$v.unit}</td>
-                          <!--<td><img src="__MODEL__/{$v.img}" alt="" height="60" width="100"></td>-->
+                          <td>{$v.price}</td>
                           <td>{$v.create_time}</td>
                           <td style="text-align: center;">
                             <a href="{:url('Datas/edit',['dm_id'=>$v['dm_id']])}" class="glyphicon glyphicon-edit" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;

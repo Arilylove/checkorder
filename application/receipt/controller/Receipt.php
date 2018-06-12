@@ -28,6 +28,7 @@ class Receipt extends Base{
         echo json_encode($data);
     }
 
+
     /**
      * 列表
      * */
@@ -278,7 +279,6 @@ class Receipt extends Base{
         }
         return $newNotes;
     }
-
 
     /**
      * 获取本地文件

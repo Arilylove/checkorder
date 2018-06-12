@@ -87,6 +87,17 @@ class Client extends Base{
         echo json_encode($data);
     }
     /**
+     * 由国家id查找全部客户
+     */
+    public function findsid(){
+        $sid = input('param.sid');
+        $where = array('sid'=>$sid);
+        $field = 'cid,sid,client,address,contacts,phone,email,create_time';
+        $data = $this->clients()->select($field, $where);
+        //var_dump(json_encode($data));exit();
+        echo json_encode($data);
+    }
+    /**
      * 跳转到客户信息编辑页面
      * @return mixed
      */
