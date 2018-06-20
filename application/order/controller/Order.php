@@ -304,6 +304,54 @@ class Order extends Base{
     }
 
     /**
+     * 根据输入的模块订单号导入： 订单数量，模块下单开始时间和模块下单结束时间
+     */
+    public function getModelNum(){
+        $modelNum = input('param.modelNum');
+        $where = array('modelNum'=>$modelNum);
+        //订单号升序
+        $order = 'oid asc';
+        $select = $this->orders()->orderSelect($where, $order);
+        //var_dump($select);exit();
+        $len = count($select);
+        $sum = 0;
+        //剩余量
+        $surplus = 0;
+        $oneModel = array(
+            'orderQty' => $surplus,
+            'modelStart' => '',
+            'modelEnd' => '',
+            'firstadd' =>'第一次添加'
+        );
+        if($len>0){
+            //1.获取第一个订单号的数量
+            $nums = $select['0']['orderQty'];
+            //2.循环输出每一个订单的订单数量总和(除去第一次添加的)
+            if($len > 1){
+                for ($i=1;$i<$len;$i++){
+                    $sum += $select[$i]['orderQty'];
+                }
+                //3.导出最后的剩余量
+                $surplus = $nums - $sum;
+            }else{
+                $surplus = $nums;
+            }
+            $firstadd = '';
+            $start = $select['0']['modelStart'];
+            $end = $select['0']['modelEnd'];
+            //传给前端的数据
+            $oneModel = array(
+                'orderQty' => $surplus,
+                'modelStart' => $start,
+                'modelEnd' => $end,
+                'firstadd' => $firstadd
+            );
+        }
+        //var_dump(json_encode($oneModel));exit();
+        echo json_encode($oneModel);
+    }
+
+    /**
      * 搜索
      */
     public function search(){
@@ -316,7 +364,7 @@ class Order extends Base{
         $cid = input('param.cid');
         $mfId = input('param.mfId');
         $orders = $this->orders()->join($meterNum, $deliveryStatus, $sid, $cid, $orderNum, $modelNum, $mfId);
-        var_dump($orders);exit();
+        //var_dump($orders);exit();
         $len = count($orders);
         //存在搜索的结果
         if($len >= 1){

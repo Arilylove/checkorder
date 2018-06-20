@@ -7,7 +7,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>修改订单</title>
-
+    <style>
+        .hidqty{
+            display: none;
+        }
+        .qty{
+            border:0;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+    </style>
 </head>
 
 <body class="nav-md">
@@ -101,13 +110,6 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">订单数量 <span class="required">*</span>
-                                            </label>
-                                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <input type="text" name="orderQty" value="{$order['orderQty']}" required="required" class="form-control col-md-7 col-xs-12">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelType">电子模块类型
                                             </label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
@@ -123,11 +125,18 @@
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelNum">模块订单号
                                             </label>
-                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="col-md-6 col-sm-6 col-xs-12" onchange="getModelNum()">
                                                 <input type="text" id="modelNum" name="modelNum" value="{$order['modelNum']}" class="form-control col-md-7 col-xs-12">
                                             </div>
                                         </div>
-
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">订单数量 <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" id="orderQty" name="orderQty" value="{$order['orderQty']}" required="required" class="form-control col-md-7 col-xs-12">
+                                            </div>
+                                            <input type="text" class="qty hidqty" name="hidqty">
+                                        </div>
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelStart">模块下单开始时间
                                             </label>
@@ -331,6 +340,36 @@
 <script src="__VENDOR__/starrr/dist/starrr.js"></script>
 <!-- Custom Theme Scripts -->
 <script src="__JS__/build/js/custom.min.js"></script>
+<script>
+    function getModelNum() {
+        var modelNum = $('#modelNum').val();
+        //console.log(modelNum)
+        $.ajax({
+            //几个参数需要注意一下
+            type: "POST",//方法类型
+            dataType: "json",//预期服务器返回的数据类型
+            url: "{:url('Order/getModelNum')}",//url
+            data: {'modelNum':modelNum},
+            success: function (result) {
+                var num = result.orderQty;
+                var start = result.modelStart;
+                var end = result.modelEnd;
+                var first = result.firstadd;
+                //console.log(num+','+start+','+end)
+                $('#orderQty').val(num)
+                $('#modelStart').val(start)
+                $('#modelEnd').val(end)
+                //console.log('success'+result)
+                $("input[name='hidqty']").removeClass('hidqty')
+                $("input[name='hidqty']").val(first)
 
+            },
+            error:function (result) {
+                //console.log('error'+result)
+                alert('服务出错')
+            }
+        });
+    }
+</script>
 </body>
 </html>

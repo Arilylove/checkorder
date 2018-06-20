@@ -115,6 +115,17 @@ class Orders{
         return $admin;
     }
 
+    /**
+     * 排序输出
+     * @param $where
+     * @param $order
+     * @return false|\PDOStatement|string|\think\Collection
+     */
+    public function orderSelect($where, $order){
+        $data = Db::table($this->tableName)->where($where)->order($order)->select();
+        return $data;
+    }
+
     public function count($where){
         $count = Db::table($this->tableName)->where($where)->count();
         return $count;
