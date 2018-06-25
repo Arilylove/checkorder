@@ -86,14 +86,25 @@ class Records{
         $pcId = $search['pcId'];
         $cid = $search['cid'];
         $solved = $search['solved'];
+        $where = array();
+        if($recorder != ''){
+            $where['recorder'] = $recorder;
+        }
+        if($pcId != ''){
+            $where['pcId'] = $pcId;
+        }
+        if($cid != ''){
+            $where['cid'] = $cid;
+        }
+        if($solved != ''){
+            $where['solved'] = $solved;
+        }
         $num = 10;
         $count = Db::table($this->tableName)
-            ->where("recorder", 'like', "%$recorder%")->where('pcId', 'like', "%$pcId%")
-            ->where("cid", 'like', "%$cid%")->where('solved', 'like', "%$solved%")
+            ->where($where)
             ->count();
         $record = Db::table($this->tableName)
-            ->where("recorder", 'like', "%$recorder%")->where('pcId', 'like', "%$pcId%")
-            ->where("cid", 'like', "%$cid%")->where('solved', 'like', "%$solved%")
+            ->where($where)
             ->paginate($num, $count, ['query' => request()->param()]);
         return $record;
     }
@@ -106,9 +117,20 @@ class Records{
         $pcId = $search['pcId'];
         $cid = $search['cid'];
         $solved = $search['solved'];
-        $data = Db::table($this->tableName)
-            ->where("recorder", 'like', "%$recorder%")->where('pcId', 'like', "%$pcId%")
-            ->where("cid", 'like', "%$cid%")->where('solved', 'like', "%$solved%")->select();
+        $where = array();
+        if($recorder != ''){
+            $where['recorder'] = $recorder;
+        }
+        if($pcId != ''){
+            $where['pcId'] = $pcId;
+        }
+        if($cid != ''){
+            $where['cid'] = $cid;
+        }
+        if($solved != ''){
+            $where['solved'] = $solved;
+        }
+        $data = Db::table($this->tableName)->where($where)->select();
         $sum = 0.0;
         foreach ($data as $v){
             $sum += $v['solveCycle'];
