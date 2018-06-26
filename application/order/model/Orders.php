@@ -109,9 +109,9 @@ class Orders{
      * @param $count
      * @return \think\paginator\Collection
      */
-    public function selectPage($where, $count){
+    public function selectPage($where, $count, $order){
         $num = 10;
-        $admin = Db::table($this->tableName)->where($where)->paginate($num, $count, ['query' => request()->param()]);
+        $admin = Db::table($this->tableName)->where($where)->order($order)->paginate($num, $count, ['query' => request()->param()]);
         return $admin;
     }
 
@@ -157,7 +157,7 @@ class Orders{
      * @param $count
      * @return \think\paginator\Collection
      */
-    public function join($meterNum, $deliveryStatus, $sid, $cid, $orderNum, $modelNum, $mfId){
+    public function join($meterNum, $deliveryStatus, $sid, $cid, $orderNum, $modelNum, $mfId, $ord){
         $num = 10;
         $where = array();
         //需要多层判断（如果为空则不执行）
@@ -184,7 +184,7 @@ class Orders{
             $where['mfId'] = $mfId;
         }
         $count = Db::table($this->tableName)->where($where)->count();
-        $orders = Db::table($this->tableName)->where($where)->paginate($num, $count, ['query'=>request()->param()]);
+        $orders = Db::table($this->tableName)->where($where)->order($ord)->paginate($num, $count, ['query'=>request()->param()]);
         return $orders;
     }
 
