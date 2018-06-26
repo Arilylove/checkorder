@@ -155,6 +155,9 @@ class Order extends Base{
         $oneModel = $this->sumQty($order['modelNum']);
         $order['surplus'] = $oneModel['modelQty'];
         $this->assign('order', $order);
+        $page = input('param.page');
+        //var_dump($query);exit();
+        $this->assign('currentPage', $page);
         return $this->fetch("ord/update");
     }
 
@@ -263,8 +266,10 @@ class Order extends Base{
                 $addMeter = $this->meters()->add($meters, '');
             }
         }
-
-        return $this->success(Lang::get('edit success'), 'Order/index');
+        $page = input('param.page');
+        $data = '?page='.$page;
+        $url = url('Order/index').$data;
+        return $this->success(Lang::get('edit success'), $url);
 
     }
 
@@ -311,6 +316,9 @@ class Order extends Base{
         $order = $this->orders()->findById(array('oid'=>$oid));
         $order = $this->getOneJoinId($order);
         $this->assign('order', $order);
+        $page = input('param.page');
+        //var_dump($query);exit();
+        $this->assign('currentPage', $page);
         return $this->fetch("ord/view");
     }
 
@@ -431,7 +439,7 @@ class Order extends Base{
         }
         $rate = 6.5;
         $newOrders = $this->graphM($rate);
-        //var_dump($newOrder);exit();
+        //var_dump($newOrders);exit();
         $this->assign('graphyM', $newOrders);
         return $this->fetch("ord/graphym");
     }
@@ -840,6 +848,8 @@ class Order extends Base{
                 $newOrder[$i]['sid'] = $sid;
                 $newOrder[$i]['state'] = $findSid['state'];
                 $newOrder[$i]['value'] = number_format($sumAmounts, 2);
+                //去除分隔符
+                $newOrder[$i]['value'] = str_replace(',', '', $newOrder[$i]['value']);
                 $i++;
             }
         }
@@ -894,6 +904,8 @@ class Order extends Base{
                 $newOrder[$i]['cid'] = $cid;
                 $newOrder[$i]['client'] = $findCid['client'];
                 $newOrder[$i]['value'] = number_format($sumAmounts, 2);
+                //去除分隔符
+                $newOrder[$i]['value'] = str_replace(',', '', $newOrder[$i]['value']);
                 $i++;
             }
         }
@@ -939,17 +951,50 @@ class Order extends Base{
         //$rate = input('param.rate');
         //一维数组
         $orders = $this->groupMeterId($rate);
+        //var_dump($orders);exit();
         $len = count($orders);
         //$newOrder = array();
         if($len > 0){
             $i=0;
             foreach ($orders as $meterId=>$sumAmounts){
                 $findMeterId = $this->meterTypes()->findById(array('meterId'=>$meterId));
-                $newOrder[$i]['meterId'] = $meterId;
-                $newOrder[$i]['meterType'] = $findMeterId['meterType'];
-                $newOrder[$i]['value'] = number_format($sumAmounts, 2);
-                $i++;
+                $pid = $findMeterId['pid'];
+                //判断是否主类
+                //如果是主类，直接输出
+                //如果不是主类，找到主类meterId,分类的订单金额
+                if($pid == 0){
+                    $newOrder[$meterId]['meterId'] = $meterId;
+                    $newOrder[$meterId]['meterType'] = $findMeterId['meterType'];
+                    $newOrder[$meterId]['value']['0'] = number_format($sumAmounts, 2);
+                    //去除分隔符
+                    $newOrder[$meterId]['value']['0'] = str_replace(',','', $newOrder[$meterId]['value']['0']);
+                }else{
+                    $newOrder[$pid]['meterId'] = $pid;
+                    $findNew = $this->meterTypes()->findById(array('meterId'=>$pid));
+                    $newOrder[$pid]['meterType'] = $findNew['meterType'];
+                    $newOrder[$pid]['value'][$meterId] = number_format($sumAmounts, 2);
+                    //去除分隔符
+                    $newOrder[$pid]['value'][$meterId] = str_replace(',', '', $newOrder[$pid]['value'][$meterId]);
+                }
+
             }
+            //var_dump($newOrder);exit();
+            //继续做处理，计算各类订单value
+            foreach ($newOrder as $meterId=>$value){
+                $everyValue = $value['value'];
+                //var_dump($everyValue);
+                $tempSumValue = 0;
+                foreach ($everyValue as $v){
+                    $tempSumValue += $v;
+                }
+                //var_dump($tempSumValue);
+                $value['value'] = number_format($tempSumValue, 2);
+                //去除分隔符
+                $value['value'] = str_replace(',', '', $value['value']);
+                $tempOrder[] = $value;
+            }
+            //需要重新组合
+            $newOrder = $tempOrder;
         }
         $newOrders = json_encode($newOrder);
         return $newOrders;
@@ -961,8 +1006,10 @@ class Order extends Base{
      */
     private function groupMeterId($rate){
         $orders = $this->calSumByRate($rate);
+        //var_dump($orders);exit();
         //var_dump($orders);
         $len = count($orders);
+        //同一个基表型号属于一类
         $sameMeterId = array();
         $firstMeterId = $orders['0']['meterId'];
         $sameMeterId[$firstMeterId]['0'] = $orders['0']['sumAmounts'];
@@ -1004,11 +1051,11 @@ class Order extends Base{
             for($i=0;$i<$len;$i++){
                 if($orders[$i]['sumUnits'] == '$'){
                     $temp = floatval($orders[$i]['sumAmounts'] * $rate);
-                    $orders[$i]['sumAmounts'] = number_format($temp, 2);
+                    $orders[$i]['sumAmounts'] = $temp;
 
                 }else{
                     $temp = floatval($orders[$i]['sumAmounts']);
-                    $orders[$i]['sumAmounts'] = number_format($temp, 2);
+                    $orders[$i]['sumAmounts'] = $temp;
                 }
             }
         }

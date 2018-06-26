@@ -50,7 +50,7 @@
                                 </div>
                                 <div class="x_content">
                                     <br />
-                                    <form id="demo-form2" method="post" action="{:url('MeterType/editMT')}" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
+                                    <form id="demo-form2" method="post" action="{:url('MeterType/editMT',['page'=>$currentPage])}" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
                                         <input type="hidden" name="meterId" value="{$meterTypes['meterId']}"/>
 
                                         <div class="form-group">
@@ -60,12 +60,23 @@
                                                 <input type="text" id="first-name" name="meterType" value="{$meterTypes['meterType']}" required="required" class="form-control col-md-7 col-xs-12">
                                             </div>
                                         </div>
-
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">分类 <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <select name="pid" id="pid" class="form-control col-md-7 col-xs-12">
+                                                    <option value="0">主类</option>
+                                                    {volist name='allPids' id='v'}
+                                                    <option value="{$v['meterId']}">{$v.meterType}</option>
+                                                    {/volist}
+                                                </select>
+                                            </div>
+                                        </div>
 
                                         <div class="ln_solid"></div>
                                         <div class="form-group">
                                             <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                                                <a class="btn btn-primary" href="{:url('MeterType/index')}" type="button">取消</a>
+                                                <a class="btn btn-primary" href="{:url('MeterType/index')}?page={$currentPage}" type="button">取消</a>
 
                                                 <button type="submit" class="btn btn-success">确定</button>
                                             </div>

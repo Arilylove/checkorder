@@ -18,9 +18,10 @@ class MeterType extends Base
 {
     public function index(){
         $this->authVerify();
-        $field = 'meterId,meterType';
+        $field = 'meterId,meterType,pid';
         $count = $this->meterTypes()->count('');
         $meterTypes = $this->meterTypes()->selectPage($field, '', $count);
+        $meterTypes = $this->dealMeterType($meterTypes);
         $this->page($meterTypes);
         $this->assign('meterTypes', $meterTypes);
         return $this->fetch("met/index");
@@ -34,8 +35,12 @@ class MeterType extends Base
         if(!$auth){
             return $this->error(Lang::get('no authority'));
         }
+        //获取所有主类
+        $allPid = $this->getAllPid();
+        $this->assign('allPids', $allPid);
         return $this->fetch('met/add');
     }
+
 
     /**
      * 添加action
@@ -74,6 +79,9 @@ class MeterType extends Base
         if(!$auth){
             return $this->error(Lang::get('no authority'));
         }
+        //获取所有主类
+        $allPid = $this->getAllPid();
+        $this->assign('allPids', $allPid);
         return $this->fetch('met/batchadd');
     }
 
@@ -86,6 +94,7 @@ class MeterType extends Base
             return $this->error(Lang::get('no authority'));
         }
         $post = input('post.');
+        $pid = $post['pid'];
         $meterType = $post['meterType'];
         //1.先验证都通过了
         for ($i=0;$i<count($meterType);$i++){
@@ -96,6 +105,7 @@ class MeterType extends Base
                 return $this->error(" $validate ");
             }
             $insertAll[$i]['meterType'] = $meterType[$i];
+            $insertAll[$i]['pid'] = $pid[$i];
         }
         //2.再批量添加
         $result = $this->meterTypes()->insertAll($insertAll);
@@ -112,7 +122,7 @@ class MeterType extends Base
      */
     public function meterType(){
         $meterId = input('param.meterId');
-        $field = 'meterId,meterType';
+        $field = 'meterId,meterType,pid';
         $where = array('meterId'=>$meterId);
         $data = $this->meterTypes()->select($field, $where);
         //var_dump($data);
@@ -128,13 +138,20 @@ class MeterType extends Base
         if(!$auth){
             return $this->error(Lang::get('no authority'));
         }
+        //1.当前数据
         $meterId = input('param.meterId');
-        $field = 'meterId,meterType';
         $where = array('meterId'=>$meterId);
-        $data = $this->meterTypes()->select($field, $where);
-        $this->assign('meterTypes', $data['0']);
+        $data = $this->meterTypes()->findById($where);
+        $this->assign('meterTypes', $data);
+        //2.所有主类
+        $allPid = $this->getAllPid();
+        $this->assign('allPids', $allPid);
+        $page = input('param.page');
+        //var_dump($query);exit();
+        $this->assign('currentPage', $page);
         return $this->fetch('met/update');
     }
+
 
     /**
      * 更新action
@@ -144,6 +161,7 @@ class MeterType extends Base
         if(!$auth){
             return $this->error(Lang::get('no authority'));
         }
+        //var_dump($page);exit();
         $meterId = input('param.meterId');
         $where = array('meterId'=>$meterId);
         $find = $this->meterTypes()->findById($where);
@@ -160,7 +178,10 @@ class MeterType extends Base
         if($result < 1){
             return $this->error(Lang::get('edit fail'));
         }
-        return $this->success(Lang::get('edit success'), 'MeterType/index');
+        $page = input('param.page');
+        $data = '?page='.$page;
+        $url = url('MeterType/index').$data;
+        return $this->success(Lang::get('edit success'), $url);
     }
 
     /**
@@ -209,6 +230,50 @@ class MeterType extends Base
         return $this->fetch('met/index');
     }
 
+    /**
+     * 获取所有主类
+     * @return false|\PDOStatement|string|\think\Collection
+     */
+    private function getAllPid(){
+        $field = 'meterId,meterType,pid';
+        $where = array('pid'=>0);
+        $allPid = $this->meterTypes()->select($field, $where);
+        return $allPid;
+    }
 
+    /**
+     * 获取每一个订单的主类名
+     * @param $datas
+     */
+    private function dealMeterType($datas){
+        $len = count($datas);
+        if($len > 0){
+            for($i=0;$i<$len;$i++){
+                $datas[$i] = $this->dealOne($datas[$i]);
+            }
+        }
+        return $datas;
 
+    }
+
+    /**
+     * 获取一个订单的主类名
+     * @param $data
+     * @return mixed
+     */
+    private function dealOne($data){
+        $len = count($data);
+        if($len > 0){
+            $pid = $data['pid'];
+            if($pid == 0){
+                $data['parentType'] = '主类';
+            }else{
+                $find = $this->meterTypes()->findById(array('meterId'=>$pid));
+                $data['parentType'] = $find['meterType'];
+            }
+        }else{
+            $data['parentType'] = '';
+        }
+        return $data;
+    }
 }

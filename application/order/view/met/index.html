@@ -69,6 +69,7 @@
                                                 <input type="checkbox" id="check-all" class="flat">
                                             </th>
                                             <th>基表型号编号</th>
+                                            <th>分类</th>
                                             <th>基表型号</th>
                                             <th class="column-title no-link last" style="text-align: center;"><span class="nobr">操作</span>
                                             </th>
@@ -83,10 +84,11 @@
                                                 <input type="checkbox" class="flat" name="table_records">
                                             </td>
                                             <td>{$v.meterId}</td>
+                                            <td>{$v.parentType}</td>
                                             <td>{$v.meterType}</td>
                                             <td style="text-align: center;">
                                                 {if condition="in_array('MeterType',$ownways['w_control']) && in_array('eMT',$ownways['w_way'])"}
-                                                <a href="{:url('MeterType/eMT',['meterId'=>$v['meterId']])}" title="修改" class="glyphicon glyphicon-edit" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
+                                                <a href="{:url('MeterType/eMT',['meterId'=>$v['meterId'],'page'=>$currentPage])}" title="修改" class="glyphicon glyphicon-edit" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;
                                                 {/if}
                                                 {if condition="in_array('MeterType',$ownways['w_control']) && in_array('dMT',$ownways['w_way'])"}
                                                 <a href="javascript:void (0);" title="删除" class="glyphicon glyphicon-remove class-del" onclick=confirmDel("{$v['meterId']}") style="color: red;font-size: 18px;"></a>

@@ -59,6 +59,18 @@
                           <input type="text" name="meterType[]" required="required" class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">分类 <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <select name="pid[]" id="pid" class="form-control col-md-7 col-xs-12">
+                            <option value="0">主类</option>
+                            {volist name='allPids' id='v'}
+                            <option value="{$v['meterId']}">{$v.meterType}</option>
+                            {/volist}
+                          </select>
+                        </div>
+                      </div>
                       <div class="form-group"></div>
                       <div class="form-group" id="met1"></div>
                       <div class="col-sm-2 col-md-2 col-xs-6 col-lg-2 col-md-offset-2 col-sm-offset-2 col-lg-offset-2">
@@ -123,18 +135,34 @@
     <script src="__JS__/build/js/custom.min.js"></script>
   <script>
       $('#add').click(function(){
-          $('<div class="form-group">'+
-                '<label class="control-label col-md-3 col-sm-3 col-xs-12">基表型号 <span class="required">*</span>'+
-                '</label>'+
-                '<div class="col-md-6 col-sm-6 col-xs-12">'+
-                  '<input type="text" name="meterType[]" required="required" class="form-control col-md-7 col-xs-12">'+
-                '</div><button type="button" class="delHi">删除</button>'+
-              '</div>').appendTo('#met1')
+          $(`<div id="fordel">
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">基表型号 <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <input type="text" name="meterType[]" required="required" class="form-control col-md-7 col-xs-12">
+                </div>
+              </div>
+               <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">分类 <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select name="pid[]" id="pid" class="form-control col-md-7 col-xs-12">
+                      <option value="0">主类</option>
+                      {volist name='allPids' id='v'}
+                      <option value="{$v['meterId']}">{$v.meterType}</option>
+                      {/volist}
+                    </select>
+                  </div>
+                  <button type="button" class="delHi">删除</button>
+                </div>
+                </div>
+            `).appendTo('#met1')
       })
       $(function(){
           $('.x_content').delegate(".delHi","click",function(){
               //alert(123);
-              $(this).parent('div').remove();
+              $(this).closest('#fordel').remove();
           })
       })
 

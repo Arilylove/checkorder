@@ -131,6 +131,7 @@
     function defaultRate(myChartM) {
         var graphM = '{$graphyM}';
         graphM = JSON.parse(graphM);
+        //console.log(graphM)
         changeRate(graphM, myChartM)
     }
 
@@ -202,7 +203,7 @@
             success: function (result) {
                 //console.log(result)
                 var graph = result;
-                changeRate(graph, myChart);
+                changeRate(graph, myChartM);
             },
             error:function (result) {
                 //console.log('error'+result)
