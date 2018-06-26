@@ -131,10 +131,10 @@
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">订单金额
                                             </label>
-                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="col-md-6 col-sm-6 col-xs-6">
                                                 <input type="text" id="sumAmounts" name="sumAmounts" value="{$order['sumAmounts']}" required="required" class="form-control col-md-7 col-xs-12">
                                             </div>
-                                            <div class="col-md-2 col-sm-2 col-xs-12">
+                                            <div class="col-md-2 col-sm-2 col-xs-6">
                                                 <select name="sumUnits" id="sumUnits" class="form-control col-md-7 col-xs-12">
                                                     {if condition="$order['sumUnits'] eq '$'"}
                                                     <option value="$">美元（$）</option>
@@ -159,7 +159,7 @@
                                             <div class="col-md-6 col-sm-6 col-xs-12">
                                                 <input type="text" id="modelQty" name="modelQty" value="{$order['modelQty']}" class="form-control col-md-7 col-xs-12">
                                             </div>
-                                            <input type="text" id="surplus" style="border: 0;" placeholder="剩余模块:{$order['surplus']}"/>
+                                            <input type="text" class="col-md-3 col-sm-3 col-xs-12" id="surplus" style="border: 0;margin-top: 2px;" placeholder="剩余模块:{$order['surplus']}(当前订单数量已减)"/>
                                             <input type="text" class="qty hidqty" name="hidqty">
                                         </div>
 
