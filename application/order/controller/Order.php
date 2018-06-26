@@ -26,7 +26,8 @@ class Order extends Base{
             $where = array('sale_id'=>$sale_id);
         }
         $count = $this->orders()->count($where);
-        $orders = $this->orders()->selectPage($where, $count);
+        $ord = 'oid asc';
+        $orders = $this->orders()->selectPage($where, $count, $ord);
         $order = $this->getJoinId($orders);
         //var_dump($sql);
         $this->page($order);
@@ -329,7 +330,8 @@ class Order extends Base{
         $sid = input('param.sid');
         $cid = input('param.cid');
         $mfId = input('param.mfId');
-        $orders = $this->orders()->join($meterNum, $deliveryStatus, $sid, $cid, $orderNum, $modelNum, $mfId);
+        $ord = 'oid asc';
+        $orders = $this->orders()->join($meterNum, $deliveryStatus, $sid, $cid, $orderNum, $modelNum, $mfId, $ord);
         //var_dump($orders);exit();
         $len = count($orders);
         //存在搜索的结果
@@ -737,7 +739,6 @@ class Order extends Base{
      * @return array
      */
     private function sumQty($modelNum){
-
         $where = array('modelNum'=>$modelNum);
         //订单号升序
         $order = 'oid asc';
@@ -751,21 +752,22 @@ class Order extends Base{
             'modelQty' => $surplus,
             'modelStart' => '',
             'modelEnd' => '',
-            'firstadd' =>'模块总数量'
+            'firstadd' =>'输入模块总数量'
         );
         if($len>0){
-            //1.获取第一个订单号的数量
+            //1.获取第一个订单号的模块数量和订单数量
             $nums = $select['0']['modelQty'];
-            //2.循环输出每一个订单的模块数量总和(除去第一次添加的)
-            if($len > 1){
-                for ($i=1;$i<$len;$i++){
-                    $sum += $select[$i]['modelQty'];
-                }
-                //3.导出最后的剩余量
-                $surplus = $nums - $sum;
-            }else{
-                $surplus = $nums;
+            //$orderQty = $select['0']['orderQty'];
+            //订单数量有的会有括号，需要做处理
+            //$orderQty = $this->dealBraces($orderQty);
+            //2.循环输出每一个订单的订单数量总和
+            for ($i=0;$i<$len;$i++){
+                $everyQty = $select[$i]['orderQty'];
+                $everyQty = $this->dealBraces($everyQty);
+                $sum += $everyQty;
             }
+            //3.导出最后的剩余量（总的模块数量减去用掉的订单数量）
+            $surplus = $nums - $sum;
             $firstadd = '';
             $start = $select['0']['modelStart'];
             $end = $select['0']['modelEnd'];
@@ -778,6 +780,44 @@ class Order extends Base{
             );
         }
         return $oneModel;
+    }
+
+    /**
+     * 订单数量不是数字的处理（括号处理）
+     */
+    private function dealBraces($orderQty){
+        //先判断是否包含括号(中英文格式都要判断)
+        $start = 0;
+        $end = 0;
+        //1.英文开头
+        $eStart = strpos($orderQty, '(');
+        if($eStart){
+            $start = $eStart;
+        }
+        //2.英文结束
+        $eEnd = strpos($orderQty, ')');
+        if($eEnd){
+            $end = $eEnd;
+        }
+        //3.中文开头
+        $zStart = strpos($orderQty, '（');
+        if($zStart){
+            //将中英文字符替换
+            $orderQty = str_replace('（', '(', $orderQty);
+            $start = strpos($orderQty, '(');
+        }
+        //4.中文结束
+        $zEnd = strpos($orderQty, '）');
+        if($zEnd){
+            //将中英文字符替换
+            $orderQty = str_replace('）', ')', $orderQty);
+            $end = strpos($orderQty, ')');
+        }
+        if($start && $end){
+            $len = $end-$start-1;
+            $orderQty = substr($orderQty, $start+1, $len);
+        }
+        return $orderQty;
     }
     //获取json值
     private function graphS($rate){
