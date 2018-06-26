@@ -87,6 +87,7 @@
                                             <th>生产状态</th>
                                             <th>发货状态</th>
                                             <th>模块订单号</th>
+                                            <th>模块数量</th>
                                             <th>模块订单周期(天)</th>
                                             <th>基表组装周期(天)</th>
                                             <th>基表订单号</th>
@@ -96,6 +97,7 @@
                                             <th>客户化工具</th>
                                             <th>生产数据校验</th>
                                             <th>备注说明</th>
+                                            <th>订单金额（单位）</th>
                                             <th style="text-align: center;"><span>操作</span></th>
                                         </tr>
                                         </thead>
@@ -122,6 +124,7 @@
                                             <td>否</td>
                                             {/if}
                                             <td>{$v.modelNum}</td>
+                                            <td>{$v.modelQty}</td>
                                             <td>{$v.orderCycle}</td>
                                             <td>{$v.assemCycle}</td>
                                             <td>{$v.orderNum}</td>
@@ -139,6 +142,7 @@
                                             <td>否</td>
                                             {/if}
                                             <td>{$v.comments}</td>
+                                            <td>{$v.sumAmounts}&nbsp;({$v.sumUnits})</td>
                                             <td>
                                                 {if condition="in_array('Order',$ownways['w_control']) && in_array('view',$ownways['w_way'])"}
                                                 <a href="{:url('Order/view',['oid'=>$v['oid']])}" title="查看明细" class="glyphicon glyphicon-sunglasses" style="color: #00a0e9;font-size: 18px;"></a>&nbsp;&nbsp;

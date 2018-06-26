@@ -76,6 +76,7 @@ class Order extends Base{
         if(true !== $validate){
             return $this->error(" $validate ");
         }
+
         $startLen = strlen($orders['meterStart']);
         $endLen = strlen($orders['meterEnd']);
        /* var_dump($startLen);
@@ -103,7 +104,7 @@ class Order extends Base{
             $orders['assemCycle'] = 0;
         }
         //var_dump($orders);exit();
-
+        unset($orders['hidqty']);
         $addOrder = $this->orders()->add($orders, '');
         if($addOrder < 1){
             return $this->error(Lang::get('add fail'));
@@ -147,6 +148,9 @@ class Order extends Base{
         $order = $this->orders()->findById(array('oid'=>$oid));
         //国家，客户，基表型号，电子模块类型，制造商，生产负责人
         $order = $this->getOneJoinId($order);
+        //根据modelNum查询剩余模块数量
+        $oneModel = $this->sumQty($order['modelNum']);
+        $order['surplus'] = $oneModel['modelQty'];
         $this->assign('order', $order);
         return $this->fetch("ord/update");
     }
@@ -224,6 +228,7 @@ class Order extends Base{
 
         /*var_dump($meterStart);
         var_dump($meterEnd);exit();*/
+        unset($orders['hidqty']);
         $edit = $this->orders()->update($orders, $where);
         if($edit < 1){
             return $this->error(Lang::get('edit fail'));
@@ -262,7 +267,7 @@ class Order extends Base{
      */
     public function order(){
         $oid = input('param.oid');
-        $field = "oid,state";
+        $field = "oid,sid";
         $where = array('oid'=>$oid);
         $data = $this->orders()->select($field, $where);
         //var_dump($data);
@@ -304,50 +309,11 @@ class Order extends Base{
     }
 
     /**
-     * 根据输入的模块订单号导入： 订单数量，模块下单开始时间和模块下单结束时间
+     * 根据输入的模块订单号导入： 模块数量，模块下单开始时间和模块下单结束时间
      */
     public function getModelNum(){
         $modelNum = input('param.modelNum');
-        $where = array('modelNum'=>$modelNum);
-        //订单号升序
-        $order = 'oid asc';
-        $select = $this->orders()->orderSelect($where, $order);
-        //var_dump($select);exit();
-        $len = count($select);
-        $sum = 0;
-        //剩余量
-        $surplus = 0;
-        $oneModel = array(
-            'orderQty' => $surplus,
-            'modelStart' => '',
-            'modelEnd' => '',
-            'firstadd' =>'第一次添加'
-        );
-        if($len>0){
-            //1.获取第一个订单号的数量
-            $nums = $select['0']['orderQty'];
-            //2.循环输出每一个订单的订单数量总和(除去第一次添加的)
-            if($len > 1){
-                for ($i=1;$i<$len;$i++){
-                    $sum += $select[$i]['orderQty'];
-                }
-                //3.导出最后的剩余量
-                $surplus = $nums - $sum;
-            }else{
-                $surplus = $nums;
-            }
-            $firstadd = '';
-            $start = $select['0']['modelStart'];
-            $end = $select['0']['modelEnd'];
-            //传给前端的数据
-            $oneModel = array(
-                'orderQty' => $surplus,
-                'modelStart' => $start,
-                'modelEnd' => $end,
-                'firstadd' => $firstadd
-            );
-        }
-        //var_dump(json_encode($oneModel));exit();
+        $oneModel = $this->sumQty($modelNum);
         echo json_encode($oneModel);
     }
 
@@ -379,6 +345,102 @@ class Order extends Base{
         return $this->fetch("ord/index");
 
     }
+
+    /**
+     * 统计报表
+     */
+    public function graph(){
+        $this->statByState();
+        $this->statByClient();
+        $this->statByMeter();
+        return $this->fetch("ord/graphys");
+    }
+    /**
+     * 统计报表-按国家分类
+     */
+    public function statByState(){
+        $auth = $this->auth('Order', 'graphs');
+        if(!$auth){
+            return $this->error(Lang::get('no authority'));
+        }
+        $rate = 6.5;
+        $newOrders = $this->graphS($rate);
+        //var_dump($newOrders);exit();
+        $this->assign('graphyS', $newOrders);
+        return $this->fetch("ord/graphys");
+    }
+
+    /**
+     * 实时改变汇率，改变值--国家
+     */
+    public function jsonGraphS(){
+        $auth = $this->auth('Order', 'graphs');
+        if(!$auth){
+            return $this->error(Lang::get('no authority'));
+        }
+        $rate = input('param.rate');
+        $newOrders = $this->graphS($rate);
+        echo $newOrders;
+    }
+
+    /**
+     * 统计报表-按客户分类
+     */
+    public function statByClient(){
+        $auth = $this->auth('Order', 'graphc');
+        if(!$auth){
+            return $this->error(Lang::get('no authority'));
+        }
+        $rate = 6.5;
+        $newOrders = $this->graphC($rate);
+        //var_dump($newOrder);exit();
+        $this->assign('graphyC', $newOrders);
+        return $this->fetch("ord/graphyc");
+    }
+
+    /**
+     * 实时改变汇率，改变值--客户
+     */
+    public function jsonGraphC(){
+        $auth = $this->auth('Order', 'graphc');
+        if(!$auth){
+            return $this->error(Lang::get('no authority'));
+        }
+        $rate = input('param.rate');
+        $newOrders = $this->graphC($rate);
+        echo $newOrders;
+
+    }
+
+
+    /**
+     * 统计报表-按表型（基表型号？）分类
+     */
+    public function statByMeter(){
+        $auth = $this->auth('Order', 'graphm');
+        if(!$auth){
+            return $this->error(Lang::get('no authority'));
+        }
+        $rate = 6.5;
+        $newOrders = $this->graphM($rate);
+        //var_dump($newOrder);exit();
+        $this->assign('graphyM', $newOrders);
+        return $this->fetch("ord/graphym");
+    }
+
+    /**
+     * 实时改变汇率改变值--基表型号
+     */
+    public function jsonGraphM(){
+        $auth = $this->auth('Order', 'graphm');
+        if(!$auth){
+            return $this->error(Lang::get('no authority'));
+        }
+        $rate = input('param.rate');
+        $newOrders = $this->graphM($rate);
+        echo $newOrders;
+    }
+
 
     /**
      * 导出订单excel
@@ -669,5 +731,244 @@ class Order extends Base{
         }
         return $data;
     }
+
+    /**
+     * 获取剩余模块数量
+     * @return array
+     */
+    private function sumQty($modelNum){
+
+        $where = array('modelNum'=>$modelNum);
+        //订单号升序
+        $order = 'oid asc';
+        $select = $this->orders()->orderSelect($where, $order);
+        //var_dump($select);exit();
+        $len = count($select);
+        $sum = 0;
+        //剩余量
+        $surplus = 0;
+        $oneModel = array(
+            'modelQty' => $surplus,
+            'modelStart' => '',
+            'modelEnd' => '',
+            'firstadd' =>'模块总数量'
+        );
+        if($len>0){
+            //1.获取第一个订单号的数量
+            $nums = $select['0']['modelQty'];
+            //2.循环输出每一个订单的模块数量总和(除去第一次添加的)
+            if($len > 1){
+                for ($i=1;$i<$len;$i++){
+                    $sum += $select[$i]['modelQty'];
+                }
+                //3.导出最后的剩余量
+                $surplus = $nums - $sum;
+            }else{
+                $surplus = $nums;
+            }
+            $firstadd = '';
+            $start = $select['0']['modelStart'];
+            $end = $select['0']['modelEnd'];
+            //传给前端的数据
+            $oneModel = array(
+                'modelQty' => $surplus,
+                'modelStart' => $start,
+                'modelEnd' => $end,
+                'firstadd' => $firstadd
+            );
+        }
+        return $oneModel;
+    }
+    //获取json值
+    private function graphS($rate){
+        //默认rate用6.5表示
+        //$rate = input('param.rate');
+        //一维数组
+        $orders = $this->groupSid($rate);
+        $len = count($orders);
+        //$newOrder = array();
+        if($len > 0){
+            $i=0;
+            foreach ($orders as $sid=>$sumAmounts){
+                $findSid = $this->state()->findById(array('sid'=>$sid));
+                $newOrder[$i]['sid'] = $sid;
+                $newOrder[$i]['state'] = $findSid['state'];
+                $newOrder[$i]['value'] = number_format($sumAmounts, 2);
+                $i++;
+            }
+        }
+        $newOrders = json_encode($newOrder);
+        return $newOrders;
+    }
+
+    /**
+     * 按国家计算总金额
+     * @param $rate
+     * @return array
+     */
+    private function groupSid($rate){
+        $orders = $this->calSumByRate($rate);
+        //var_dump($orders);
+        $len = count($orders);
+        $sameSid = array();
+        $firstSid = $orders['0']['sid'];
+        $sameSid[$firstSid]['0'] = $orders['0']['sumAmounts'];
+        for($i=1;$i<$len;$i++){
+            if($orders[$i]['sid'] == $orders[$i-1]['sid']){
+                $sid = $orders[$i-1]['sid'];
+                $sameSid[$sid][] = $orders[$i]['sumAmounts'];
+            }else{
+                $sid = $orders[$i]['sid'];
+                $sameSid[$sid][]  = $orders[$i]['sumAmounts'];
+            }
+        }
+        $sum = array();
+        foreach ($sameSid as $sid=>$sumAmount){
+            $sumSid = 0.00;
+            for($j=0;$j<count($sumAmount);$j++){
+                $sumSid += $sumAmount[$j];
+            }
+            $sum[$sid] = $sumSid;
+        }
+        //var_dump($sum);exit();
+        return $sum;
+    }
+    //json--客户
+    private function graphC($rate){
+        //默认rate用6.5表示
+        //$rate = input('param.rate');
+        //一维数组
+        $orders = $this->groupCid($rate);
+        $len = count($orders);
+        //$newOrder = array();
+        if($len > 0){
+            $i=0;
+            foreach ($orders as $cid=>$sumAmounts){
+                $findCid = $this->clients()->findById(array('cid'=>$cid));
+                $newOrder[$i]['cid'] = $cid;
+                $newOrder[$i]['client'] = $findCid['client'];
+                $newOrder[$i]['value'] = number_format($sumAmounts, 2);
+                $i++;
+            }
+        }
+        $newOrders = json_encode($newOrder);
+        return $newOrders;
+    }
+
+    /**
+     * 按客户计算总金额
+     * @param $rate
+     * @return array
+     */
+    private function groupCid($rate){
+        $orders = $this->calSumByRate($rate);
+        //var_dump($orders);
+        $len = count($orders);
+        $sameCid = array();
+        $firstCid = $orders['0']['cid'];
+        $sameCid[$firstCid]['0'] = $orders['0']['sumAmounts'];
+        for($i=1;$i<$len;$i++){
+            if($orders[$i]['cid'] == $orders[$i-1]['cid']){
+                $cid = $orders[$i-1]['cid'];
+                $sameCid[$cid][] = $orders[$i]['sumAmounts'];
+            }else{
+                $cid = $orders[$i]['cid'];
+                $sameCid[$cid][]  = $orders[$i]['sumAmounts'];
+            }
+        }
+        $sum = array();
+        foreach ($sameCid as $cid=>$sumAmount){
+            $sumCid = 0.00;
+            for($j=0;$j<count($sumAmount);$j++){
+                $sumCid += $sumAmount[$j];
+            }
+            $sum[$cid] = $sumCid;
+        }
+        //var_dump($sum);exit();
+        return $sum;
+    }
+    //json--基表型号
+    private function graphM($rate){
+        //默认rate用6.5表示
+        //$rate = input('param.rate');
+        //一维数组
+        $orders = $this->groupMeterId($rate);
+        $len = count($orders);
+        //$newOrder = array();
+        if($len > 0){
+            $i=0;
+            foreach ($orders as $meterId=>$sumAmounts){
+                $findMeterId = $this->meterTypes()->findById(array('meterId'=>$meterId));
+                $newOrder[$i]['meterId'] = $meterId;
+                $newOrder[$i]['meterType'] = $findMeterId['meterType'];
+                $newOrder[$i]['value'] = number_format($sumAmounts, 2);
+                $i++;
+            }
+        }
+        $newOrders = json_encode($newOrder);
+        return $newOrders;
+    }
+    /**
+     * 按基表型号计算总金额
+     * @param $rate
+     * @return array
+     */
+    private function groupMeterId($rate){
+        $orders = $this->calSumByRate($rate);
+        //var_dump($orders);
+        $len = count($orders);
+        $sameMeterId = array();
+        $firstMeterId = $orders['0']['meterId'];
+        $sameMeterId[$firstMeterId]['0'] = $orders['0']['sumAmounts'];
+        for($i=1;$i<$len;$i++){
+            if($orders[$i]['meterId'] == $orders[$i-1]['meterId']){
+                $meterId = $orders[$i-1]['meterId'];
+                $sameMeterId[$meterId][] = $orders[$i]['sumAmounts'];
+            }else{
+                $meterId = $orders[$i]['meterId'];
+                $sameMeterId[$meterId][]  = $orders[$i]['sumAmounts'];
+            }
+        }
+        $sum = array();
+        foreach ($sameMeterId as $meterId=>$sumAmount){
+            $sumMeterId = 0.00;
+            for($j=0;$j<count($sumAmount);$j++){
+                $sumMeterId += $sumAmount[$j];
+            }
+            $sum[$meterId] = $sumMeterId;
+        }
+        //var_dump($sum);exit();
+        return $sum;
+    }
+
+    /**
+     * 通过汇率计算总金额（人民币元）
+     * @param $rate
+     */
+    private function calSumByRate($rate){
+        //汇率转换成number
+        $rate = floatval($rate);
+        $field = 'oid,sid,cid,meterId,sumUnits,sumAmounts';
+        $where = '';
+        $order = 'oid';
+        $orders = $this->orders()->orderSelect($where, $order);
+        //var_dump($orders);exit();
+        $len = count($orders);
+        if($len > 0){
+            for($i=0;$i<$len;$i++){
+                if($orders[$i]['sumUnits'] == '$'){
+                    $temp = floatval($orders[$i]['sumAmounts'] * $rate);
+                    $orders[$i]['sumAmounts'] = number_format($temp, 2);
+
+                }else{
+                    $temp = floatval($orders[$i]['sumAmounts']);
+                    $orders[$i]['sumAmounts'] = number_format($temp, 2);
+                }
+            }
+        }
+        //var_dump($orders);exit();
+        return $orders;
+    }
+
 
 }

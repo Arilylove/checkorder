@@ -118,6 +118,26 @@
                         </div>
                       </div>
                       <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">订单数量 <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="orderQty" name="orderQty" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">订单金额
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="sumAmounts" name="sumAmounts" class="form-control col-md-7 col-xs-12">
+                        </div>
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                          <select name="sumUnits" id="sumUnits" class="form-control col-md-7 col-xs-12">
+                            <option value="$">美元（$）</option>
+                            <option value="￥">人民币（￥）</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelNum">模块订单号
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12" onchange="getModelNum()">
@@ -125,13 +145,14 @@
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">订单数量 <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelNum">模块数量
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="orderQty" name="orderQty" required="required" class="form-control col-md-7 col-xs-12">
+                          <input type="text" id="modelQty" name="modelQty" class="form-control col-md-7 col-xs-12">
                         </div>
                         <input type="text" class="qty hidqty" name="hidqty">
                       </div>
+
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelStart">模块下单开始时间
                         </label>
@@ -321,12 +342,12 @@
               url: "{:url('Order/getModelNum')}",//url
               data: {'modelNum':modelNum},
               success: function (result) {
-                  var num = result.orderQty;
+                  var num = result.modelQty;
                   var start = result.modelStart;
                   var end = result.modelEnd;
                   var first = result.firstadd;
                   //console.log(num+','+start+','+end)
-                  $('#orderQty').val(num)
+                  $('#modelQty').val(num)
                   $('#modelStart').val(start)
                   $('#modelEnd').val(end)
                   //console.log('success'+result)

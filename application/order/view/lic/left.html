@@ -61,6 +61,15 @@
             <li><a><i class="fa fa-money"></i> 订单管理 <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
                     <li><a href="{:url('Order/index')}">订单列表</a></li>
+                    {if condition="in_array('Order',$ownways['w_control']) && in_array('graphs',$ownways['w_way'])"}
+                    <li><a href="{:url('Order/statByState')}">订单总额占比-按国家分类</a></li>
+                    {/if}
+                    {if condition="in_array('Order',$ownways['w_control']) && in_array('graphc',$ownways['w_way'])"}
+                    <li><a href="{:url('Order/statByClient')}">订单总额占比-按客户分类</a></li>
+                    {/if}
+                    {if condition="in_array('Order',$ownways['w_control']) && in_array('graphm',$ownways['w_way'])"}
+                    <li><a href="{:url('Order/statByMeter')}">订单总额占比-按基表型号分类</a></li>
+                    {/if}
                 </ul>
             </li>
             {/if}

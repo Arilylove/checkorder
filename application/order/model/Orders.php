@@ -116,6 +116,15 @@ class Orders{
     }
 
     /**
+     * 分类输出
+     * @return false|\PDOStatement|string|\think\Collection
+     */
+    public function selectGroup($field, $group, $order, $where){
+        $result = Db::table($this->tableName)->field($field)->group($group)->order($order)->where($where)->select();
+        return $result;
+    }
+
+    /**
      * 排序输出
      * @param $where
      * @param $order
@@ -126,6 +135,14 @@ class Orders{
         return $data;
     }
 
+    /**
+     * 订单总额
+     * @return float|int
+     */
+    public function sum($condition){
+        $sum = Db::table($this->tableName)->sum($condition);
+        return $sum;
+    }
     public function count($where){
         $count = Db::table($this->tableName)->where($where)->count();
         return $count;

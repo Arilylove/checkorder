@@ -104,12 +104,18 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">订单金额
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" id="sumAmounts" name="sumAmounts" readonly value="{$order['sumAmounts']} {$order['sumUnits']}" required="required" class="form-control col-md-7 col-xs-12">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelType">电子模块类型
                                             </label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
                                                 <select id="modelType" class="form-control col-md-7 col-xs-12" name="modelType" readonly>
                                                     <option value="{$order['modelType']}">{$order['modelType']}</option>
-
                                                 </select>
                                             </div>
                                         </div>
@@ -119,6 +125,13 @@
                                             </label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
                                                 <input type="text" id="modelNum" name="modelNum" value="{$order['modelNum']}" readonly class="form-control col-md-7 col-xs-12">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modelNum">模块数量
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" id="modelQty" readonly name="modelQty" value="{$order['modelQty']}" class="form-control col-md-7 col-xs-12">
                                             </div>
                                         </div>
                                         <div class="form-group">

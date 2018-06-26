@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>统计报表-客户</title>
+    <link rel="stylesheet" href="__RECORD__/bootstrap-table.css">
+    <link rel="stylesheet" href="__RECORD__/bootstrap-table-fixed-columns.css">
+    <script src="__JS__/echarts.js"></script>
+    <style>
+        .jambo_table >tbody >tr{
+            height: 41px!important;
+        }
+        .fixed-table-body-columns{
+            height: 411px!important;
+            top: 41px!important;
+        }
+    </style>
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+                <!--head-->
+                {include file="lic/head"/}
+                <!--head-->
+                <br />
+                <!-- sidebar menu -->
+                {include file="lic/left"/}
+                <!--/sidebar menu-->
+
+                <!-- /menu footer buttons -->
+                {include file="lic/foot"/}
+                <!-- /menu footer buttons -->
+            </div>
+        </div>
+        <!-- top navigation -->
+        {include file="lic/top"/}
+        <!-- /top navigation -->
+
+        <!--del-->
+        {include file="ord/del"/}
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+            <div class="">
+                <div class="page-title">
+                    <div class="title_left">
+                        <!--<h3>统计</h3>-->
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <label style="font-size: 24px;color: #0e90d2;width: 100px;">美元汇率</label>
+                                <input type="text" name="rate" value="" id="rate" onchange="newCharts()" placeholder="默认:6.5" style="width: 100px;height: 36px;line-height: 36px;border-radius: 5px;">
+                                <ul class="nav navbar-right panel_toolbox">
+                                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="x_content">
+
+                                <div  class="col-md-12 col-sm-12 col-xs-12">
+                                    <div class="x_panel tile">
+
+                                        <div class="x_content">
+                                            <table class="">
+
+                                                <tr>
+                                                    <th class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                                                        <p></p>
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <canvas id="graphC" class="canvasDoughnut" height="600" width="1000" style="margin: 15px 10px 10px 0;overflow: scroll;" ></canvas>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- /page content -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- jQuery -->
+<script src="__VENDOR__/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="__VENDOR__/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- FastClick -->
+<script src="__VENDOR__/fastclick/lib/fastclick.js"></script>
+<!-- NProgress -->
+<script src="__VENDOR__/nprogress/nprogress.js"></script>
+<!-- iCheck -->
+<script src="__VENDOR__/iCheck/icheck.min.js"></script>
+<!-- Datatables -->
+<script src="__VENDOR__/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="__VENDOR__/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script src="__VENDOR__/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="__VENDOR__/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+<script src="__VENDOR__/datatables.net-buttons/js/buttons.flash.min.js"></script>
+<script src="__VENDOR__/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="__VENDOR__/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="__VENDOR__/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+<script src="__VENDOR__/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+<script src="__VENDOR__/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="__VENDOR__/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+<script src="__VENDOR__/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+<script src="__VENDOR__/jszip/dist/jszip.min.js"></script>
+<script src="__VENDOR__/pdfmake/build/pdfmake.min.js"></script>
+<script src="__VENDOR__/pdfmake/build/vfs_fonts.js"></script>
+
+<!-- Custom Theme Scripts -->
+<script src="__JS__/build/js/custom.min.js"></script>
+<script src="__RECORD__/bootstrap-table.js"></script>
+<script src="__RECORD__/bootstrap-table-fixed-columns.js"></script>
+<script>
+    var myChartC = echarts.init(document.getElementById('graphC'));
+    defaultRate(myChartC)
+    function defaultRate(myChartC) {
+        var graphC = '{$graphyC}';
+        graphC = JSON.parse(graphC);
+        changeRate(graphC, myChartC)
+    }
+    function changeRate(graphC, myChartC) {
+        /*for client*/
+        var client = [];
+        var dataC = [];
+        for(var j=0;j<graphC.length;j++){
+            dataC[j] = {value:graphC[j]['value'],name:graphC[j]['client']}
+            client[j] = graphC[j]['client']
+        }
+        optionC = {
+            title : {
+                text: '订单总额对比图-按客户分',
+                x:'center'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                data: client
+            },
+            series : [
+                {
+                    name: '订单总额',
+                    type: 'pie',
+                    radius : '36%',
+                    center: ['56%', '45%'],
+                    label:{            //饼图图形上的文本标签
+                        normal:{
+                            show:true,
+                            textStyle : {
+                                fontWeight : 300 ,
+                                fontSize : 14    //文字的字体大小
+                            },
+                            formatter:'{b}:{d}%'
+                            //formatter:'{b}:{c}￥'
+                        }
+                    },
+                    data:dataC,
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChartC.setOption(optionC);
+    }
+
+    function newCharts() {
+        //改变汇率
+        var rate = $('#rate').val();
+        //console.log(rate)
+        $.ajax({
+            //几个参数需要注意一下
+            type: "POST",//方法类型
+            dataType: "json",//预期服务器返回的数据类型
+            url: "{:url('Order/jsonGraphC')}",//url
+            data: {'rate':rate},
+            success: function (result) {
+                //console.log(result)
+                var graph = result;
+                changeRate(graph, myChart);
+            },
+            error:function (result) {
+                //console.log('error'+result)
+                alert('服务出错')
+            }
+        });
+    }
+</script>
+</body>
+</html>
