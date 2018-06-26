@@ -184,6 +184,8 @@ class Base extends Controller{
         $this->assign('currentPage', $currentPage);
         $this->assign('pageOrder', ($currentPage-1)*10);
         $this->assign('page', $page);
+        //默认传参config（for search）
+        $this->assign('config', '');
     }
 
 
