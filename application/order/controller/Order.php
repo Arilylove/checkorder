@@ -106,6 +106,8 @@ class Order extends Base{
         }
         //var_dump($orders);exit();
         unset($orders['hidqty']);
+        $orders = $this->dealNull($orders);
+        //var_dump($orders);exit();
         $addOrder = $this->orders()->add($orders, '');
         if($addOrder < 1){
             return $this->error(Lang::get('add fail'));
@@ -230,6 +232,9 @@ class Order extends Base{
         /*var_dump($meterStart);
         var_dump($meterEnd);exit();*/
         unset($orders['hidqty']);
+        //空格处理
+        $orders = $this->dealNull($orders);
+        //var_dump($orders);exit();
         $edit = $this->orders()->update($orders, $where);
         if($edit < 1){
             return $this->error(Lang::get('edit fail'));
@@ -314,6 +319,7 @@ class Order extends Base{
      */
     public function getModelNum(){
         $modelNum = input('param.modelNum');
+        $modelNum = trim($modelNum);
         $oneModel = $this->sumQty($modelNum);
         echo json_encode($oneModel);
     }
@@ -324,9 +330,9 @@ class Order extends Base{
     public function search(){
         $search = input('post.');
         $deliveryStatus = input('param.deliveryStatus');
-        $meterNum = input('param.meterNum');
-        $orderNum = input('param.orderNum');
-        $modelNum = input('param.modelNum');
+        $meterNum = trim(input('param.meterNum'));
+        $orderNum = trim(input('param.orderNum'));
+        $modelNum = trim(input('param.modelNum'));
         $sid = input('param.sid');
         $cid = input('param.cid');
         $mfId = input('param.mfId');
@@ -1009,6 +1015,17 @@ class Order extends Base{
         //var_dump($orders);exit();
         return $orders;
     }
-
+    /**
+     * 去除数据前后空格
+     * @param $orders
+     * @return mixed
+     */
+    private function dealNull($orders){
+        $orders['modelNum'] = trim($orders['modelNum']);
+        $orders['orderNum'] = trim($orders['orderNum']);
+        $orders['orderQty'] = trim($orders['orderQty']);
+        $orders['sumAmounts'] = trim($orders['sumAmounts']);
+        return $orders;
+    }
 
 }
