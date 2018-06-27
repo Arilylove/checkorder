@@ -66,7 +66,7 @@
                                             <div class="col-md-6 col-sm-6 col-xs-12">
                                                 <input type="text" name="pid" id="makeupCo" value="{$meterTypes['parent']}" class="form-control col-md-7 col-xs-12" onfocus="setfocus(this)" oninput="setinput(this);"/>
                                                 <select id="typenum" class="form-control col-md-7 col-xs-12" style="display: none;" onchange="changeF(this)">
-                                                    <!--<option value="0">主类</option>-->
+                                                    <option value="0">主类</option>
                                                     {volist name='allPids' id='v'}
                                                     <option value="{$v['meterType']}">{$v.meterType}</option>
                                                     {/volist}
