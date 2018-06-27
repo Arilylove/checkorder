@@ -64,10 +64,11 @@
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">分类 <span class="required">*</span>
                                             </label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <select name="pid" id="pid" class="form-control col-md-7 col-xs-12">
-                                                    <option value="0">主类</option>
+                                                <input type="text" name="pid" id="makeupCo" value="{$meterTypes['parent']}" class="form-control col-md-7 col-xs-12" onfocus="setfocus(this)" oninput="setinput(this);"/>
+                                                <select id="typenum" class="form-control col-md-7 col-xs-12" style="display: none;" onchange="changeF(this)">
+                                                    <!--<option value="0">主类</option>-->
                                                     {volist name='allPids' id='v'}
-                                                    <option value="{$v['meterId']}">{$v.meterType}</option>
+                                                    <option value="{$v['meterType']}">{$v.meterType}</option>
                                                     {/volist}
                                                 </select>
                                             </div>
@@ -129,6 +130,54 @@
 <script src="__VENDOR__/starrr/dist/starrr.js"></script>
 <!-- Custom Theme Scripts -->
 <script src="__JS__/build/js/custom.min.js"></script>
+<script>
+    var TempArr=[];//存储option
 
+    $(function(){
+        /*先将数据存入数组*/
+        $("#typenum option").each(function(index, el) {
+            TempArr[index] = $(this).text();
+        });
+        $(document).bind('click', function(e) {
+            var e = e || window.event; //浏览器兼容性
+            var elem = e.target || e.srcElement;
+            while (elem) { //循环判断至跟节点，防止点击的是div子元素
+                if (elem.id && (elem.id == 'typenum' || elem.id == "makeupCo")) {
+                    return;
+                }
+                elem = elem.parentNode;
+            }
+            $('#typenum').css('display', 'none'); //点击的不是div或其子元素
+        });
+    })
+    console.log(TempArr)
+
+    function changeF(this_) {
+        $(this_).prev("input").val($(this_).find("option:selected").text());
+        $("#typenum").css({"display":"none"});
+    }
+    function setfocus(this_){
+        $("#typenum").css({"display":""});
+        var len = TempArr.length
+        $("#typenum").attr('size', len)
+        var select = $("#typenum");
+        for(i=0;i<len;i++){
+            var option = $("<option></option>").text(TempArr[i]);
+            select.append(option);
+        }
+    }
+
+    function setinput(this_){
+        var select = $("#typenum");
+        select.html("");
+        for(i=0;i<TempArr.length;i++){
+            //若找到以txt的内容开头的，添option
+            if(TempArr[i].substring(0,this_.value.length).indexOf(this_.value)==0){
+                var option = $("<option></option>").text(TempArr[i]);
+                select.append(option);
+            }
+        }
+    }
+</script>
 </body>
 </html>
