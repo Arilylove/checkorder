@@ -14,8 +14,9 @@ class MeterOrder extends Base{
         $field = "oid,state,client,meterType,modelType,modelStart,modelEnd,modelNum,meterStart,meterEnd,assemStart,assemEnd,deliveryTime,orderNum,manufacturer,productPrinciple,deliveryStatus,orderCycle,assemCycle";
         $pid = $this->getPid();
         $where = array('pid'=>$pid);
+        $ord = 'oid asc';
         $count = $this->orders()->count($where);
-        $orders = $this->orders()->selectPage($where, $count);
+        $orders = $this->orders()->selectPage($where, $count, $ord);
         $order = $this->getJoinId($orders);
         //var_dump($sql);
         $this->page($order);
