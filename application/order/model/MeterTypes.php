@@ -64,37 +64,12 @@ class MeterTypes{
     }
 
     /**
-     * @return mixed
+     * 获取上次添加的id
      */
-    public function getMeterId()
-    {
-        return $this->meterId;
+    public function getLastId(){
+        $lastId = Db::table($this->tableName)->getLastInsID();
+        return $lastId;
     }
-
-    /**
-     * @param mixed $meterId
-     */
-    public function setMeterId($meterId)
-    {
-        $this->meterId = $meterId;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMeterType()
-    {
-        return $this->meterType;
-    }
-
-    /**
-     * @param mixed $meterType
-     */
-    public function setMeterType($meterType)
-    {
-        $this->meterType = $meterType;
-    }
-
 
 
 
