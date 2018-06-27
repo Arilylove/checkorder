@@ -51,8 +51,24 @@ class MeterType extends Base
             return $this->error(Lang::get('no authority'));
         }
         $meterTypes = input('post.');
+        //空格处理
+        $meterTypes['pid'] = trim($meterTypes['pid']);
+        $meterTypes['meterType'] = trim($meterTypes['meterType']);
+        $pid = $meterTypes['pid'];
+        //先查找数据库中是否存在
+        $find = $this->meterTypes()->findById(array('meterId'=>$pid));
+        if(!$find){
+            $parentOne['meterType'] = $pid;
+            $parentOne['pid'] = 0;
+            $this->meterTypes()->add($parentOne, '');
+            $lastId = $this->meterTypes()->getLastId();
+            if($lastId){
+                $meterTypes['pid'] = $lastId;
+            }else{
+                return $this->error(Lang::get('add fail'));
+            }
+        }
         $validate = $this->validate($meterTypes, 'Met');
-        //var_dump($validate);exit();
         if(true !== $validate){
             return $this->error(" $validate ");
         }
@@ -142,6 +158,13 @@ class MeterType extends Base
         $meterId = input('param.meterId');
         $where = array('meterId'=>$meterId);
         $data = $this->meterTypes()->findById($where);
+        $findPid = $data['pid'];
+        $parentPid = $this->meterTypes()->findById(array('meterId'=>$findPid));
+        if(!$parentPid){
+            $data['parent'] = '主类';
+        }else{
+            $data['parent'] = $parentPid['meterType'];
+        }
         $this->assign('meterTypes', $data);
         //2.所有主类
         $allPid = $this->getAllPid();
@@ -169,11 +192,37 @@ class MeterType extends Base
             return $this->error(Lang::get('unfind metertype'));
         }
         $meterTypes = input('post.');
+        //空格处理
+        $meterTypes['pid'] = trim($meterTypes['pid']);
+        $meterTypes['meterType'] = trim($meterTypes['meterType']);
+        $pid = $meterTypes['pid'];
+        //先判断是否是主类
+        if($pid == '主类'){
+            $meterTypes['pid'] = 0;
+        }else{
+            //先查找数据库中是否存在
+            $find = $this->meterTypes()->findById(array('meterType'=>$pid));
+            //var_dump($find);exit();
+            if(!$find){
+                $parentOne['meterType'] = $pid;
+                $parentOne['pid'] = 0;
+                $this->meterTypes()->add($parentOne, '');
+                $lastId = $this->meterTypes()->getLastId();
+                if($lastId){
+                    $meterTypes['pid'] = $lastId;
+                }else{
+                    return $this->error(Lang::get('add fail'));
+                }
+            }else{
+                $meterTypes['pid'] = $find['meterId'];
+            }
+        }
+
         $validate = $this->validate($meterTypes, 'Met');
-        //var_dump($validate);exit();
         if(true !== $validate){
             return $this->error(" $validate ");
         }
+
         $result = $this->meterTypes()->update($meterTypes, $where);
         if($result < 1){
             return $this->error(Lang::get('edit fail'));
