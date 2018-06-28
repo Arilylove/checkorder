@@ -283,7 +283,11 @@
                                         <div class="ln_solid"></div>
                                         <div class="form-group">
                                             <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                                {if condition="$config eq ''"}
                                                 <a class="btn btn-primary" href="{:url('Order/index')}?page={$currentPage}" type="button">返回列表</a>
+                                                {else/}
+                                                <a class="btn btn-primary" href="{:url('Order/search')}?{$config}&page={$currentPage}" type="button">返回列表</a>
+                                                {/if}
                                             </div>
                                         </div>
 

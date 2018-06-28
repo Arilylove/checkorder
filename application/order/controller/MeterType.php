@@ -19,8 +19,10 @@ class MeterType extends Base
     public function index(){
         $this->authVerify();
         $field = 'meterId,meterType,pid';
-        $count = $this->meterTypes()->count('');
-        $meterTypes = $this->meterTypes()->selectPage($field, '', $count);
+        //$where = array('pid'=>['>','0']);
+        $where = '';
+        $count = $this->meterTypes()->count($where);
+        $meterTypes = $this->meterTypes()->selectPage($field, $where, $count);
         $meterTypes = $this->dealMeterType($meterTypes);
         $this->page($meterTypes);
         $this->assign('meterTypes', $meterTypes);

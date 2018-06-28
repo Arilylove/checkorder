@@ -59,7 +59,7 @@
                                 </div>
                                 <div class="x_content">
                                     <br />
-                                    <form id="demo-form2" method="post" action="{:url('Order/editOrd',['page'=>$currentPage])}" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
+                                    <form id="demo-form2" method="post" action="{:url('Order/editOrd',['page'=>$currentPage,'config'=>$config])}" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
                                         <input type="hidden" name="oid" value="{$order['oid']}"/>
 
                                         <div class="form-group">
@@ -314,7 +314,11 @@
                                         <div class="ln_solid"></div>
                                         <div class="form-group">
                                             <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                                {if condition="$config eq ''"}
                                                 <a class="btn btn-primary" href="{:url('Order/index')}?page={$currentPage}" type="button">取消</a>
+                                                {else/}
+                                                <a class="btn btn-primary" href="{:url('Order/search')}?{$config}&page={$currentPage}" type="button">取消</a>
+                                                {/if}
                                                 <button type="submit" class="btn btn-success">确定</button>
                                             </div>
                                         </div>

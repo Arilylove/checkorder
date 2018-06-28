@@ -162,6 +162,7 @@ class Orders{
         $where = array();
         //需要多层判断（如果为空则不执行）
         if($meterNum != ''){
+            $meterNum = trim($meterNum);
             $where['meterStart'] = ['<=', $meterNum];
             $where['meterEnd'] = ['>=', $meterNum];
         }
@@ -175,9 +176,11 @@ class Orders{
             $where['cid'] = $cid;
         }
         if($orderNum != ''){
+            $orderNum = trim($orderNum);
             $where['orderNum'] = ['like', "%$orderNum%"];
         }
         if($modelNum != ''){
+            $modelNum = trim($modelNum);
             $where['modelNum'] = ['like', "%$modelNum%"];
         }
         if($mfId != ''){

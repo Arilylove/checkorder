@@ -158,6 +158,9 @@ class Order extends Base{
         $page = input('param.page');
         //var_dump($query);exit();
         $this->assign('currentPage', $page);
+        $config = input('param.config');
+        //var_dump($config);exit();
+        $this->assign('config', $config);
         return $this->fetch("ord/update");
     }
 
@@ -267,8 +270,14 @@ class Order extends Base{
             }
         }
         $page = input('param.page');
-        $data = '?page='.$page;
-        $url = url('Order/index').$data;
+        $data = 'page='.$page;
+        $config = input('param.config');
+        if($config == ''){
+            $url = url('Order/index').'?'.$data;
+        }else{
+            $url = url('Order/search').'?'.$config.'&'.$data;
+        }
+
         return $this->success(Lang::get('edit success'), $url);
 
     }
@@ -319,6 +328,8 @@ class Order extends Base{
         $page = input('param.page');
         //var_dump($query);exit();
         $this->assign('currentPage', $page);
+        $config = input('param.config');
+        $this->assign('config', $config);
         return $this->fetch("ord/view");
     }
 
@@ -337,10 +348,11 @@ class Order extends Base{
      */
     public function search(){
         $search = input('post.');
+        //var_dump($search);exit();
         $deliveryStatus = input('param.deliveryStatus');
-        $meterNum = trim(input('param.meterNum'));
-        $orderNum = trim(input('param.orderNum'));
-        $modelNum = trim(input('param.modelNum'));
+        $meterNum = input('param.meterNum');
+        $orderNum = input('param.orderNum');
+        $modelNum = input('param.modelNum');
         $sid = input('param.sid');
         $cid = input('param.cid');
         $mfId = input('param.mfId');
@@ -358,6 +370,9 @@ class Order extends Base{
         $this->page($orders);
         //var_dump($orders);exit();
         $this->assign('orders', $orders);
+        //将search变成字符串
+        $config = 'deliveryStatus='.$deliveryStatus.'&meterNum='.$meterNum.'&orderNum='.$orderNum.'&modelNum='.$modelNum.'&sid='.$sid.'&cid='.$cid.'&mfId='.$mfId;
+        $this->assign('config', $config);
         return $this->fetch("ord/index");
 
     }
