@@ -445,7 +445,7 @@ class Order extends Base{
 
 
     /**
-     * 统计报表-按表型（基表型号？）分类
+     * 统计报表-按表型（基表型号）分类
      */
     public function statByMeter(){
         $auth = $this->auth('Order', 'graphm');
@@ -470,6 +470,113 @@ class Order extends Base{
         $rate = input('param.rate');
         $newOrders = $this->graphM($rate);
         echo $newOrders;
+    }
+
+    /**
+     * 统计报表-按基表订单数量分类
+     */
+    public function statQty(){
+        $auth = $this->auth('Order', 'graphq');
+        if(!$auth){
+            return $this->error(Lang::get('no authority'));
+        }
+        //按订单编号排序输出
+        $where = '';
+        $order = 'oid asc';
+        $orders = $this->orders()->orderSelect($where, $order);
+        $len = count($orders);
+        //初始化
+        $newOrder = array(
+            '0'=>array(
+                'orderQty'=>0,
+                'meterId'=>0
+            )
+        );
+        if($len > 0){
+            for ($i=0;$i<$len;$i++){
+                $orderQty = $orders[$i]['orderQty'];
+                $meterId = $orders[$i]['meterId'];
+                //进行数量处理
+                $orderQty = $this->dealBraces($orderQty);
+                $newOrder[$i]['orderQty'] = $orderQty;
+                $newOrder[$i]['meterId'] = $meterId;
+            }
+        }
+        //每一个基表型号的订单总数
+        $newOrder = $this->allQty($newOrder);
+        $newOrder = $this->qtyByMeterId($newOrder);
+        $newOrder = json_encode($newOrder);
+        $this->assign('graphQ', $newOrder);
+        return $this->fetch("ord/graphq");
+
+    }
+
+    /**
+     * 每一个基表型号的订单总数
+     * @param $newOrder
+     * @return mixed  $order[meterId][orderQty]
+     */
+    private function allQty($newOrder){
+        $meterIds = array_column($newOrder, 'meterId');
+        array_multisort($meterIds, SORT_ASC, $newOrder);
+        $len = count($newOrder);
+        $orders[$newOrder['0']['meterId']]['0'] = $newOrder['0']['orderQty'];
+        for($i=0;$i<$len;$i++){
+            $meterId = $newOrder[$i]['meterId'];
+            //按照id分类
+            $orders[$meterId][$i] = $newOrder[$i]['orderQty'];
+        }
+        $lenOrder = count($orders);
+        //$orders['0']['sum'] = 0;
+        foreach ($orders as $meterId=>$value){
+            $sum = 0;
+            foreach ($value as $v){
+                $sum += $v;
+            }
+            $value = $sum;
+            $orders[$meterId] = $value;
+        }
+        return $orders;
+    }
+
+    /**
+     * 基表型号主类的订单数量
+     * $orders[key]=>{meterid,metertype,value}
+     */
+    private function qtyByMeterId($orders){
+        $newOrder = array();
+        foreach ($orders as $meterId=>$orderQty){
+            //判断是否是主类
+            $find = $this->meterTypes()->findById(array('meterId'=>$meterId));
+            $pid = $find['pid'];
+            //判断是否主类
+            //如果是主类，直接输出
+            //如果不是主类，找到主类meterId,分类的订单金额
+            if($pid == 0){
+                $newOrder[$meterId]['meterId'] = $meterId;
+                $newOrder[$meterId]['meterType'] = $find['meterType'];
+                $newOrder[$meterId]['value']['0'] = $orderQty;
+            }else{
+                $newOrder[$pid]['meterId'] = $pid;
+                $findNew = $this->meterTypes()->findById(array('meterId'=>$pid));
+                $newOrder[$pid]['meterType'] = $findNew['meterType'];
+                $newOrder[$pid]['value'][$meterId] = $orderQty;
+            }
+
+        }
+        $newOrders = array();
+        foreach ($newOrder as $meterId=>$v){
+            $sum = 0;
+            foreach ($v['value'] as $value){
+                $sum += $value;
+            }
+            $newOrders[] = array(
+                'meterId'=>$v['meterId'],
+                'meterType'=>$v['meterType'],
+                'value'=>$sum
+            );
+        }
+        return $newOrders;
     }
 
 

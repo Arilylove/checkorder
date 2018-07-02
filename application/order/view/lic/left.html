@@ -70,6 +70,9 @@
                     {if condition="in_array('Order',$ownways['w_control']) && in_array('graphm',$ownways['w_way'])"}
                     <li><a href="{:url('Order/statByMeter')}">订单总额占比-按基表型号分类</a></li>
                     {/if}
+                    {if condition="in_array('Order',$ownways['w_control']) && in_array('graphq',$ownways['w_way'])"}
+                    <li><a href="{:url('Order/statQty')}">订单数量占比-按基表型号分类</a></li>
+                    {/if}
                 </ul>
             </li>
             {/if}
