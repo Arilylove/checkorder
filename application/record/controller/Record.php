@@ -240,6 +240,68 @@ class Record extends Base{
     }
 
     /**
+     * 各问题分类的解决时长占比-统计报表
+     */
+    public function graphSycle(){
+        $field = 'pcId,rid,solveCycle';
+        $where = '';
+        $order = 'rid asc';
+        $records = $this->records()->orderSelect($field, $where, $order);
+        //对记录的处理
+        $len = count($records);
+        if($len > 0){
+            $records = $this->dealSycle($records);
+        }
+        $records = $this->getClassify($records);
+        //var_dump($records);exit();
+        $graphs = json_encode($records);
+        $this->assign('graph', $graphs);
+        return $this->fetch('record/graph');
+    }
+
+    /**
+     * 处理各分类的解决时长
+     */
+    private function dealSycle($records){
+        //1.按问题分类id分类
+        $pcId = array_column($records, 'pcId');
+        //2.按pcId排序
+        array_multisort($pcId, SORT_ASC, $records);
+        //3.计算各分类总解决时长
+        $len = count($records);
+        $newrecords[$records['0']['pcId']]['0'] = $records['0']['solveCycle'];
+        for ($i=0;$i<$len;$i++){
+            $pcId = $records[$i]['pcId'];
+            $newrecords[$pcId][$i] = $records[$i]['solveCycle'];
+        }
+        foreach ($newrecords as $pcId=>$solveCycle){
+            $sum = 0;
+            foreach ($solveCycle as $value){
+                $sum += $value;
+            }
+            $newrecords[$pcId] = $sum;
+        }
+        return $newrecords;
+
+    }
+
+    /**
+     * 组合最终报表结果
+     * @param $records
+     * @return array  [key]{classify,value}
+     */
+    private function getClassify($records){
+        foreach ($records as $pcId=>$solveCycle){
+            $findPc = $this->classifies()->findById(array('pcId'=>$pcId));
+            $classify = $findPc['classify'];
+            $newrecords[] = array(
+                'classify' => $classify,
+                'value' => $solveCycle
+            );
+        }
+        return $newrecords;
+    }
+    /**
      * 由联合表id获取名称
      * @param $records
      * @return mixed

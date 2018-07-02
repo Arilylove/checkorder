@@ -199,84 +199,16 @@ class Records{
             ->field($field)->where($where)->select();
         return $record;
     }
-    /**
-     * @return 记录编号
-     */
-    public function getRid()
-    {
-        return $this->rid;
-    }
 
     /**
-     * @param 记录编号 $rid
+     * 排序输出
+     * @param $field
+     * @param $where
+     * @param $order
      */
-    public function setRid($rid)
-    {
-        $this->rid = $rid;
-    }
-
-    /**
-     * @return 问题来源
-     */
-    public function getSource()
-    {
-        return $this->source;
-    }
-
-    /**
-     * @param 问题来源 $source
-     */
-    public function setSource($source)
-    {
-        $this->source = $source;
-    }
-
-    /**
-     * @return 问题描述
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param 问题描述 $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * @return 解决时间
-     */
-    public function getSolveTime()
-    {
-        return $this->solveTime;
-    }
-
-    /**
-     * @param 解决时间 $solveTime
-     */
-    public function setSolveTime($solveTime)
-    {
-        $this->solveTime = $solveTime;
-    }
-
-    /**
-     * @return 是否解决
-     */
-    public function getSolved()
-    {
-        return $this->solved;
-    }
-
-    /**
-     * @param 是否解决 $solved
-     */
-    public function setSolved($solved)
-    {
-        $this->solved = $solved;
+    public function orderSelect($field, $where, $order){
+        $record = Db::table($this->tableName)->field($field)->where($where)->order($order)->select();
+        return $record;
     }
 
 
