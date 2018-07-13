@@ -184,4 +184,14 @@ class Client extends Base{
         return $this->fetch('cli/clients');
     }
 
+    /**
+     * 根据国家筛选客户
+     */
+    public function getClientsBySid(){
+        $sid = input('param.sid');
+        $field = 'cid,sid,client';
+        $where = array('sid'=>$sid);
+        $data = $this->clients()->select($field, $where);
+        echo json_encode($data);
+    }
 }

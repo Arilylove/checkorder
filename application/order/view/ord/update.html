@@ -66,7 +66,7 @@
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="state">国家 <span class="required">*</span>
                                             </label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <select id="state" class="form-control col-md-7 col-xs-12" name="sid" required="required">
+                                                <select id="state" class="form-control col-md-7 col-xs-12" name="sid" required="required" onchange="setClients(this.options[this.options.selectedIndex].value)">
                                                     <option value="{$order['sid']}">{$order['state']}</option>
                                                     {volist name="state" id="v"}
                                                     <option value="{$v.sid}">{$v.state}</option>
@@ -75,10 +75,10 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="client">客户 <span class="required">*</span>
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="cid">客户 <span class="required">*</span>
                                             </label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <select id="client" class="form-control col-md-7 col-xs-12" name="cid" required="required">
+                                                <select id="cid" class="form-control col-md-7 col-xs-12" name="cid" required="required">
                                                     <option value="{$order['cid']}">{$order['client']}</option>
                                                     {volist name="clients" id="v"}
                                                     <option value="{$v.cid}">{$v.client}</option>
@@ -403,6 +403,23 @@
                 alert('服务出错')
             }
         });
+    }
+    function setClients(sid) {
+        var select = $('#cid')
+        select.html('')
+        //post前设为同步
+        $.ajaxSettings.async = false;
+        $.post("{:url('Client/getClientsBySid')}",{sid:sid},function(data){
+            //console.log(data)
+            if(data) {
+                var len = data.length;
+                for(var i=0;i<len;i++){
+                    var option = $("<option></option>").text(data[i].client);
+                    option.val(data[i].cid)
+                    select.append(option);
+                }
+            }
+        },'json');
     }
 </script>
 </body>

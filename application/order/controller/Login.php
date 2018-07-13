@@ -89,6 +89,7 @@ class Login extends Controller {
         $verify->length = 4;
         $verify->useNoise = false;
         $verify->fontSize = 18;
+        $verify->fontttf = '4.ttf';
         return $verify->entry();
     }
 
