@@ -5,7 +5,6 @@
     <title>统计报表-国家</title>
     <link rel="stylesheet" href="__RECORD__/bootstrap-table.css">
     <link rel="stylesheet" href="__RECORD__/bootstrap-table-fixed-columns.css">
-    <script src="__JS__/echarts.js"></script>
     <style>
         .jambo_table >tbody >tr{
             height: 41px!important;
@@ -52,13 +51,9 @@
 
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="x_panel">
-                            <div class="x_title">
+                            <div class="x_title pull-right">
                                 <label style="font-size: 24px;color: #0e90d2;width: 100px;">美元汇率</label>
                                 <input type="text" name="rate" value="" id="rate" onchange="newCharts()" placeholder="默认:6.5" style="width: 100px;height: 36px;line-height: 36px;border-radius: 5px;">
-                                <ul class="nav navbar-right panel_toolbox">
-                                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                    </li>
-                                </ul>
                             </div>
 
                             <div class="x_content">
@@ -69,7 +64,8 @@
                                             <table class="">
                                                 <tr>
                                                     <th class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
-                                                        <p></p>
+                                                        <p style="font-size: 18px;">订单总额对比图-按国家分</p>
+                                                        <hr/>
                                                     </th>
                                                 </tr>
                                                 <tr>
@@ -123,6 +119,7 @@
 <script src="__JS__/build/js/custom.min.js"></script>
 <script src="__RECORD__/bootstrap-table.js"></script>
 <script src="__RECORD__/bootstrap-table-fixed-columns.js"></script>
+<script src="__JS__/echarts.js"></script>
 <script>
     var myChart = echarts.init(document.getElementById('graph'));
 
@@ -144,10 +141,6 @@
             state[i] = graphS[i]['state']
         }
         optionS = {
-            title : {
-                text: '订单总额对比图-按国家分',
-                x:'center'
-            },
             tooltip : {
                 trigger: 'item',
                 formatter: "{a} <br/>{b} : {c} ({d}%)"
@@ -161,8 +154,8 @@
                 {
                     name: '订单总额占比',
                     type: 'pie',
-                    radius : '36%',
-                    center: ['50%', '45%'],
+                    radius : '46%',
+                    center: ['46%', '40%'],
                     label:{            //饼图图形上的文本标签
                         normal:{
                             show:true,
